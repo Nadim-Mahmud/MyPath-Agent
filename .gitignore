@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Python caches (if used in ai-core)
+__pycache__/
+*.py[cod]
+
+# Frontend artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+
+# Backend artifacts
+routing-server/.gradle/
+routing-server/build/
+routing-server/bin/
+routing-server/out/
+routing-server/myPathDataStore/log/
+routing-server/myPathDataStore/tmp-routing-graph-cache/
+
+# Runtime/generated files
+*.pid
+*.seed
+*.pid.lock

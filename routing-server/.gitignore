@@ -1,0 +1,17 @@
+# Gradle and build output
+.gradle/
+build/
+bin/
+out/
+
+# Logs and runtime
+*.log
+*.pid
+
+# Local dataset/cache (large and machine-specific)
+myPathDataStore/
+
+# IDE/editor
+.idea/
+.vscode/
+.DS_Store

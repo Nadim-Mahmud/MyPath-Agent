@@ -1,0 +1,1 @@
+nohup java -jar ./build/libs/mypath-0.0.1-SNAPSHOT.jar --server.port=8093 > mypath_stdout.log 2>&1 &

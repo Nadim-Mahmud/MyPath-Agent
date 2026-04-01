@@ -1,0 +1,40 @@
+services:
+
+  # ── Routing Server (Spring Boot + GraphHopper) ────────────────────────────
+  routing-server:
+    build:
+      context: ./routing-server
+      dockerfile: Dockerfile
+    container_name: wheelway-routing-server
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount the pre-built GraphHopper graph cache from the host.
+      # On first boot, if myPathDataStore/routing-graph-cache is missing,
+      # the server will download the OSM PBF and build the cache automatically
+      # (this can take 10-30+ minutes and requires ~4 GB of disk).
+      - ./routing-server/myPathDataStore:/app/myPathDataStore
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      # GraphHopper loading or OSM download can take several minutes on first boot
+      start_period: 180s
+
+  # ── Frontend (React + nginx) ───────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # The static API key used by the routing server's ApiKeyFilter
+        VITE_API_KEY: "0aed6a955c59dc3c75dba711c6b74edb"
+    container_name: wheelway-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      routing-server:
+        condition: service_healthy
+    restart: unless-stopped

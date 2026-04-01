@@ -1,0 +1,32 @@
+<configuration>
+    <!-- Define the log file location -->
+    <property name="LOG_PATH" value="myPathDataStore/log" />
+    <property name="LOG_FILE" value="${LOG_PATH}/mypath-app.log" />
+
+    <!-- File appender to write logs to a text file -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Roll over daily -->
+            <fileNamePattern>${LOG_PATH}/mypath-app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory> <!-- Keep 30 days -->
+            <totalSizeCap>200MB</totalSizeCap> <!-- Limit total size -->
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Optional console appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" /> <!-- Remove if you only want file logs -->
+    </root>
+</configuration>
