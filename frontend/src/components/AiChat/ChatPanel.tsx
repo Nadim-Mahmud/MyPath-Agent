@@ -18,6 +18,7 @@ export default function ChatPanel() {
     route,
     origin,
     destination,
+    userPosition,
   } = useAppStore();
 
   const [input, setInput] = useState('');
@@ -36,8 +37,29 @@ export default function ChatPanel() {
     }
   }, [chatOpen]);
 
-  const buildContext = useCallback(() => {
+  const resolveUserLocation = useCallback(async (): Promise<{ lat: number; lng: number } | null> => {
+    if (userPosition) {
+      return { lat: userPosition[0], lng: userPosition[1] };
+    }
+    if (!navigator.geolocation) {
+      return null;
+    }
+
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        },
+        () => resolve(null),
+        { enableHighAccuracy: true, timeout: 3000, maximumAge: 30000 },
+      );
+    });
+  }, [userPosition]);
+
+  const buildContext = useCallback(async () => {
+    const userLocation = await resolveUserLocation();
     return {
+      user_location: userLocation,
       active_route: route ?? null,
       map_center: origin
         ? { lat: origin.lat, lng: origin.lng }
@@ -45,7 +67,7 @@ export default function ChatPanel() {
         ? { lat: destination.lat, lng: destination.lng }
         : null,
     };
-  }, [route, origin, destination]);
+  }, [resolveUserLocation, route, origin, destination]);
 
   const handleSend = useCallback(async () => {
     const text = input.trim();
@@ -56,7 +78,8 @@ export default function ChatPanel() {
     setChatLoading(true);
 
     try {
-      const response = await sendChat(chatSessionId, text, buildContext());
+      const context = await buildContext();
+      const response = await sendChat(chatSessionId, text, context);
       addChatMessage({ role: 'assistant', content: response.message });
     } catch (err) {
       addChatMessage({

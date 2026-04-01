@@ -8,6 +8,7 @@ from app.exceptions import GeminiError
 from app.mcp.mcp_server import TOOL_DECLARATIONS, execute_tool
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 _SYSTEM_PROMPT = pathlib.Path(__file__).parent.parent / "prompts" / "system_prompt.txt"
 
@@ -26,10 +27,12 @@ def _call_gemini(contents: list[dict]) -> dict:
         "contents": contents,
         "tools": [{"function_declarations": TOOL_DECLARATIONS}],
     }
+    logger.info("Calling Gemini API: model=%s content_messages=%d", GEMINI_MODEL, len(contents))
     try:
         with httpx.Client(timeout=60) as client:
             resp = client.post(url, json=body)
             resp.raise_for_status()
+            logger.info("Gemini API call succeeded: status_code=%d", resp.status_code)
             try:
                 return resp.json()
             except ValueError as exc:
@@ -65,12 +68,20 @@ def _extract_function_calls(response: dict) -> list[dict]:
 
 def complete(user_message: str, history: list[dict]) -> str:
     contents = list(history) + [{"role": "user", "parts": [{"text": user_message}]}]
+    logger.info(
+        "Starting completion: history_messages=%d user_message_chars=%d",
+        len(history),
+        len(user_message),
+    )
 
-    for _ in range(MAX_TOOL_ROUNDS):
+    for round_number in range(1, MAX_TOOL_ROUNDS + 1):
+        logger.info("Completion round started: round=%d", round_number)
         response = _call_gemini(contents)
         function_calls = _extract_function_calls(response)
+        logger.info("Completion round response: round=%d tool_calls=%d", round_number, len(function_calls))
 
         if not function_calls:
+            logger.info("Completion finished without tool calls: round=%d", round_number)
             return _extract_text(response)
 
         try:
@@ -82,6 +93,8 @@ def complete(user_message: str, history: list[dict]) -> str:
 
         tool_response_parts = []
         for fc in function_calls:
+            tool_name = fc.get("name", "<unknown>")
+            logger.info("Executing tool call: round=%d tool=%s", round_number, tool_name)
             try:
                 result = execute_tool(fc["name"], fc.get("args", {}))
             except Exception as exc:
@@ -95,5 +108,6 @@ def complete(user_message: str, history: list[dict]) -> str:
             })
         contents.append({"role": "user", "parts": tool_response_parts})
 
+    logger.warning("Completion reached max tool rounds: max_rounds=%d", MAX_TOOL_ROUNDS)
     response = _call_gemini(contents)
     return _extract_text(response)

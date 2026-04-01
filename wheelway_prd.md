@@ -2,11 +2,11 @@
 
 ### Wheelchair-Accessible Navigation Platform
 
-|                  |              |                     |                |
-| ---------------- | ------------ | ------------------- | -------------- |
-| **Product Name** | Wheelway     | **Version**         | 1.0            |
-| **Status**       | In Progress  | **Date**            | April 1, 2025  |
-| **Author**       | Product Team | **Confidentiality** | Internal       |
+|                  |              |                     |               |
+| ---------------- | ------------ | ------------------- | ------------- |
+| **Product Name** | Wheelway     | **Version**         | 1.0           |
+| **Status**       | In Progress  | **Date**            | April 1, 2025 |
+| **Author**       | Product Team | **Confidentiality** | Internal      |
 
 > _Every path, accessible._
 
@@ -101,13 +101,13 @@ By combining a purpose-built accessible routing engine with a modern map UI and 
 
 ### 4.2 Internal Stakeholders
 
-| Stakeholder          | Interest                                                      |
-| -------------------- | ------------------------------------------------------------- |
-| Product Team         | Feature prioritization, roadmap, user research                |
-| routing server Engineering  | Spring Boot routing API maintenance and enhancement           |
-| Frontend Engineering | React UI development and performance                          |
-| AI Engineering       | AI core development, prompt engineering, LLM integration      |
-| QA Team              | Accessibility testing, regression, and performance validation |
+| Stakeholder                | Interest                                                      |
+| -------------------------- | ------------------------------------------------------------- |
+| Product Team               | Feature prioritization, roadmap, user research                |
+| routing server Engineering | Spring Boot routing API maintenance and enhancement           |
+| Frontend Engineering       | React UI development and performance                          |
+| AI Engineering             | AI core development, prompt engineering, LLM integration      |
+| QA Team                    | Accessibility testing, regression, and performance validation |
 
 ---
 
@@ -135,12 +135,12 @@ PostgreSQL     AI Core (FastAPI + MCP Server) :8000
 
 ### 5.2 Component Summary
 
-| Component      | Technology                                                              | Port |
-| -------------- | ----------------------------------------------------------------------- | ---- |
-| Frontend       | React 19, TypeScript, Vite, Leaflet / Mapbox                            | 5173 |
-| Routing Server | Java 17, Spring Boot 3.4.3, Spring Security, GraphHopper                | 8080 |
+| Component      | Technology                                                            | Port |
+| -------------- | --------------------------------------------------------------------- | ---- |
+| Frontend       | React 19, TypeScript, Vite, Leaflet / Mapbox                          | 5173 |
+| Routing Server | Java 17, Spring Boot 3.4.3, Spring Security, GraphHopper              | 8080 |
 | AI Core + MCP  | Python 3.11, FastAPI, Google Gemini 2.0 Flash, MCP tools (in-process) | 8000 |
-| Database       | PostgreSQL 16 + PostGIS extension                                       | 5432 |
+| Database       | PostgreSQL 16 + PostGIS extension                                     | 5432 |
 
 ---
 
@@ -218,12 +218,12 @@ The Wheelway frontend delivers a Google Maps-style interactive map experience pu
 
 ### 6.4 Additional UI Features
 
-| Feature                       | Description                                                                                                                             |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Feature | Description |
+| ------- | ----------- |
 
-| **FR-10: Route Preferences**  | Settings panel to configure: max incline percentage, prefer indoor routes, avoid cobblestones, prefer covered routes.                   |
-| **FR-12: Dark Mode**          | Full dark mode toggle. Map tiles switch to a dark theme. Respects OS-level preference.                                                  |
-| **FR-13: Responsive Design**  | Fully usable on mobile (375px+), tablet, and desktop. Navigation panel collapses to bottom sheet on mobile.                             |
+| **FR-10: Route Preferences** | Settings panel to configure: max incline percentage, prefer indoor routes, avoid cobblestones, prefer covered routes. |
+| **FR-12: Dark Mode** | Full dark mode toggle. Map tiles switch to a dark theme. Respects OS-level preference. |
+| **FR-13: Responsive Design** | Fully usable on mobile (375px+), tablet, and desktop. Navigation panel collapses to bottom sheet on mobile. |
 
 ---
 
@@ -239,24 +239,24 @@ The existing Java Spring Boot application serves as the system's backbone. It ex
 
 #### Base
 
-| Method + Path | Description       | Auth Required |
-| ------------- | ----------------- | ------------- |
-| `GET /`       | Health/liveness check — returns `"Hi there.."` | No |
+| Method + Path | Description                                    | Auth Required |
+| ------------- | ---------------------------------------------- | ------------- |
+| `GET /`       | Health/liveness check — returns `"Hi there.."` | No            |
 
 #### Routing API _(implemented)_
 
-| Method + Path                   | Description                                              | Auth Required |
-| ------------------------------- | -------------------------------------------------------- | ------------- |
-| `GET /route/getSingleRoute`     | Generate a wheelchair-accessible route between two points | Yes — Bearer API key |
+| Method + Path               | Description                                               | Auth Required        |
+| --------------------------- | --------------------------------------------------------- | -------------------- |
+| `GET /route/getSingleRoute` | Generate a wheelchair-accessible route between two points | Yes — Bearer API key |
 
 **Query Parameters for `GET /route/getSingleRoute`:**
 
-| Parameter | Type   | Required | Description                  |
-| --------- | ------ | -------- | ---------------------------- |
-| `srcLat`  | double | Yes      | Origin latitude              |
-| `srcLon`  | double | Yes      | Origin longitude             |
-| `destLat` | double | Yes      | Destination latitude         |
-| `destLon` | double | Yes      | Destination longitude        |
+| Parameter | Type   | Required | Description           |
+| --------- | ------ | -------- | --------------------- |
+| `srcLat`  | double | Yes      | Origin latitude       |
+| `srcLon`  | double | Yes      | Origin longitude      |
+| `destLat` | double | Yes      | Destination latitude  |
+| `destLon` | double | Yes      | Destination longitude |
 
 **Authentication:** All `/route/*` endpoints require an `Authorization: Bearer <api-key>` header. Requests without a valid key return HTTP 401.
 
@@ -267,14 +267,16 @@ The existing Java Spring Boot application serves as the system's backbone. It ex
   "routes": {
     "points": [
       {
-        "start_location": { "latitude": 0.0, "longitude": 0.0, "elevation": 0.0 },
-        "end_location":   { "latitude": 0.0, "longitude": 0.0, "elevation": 0.0 },
-        "points": [
-          { "latitude": 0.0, "longitude": 0.0, "elevation": 0.0 }
-        ],
+        "start_location": {
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "elevation": 0.0
+        },
+        "end_location": { "latitude": 0.0, "longitude": 0.0, "elevation": 0.0 },
+        "points": [{ "latitude": 0.0, "longitude": 0.0, "elevation": 0.0 }],
         "surface": "asphalt",
         "distance": { "value": 123.45, "type": "feet", "text": "0.02 mi" },
-        "duration": { "value": 30.5,   "type": "second", "text": "0.51 min" },
+        "duration": { "value": 30.5, "type": "second", "text": "0.51 min" },
         "maneuver": "turn-left | turn-right | straight | end",
         "travel_mode": null,
         "instructions": null,
@@ -289,20 +291,20 @@ Each element in `points` represents one route segment, grouped by surface type a
 
 **Error Responses:**
 
-| HTTP Status | Condition                                              |
-| ----------- | ------------------------------------------------------ |
-| 401         | Missing or invalid `Authorization` header / API key    |
-| 404         | No route found between the given coordinates           |
+| HTTP Status | Condition                                                       |
+| ----------- | --------------------------------------------------------------- |
+| 401         | Missing or invalid `Authorization` header / API key             |
+| 404         | No route found between the given coordinates                    |
 | 500         | Internal server error (includes `timestamp`, `message`, `path`) |
 
 #### Planned APIs _(not yet implemented)_
 
-| API Area           | Planned Endpoints                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------- |
-| Obstacle reporting | `GET /api/v1/obstacles`, `POST /api/v1/obstacles`, `PATCH /api/v1/obstacles/{id}/verify`         |
-| AI Chat proxy      | `POST /api/v1/chat`, `GET /api/v1/chat/stream`, `DELETE /api/v1/chat/{sessionId}`                |
-| Auth               | JWT login/signup, Google OAuth 2.0                                                                |
-| Route history      | `GET /api/v1/routes/{id}`, `POST /api/v1/routes/{id}/feedback`                                   |
+| API Area           | Planned Endpoints                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------------- |
+| Obstacle reporting | `GET /api/v1/obstacles`, `POST /api/v1/obstacles`, `PATCH /api/v1/obstacles/{id}/verify` |
+| AI Chat proxy      | `POST /api/v1/chat`, `GET /api/v1/chat/stream`, `DELETE /api/v1/chat/{sessionId}`        |
+| Auth               | JWT login/signup, Google OAuth 2.0                                                       |
+| Route history      | `GET /api/v1/routes/{id}`, `POST /api/v1/routes/{id}/feedback`                           |
 
 ### 7.3 Non-Functional routing server Requirements
 
@@ -350,6 +352,8 @@ Each chat request from the routing server includes a context payload:
 | `map_center`           | `{ lat, lng }`         | Center coordinates of the current map viewport |
 | `conversation_history` | Message[]              | Previous messages in the current session       |
 
+In client applications, `user_location` should be auto-populated from browser/app geolocation when available so users do not need to type their location into chat prompts.
+
 #### FR-AI-03: Streaming Response
 
 - The AI core exposes a Server-Sent Events (SSE) endpoint for streaming
@@ -359,8 +363,8 @@ Each chat request from the routing server includes a context payload:
 #### FR-AI-04: Swappable LLM Backend
 
 - LLM calls are encapsulated in `gemini_service.py` — swapping providers requires implementing a new service module
-- Default implementation: **Google Gemini 2.0 Flash** via REST API (`app/gemini_service.py`)
-- Model configurable via environment variable `GEMINI_MODEL` (default: `gemini-2.0-flash`)
+- Default implementation: **Google Gemini 3.1 Flash Lite Preview** via REST API (`app/gemini_service.py`)
+- Model configurable via environment variable `GEMINI_MODEL` (default: `gemini-3.1-flash-lite-preview`)
 
 #### FR-AI-07: Embedded MCP Server
 
@@ -371,12 +375,12 @@ Each chat request from the routing server includes a context payload:
 
 **MCP Tools:**
 
-| Tool Name          | Description                                                  | Calls                          |
-| ------------------ | ------------------------------------------------------------ | ------------------------------ |
-| `get_route`        | Generate a wheelchair-accessible route between two points    | `GET /route/getSingleRoute`    |
-| `report_obstacle`  | Report an accessibility obstacle at a given location         | `POST /api/v1/obstacles`       |
-| `get_obstacles`    | Retrieve known obstacles near a location                     | `GET /api/v1/obstacles`        |
-| `get_map_context`  | Return current map center, active route, and user location   | Internal session state         |
+| Tool Name         | Description                                                | Calls                       |
+| ----------------- | ---------------------------------------------------------- | --------------------------- |
+| `get_route`       | Generate a wheelchair-accessible route between two points  | `GET /route/getSingleRoute` |
+| `report_obstacle` | Report an accessibility obstacle at a given location       | `POST /api/v1/obstacles`    |
+| `get_obstacles`   | Retrieve known obstacles near a location                   | `GET /api/v1/obstacles`     |
+| `get_map_context` | Return current map center, active route, and user location | Internal session state      |
 
 #### FR-AI-05: System Prompt & Persona
 
@@ -459,13 +463,13 @@ Each chat request from the routing server includes a context payload:
 
 ### 10.1 Performance
 
-| Requirement                | Target                 |
-| -------------------------- | ---------------------- |
+| Requirement                       | Target                 |
+| --------------------------------- | ---------------------- |
 | Route generation (routing server) | < 2 seconds end-to-end |
-| Map tile load (initial)    | < 1.5 seconds on 4G    |
-| AI first token (chat)      | < 3 seconds            |
-| Frontend bundle size       | < 500KB gzipped        |
-| API availability (SLA)     | 99.5% uptime           |
+| Map tile load (initial)           | < 1.5 seconds on 4G    |
+| AI first token (chat)             | < 3 seconds            |
+| Frontend bundle size              | < 500KB gzipped        |
+| API availability (SLA)            | 99.5% uptime           |
 
 ### 10.2 Accessibility _(The platform itself must be accessible)_
 
@@ -489,6 +493,11 @@ Each chat request from the routing server includes a context payload:
 - routing server is stateless — horizontally scalable behind a load balancer
 - AI core scales independently from routing server — designed for high-concurrency SSE connections
 - PostgreSQL with PostGIS for geospatial queries; read replicas for scaling
+
+### 10.5 Developer Experience
+
+- In local Docker Compose development mode, frontend and AI core support live reload from bind-mounted source files
+- The development startup command must rebuild images so Dockerfile and dependency changes are applied without manual cleanup
 
 ---
 
@@ -542,42 +551,42 @@ wheelway/
 
 ## 12. Milestones & Delivery Phases
 
-| Phase                       | Scope                                                                                       | Timeline   |
-| --------------------------- | ------------------------------------------------------------------------------------------- | ---------- |
-| **Phase 0: Foundation**     | Monorepo setup, CLAUDE.md, docker-compose, CI/CD baseline, design system tokens             | Week 1     |
+| Phase                       | Scope                                                                                              | Timeline   |
+| --------------------------- | -------------------------------------------------------------------------------------------------- | ---------- |
+| **Phase 0: Foundation**     | Monorepo setup, CLAUDE.md, docker-compose, CI/CD baseline, design system tokens                    | Week 1     |
 | **Phase 1: Map MVP**        | React map canvas, route search UI, routing server routing API integration, polyline rendering      | Weeks 2–3  |
-| **Phase 2: Navigation UX**  | Turn-by-turn panel, waypoint icons, ramp markers, route preferences, mobile responsiveness  | Weeks 4–5  |
+| **Phase 2: Navigation UX**  | Turn-by-turn panel, waypoint icons, ramp markers, route preferences, mobile responsiveness         | Weeks 4–5  |
 | **Phase 3: AI Chat**        | AI core FastAPI service, SSE streaming, chat UI widget, routing server proxy, map–chat integration | Weeks 6–7  |
-| **Phase 4: Data & Reports** | Obstacle reporting, user feedback, saved places, analytics dashboard                        | Week 8     |
-| **Phase 5: Hardening**      | WCAG audit, performance testing, security pen-test, load testing, documentation             | Weeks 9–10 |
-| **Phase 6: Launch**         | Production deployment, monitoring setup, user onboarding, public release                    | Week 11    |
+| **Phase 4: Data & Reports** | Obstacle reporting, user feedback, saved places, analytics dashboard                               | Week 8     |
+| **Phase 5: Hardening**      | WCAG audit, performance testing, security pen-test, load testing, documentation                    | Weeks 9–10 |
+| **Phase 6: Launch**         | Production deployment, monitoring setup, user onboarding, public release                           | Week 11    |
 
 ---
 
 ## 13. Risks & Mitigations
 
-| Risk                                      | Impact                                  | Mitigation                                                                                        |
-| ----------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Risk                                      | Impact                                  | Mitigation                                                                                               |
+| ----------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Routing API returns inaccessible segments | **High** — safety critical              | Validation layer in routing server; user feedback loop; red-flag inaccessible segments in UI             |
 | LLM hallucinations about route data       | **High** — trust damage                 | Ground AI responses in routing server data; instruct model to cite uncertainty; never invent route facts |
-| Map tile provider downtime                | **Medium** — core UX broken             | Abstract tile provider; fallback to OSM tiles if Mapbox unavailable                               |
-| SSE connection drops mid-stream           | **Medium** — broken chat UX             | Auto-reconnect with exponential backoff; display partial response with retry button               |
-| WCAG non-compliance                       | **High** — core product promise         | Continuous automated a11y testing in CI (axe-core); scheduled manual screen reader audits         |
+| Map tile provider downtime                | **Medium** — core UX broken             | Abstract tile provider; fallback to OSM tiles if Mapbox unavailable                                      |
+| SSE connection drops mid-stream           | **Medium** — broken chat UX             | Auto-reconnect with exponential backoff; display partial response with retry button                      |
+| WCAG non-compliance                       | **High** — core product promise         | Continuous automated a11y testing in CI (axe-core); scheduled manual screen reader audits                |
 | AI core cost overrun                      | **Medium** — LLM costs scale with usage | Token budgets per request; rate limiting at routing server; switch to smaller model for simple queries   |
 
 ---
 
 ## 14. Open Questions
 
-| Question                                                                                  | Owner                 |
-| ----------------------------------------------------------------------------------------- | --------------------- |
-| Which map tile provider: Leaflet + OSM (free) or Mapbox (paid, better styling)?           | Product / Engineering |
-| Should AI chat support voice input (Web Speech API) in v1.0?                              | Product               |
+| Question                                                                                  | Owner                                                                               |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Which map tile provider: Leaflet + OSM (free) or Mapbox (paid, better styling)?           | Product / Engineering                                                               |
+| Should AI chat support voice input (Web Speech API) in v1.0?                              | Product                                                                             |
 | What is the conversation memory strategy: in-memory (v1.0) or Redis from day one?         | AI Engineering — **decided: in-memory (v1.0, implemented), Redis planned for v1.1** |
-| Should the routing engine support public transit connections alongside wheelchair routes? | Product               |
-| Which LLM do we default to: GPT-4o (OpenAI) or Claude (Anthropic)?                        | AI Engineering — **decided: Google Gemini 2.0 Flash (implemented)** |
-| Do we need offline map support for areas with poor connectivity?                          | Product / Engineering |
-| Should users be required to create an account, or is anonymous usage supported?           | Product               |
+| Should the routing engine support public transit connections alongside wheelchair routes? | Product                                                                             |
+| Which LLM do we default to: GPT-4o (OpenAI) or Claude (Anthropic)?                        | AI Engineering — **decided: Google Gemini 2.0 Flash (implemented)**                 |
+| Do we need offline map support for areas with poor connectivity?                          | Product / Engineering                                                               |
+| Should users be required to create an account, or is anonymous usage supported?           | Product                                                                             |
 
 ---
 

@@ -6,11 +6,11 @@ Wheelchair-accessible navigation platform. Every path, accessible.
 
 ## Services
 
-| Service        | Technology                                              | Port |
-|----------------|---------------------------------------------------------|------|
-| Frontend       | React 19 + TypeScript + Vite (dev) / nginx (prod)       | 3000 |
-| Routing Server | Java 17, Spring Boot, GraphHopper                       | 8080 |
-| AI Core        | Python 3.11, FastAPI, Gemini 2.0 Flash, MCP tools       | 8000 |
+| Service        | Technology                                        | Port |
+| -------------- | ------------------------------------------------- | ---- |
+| Frontend       | React 19 + TypeScript + Vite (dev) / nginx (prod) | 3000 |
+| Routing Server | Java 17, Spring Boot, GraphHopper                 | 8080 |
+| AI Core        | Python 3.11, FastAPI, Gemini 2.0 Flash, MCP tools | 8000 |
 
 ---
 
@@ -27,10 +27,10 @@ Wheelchair-accessible navigation platform. Every path, accessible.
 
 The project supports two modes selected by the `ENV` variable (defaults to `development`):
 
-| Mode | Frontend | Command |
-|------|----------|---------|
-| `development` | Vite dev server — hot reload on every save | `make dev` |
-| `production` | nginx serving an optimised static build | `make prod` |
+| Mode          | Frontend                                           | Command     |
+| ------------- | -------------------------------------------------- | ----------- |
+| `development` | Vite dev server + AI Core hot reload on every save | `make dev`  |
+| `production`  | nginx serving an optimised static build            | `make prod` |
 
 ### Development (hot reload)
 
@@ -39,6 +39,8 @@ make dev
 ```
 
 Then open [http://localhost:3000](http://localhost:3000). Changes to `frontend/src/` reload instantly without rebuilding the image.
+
+In development, `ai-core/app/` and `ai-core/prompts/` are bind-mounted and FastAPI runs with auto-reload, so AI Core code changes are reflected immediately. `make dev` also runs with `--build` to pick up Dockerfile or dependency changes.
 
 ### Production build
 
@@ -60,6 +62,7 @@ make down
 **If you have the pre-built graph cache** (the `routing-server/myPathDataStore/` directory is already present), the routing server loads in ~30 seconds.
 
 **If the graph cache is missing**, the routing server will automatically download the US OpenStreetMap PBF file from Geofabrik and build the routing graph on first boot. This process:
+
 - Downloads ~1 GB of OSM data
 - Builds the wheelchair routing graph (can take 10–30 minutes depending on hardware)
 - Stores the result in `routing-server/myPathDataStore/` for future runs
@@ -170,20 +173,20 @@ Gemini 2.0 Flash ──► mcp_server.py
 
 ### MCP Tools
 
-| Tool              | Description                                       | Status      |
-|-------------------|---------------------------------------------------|-------------|
-| `get_route`       | Fetch wheelchair-accessible route from routing server | Implemented |
-| `report_obstacle` | Report an accessibility barrier at a location     | Stub (storage planned) |
-| `get_obstacles`   | Retrieve known obstacles near a location          | Stub (storage planned) |
+| Tool              | Description                                           | Status                 |
+| ----------------- | ----------------------------------------------------- | ---------------------- |
+| `get_route`       | Fetch wheelchair-accessible route from routing server | Implemented            |
+| `report_obstacle` | Report an accessibility barrier at a location         | Stub (storage planned) |
+| `get_obstacles`   | Retrieve known obstacles near a location              | Stub (storage planned) |
 
 ### Configuration (environment variables)
 
-| Env Var              | Default                      | Description                       |
-|----------------------|------------------------------|-----------------------------------|
-| `GEMINI_API_KEY`     | _(required)_                 | Google Gemini API key             |
-| `GEMINI_MODEL`       | `gemini-2.0-flash`           | Gemini model ID                   |
-| `ROUTING_SERVER_URL` | `http://routing-server:8080` | Internal routing server URL       |
-| `ROUTING_API_KEY`    | _(set in compose)_           | Bearer key for routing server     |
+| Env Var              | Default                         | Description                   |
+| -------------------- | ------------------------------- | ----------------------------- |
+| `GEMINI_API_KEY`     | _(required)_                    | Google Gemini API key         |
+| `GEMINI_MODEL`       | `gemini-3.1-flash-lite-preview` | Gemini model ID               |
+| `ROUTING_SERVER_URL` | `http://routing-server:8080`    | Internal routing server URL   |
+| `ROUTING_API_KEY`    | _(set in compose)_              | Bearer key for routing server |
 
 ---
 
@@ -197,12 +200,12 @@ Generates a wheelchair-accessible route between two coordinates.
 
 **Authentication:** `Authorization: Bearer <api-key>` header required.
 
-| Query Param | Type   | Description              |
-|-------------|--------|--------------------------|
-| `srcLat`    | double | Origin latitude          |
-| `srcLon`    | double | Origin longitude         |
-| `destLat`   | double | Destination latitude     |
-| `destLon`   | double | Destination longitude    |
+| Query Param | Type   | Description           |
+| ----------- | ------ | --------------------- |
+| `srcLat`    | double | Origin latitude       |
+| `srcLon`    | double | Origin longitude      |
+| `destLat`   | double | Destination latitude  |
+| `destLon`   | double | Destination longitude |
 
 **Example:**
 

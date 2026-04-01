@@ -10,6 +10,13 @@ from app.models import ChatRequest, ChatResponse
 from app import chat_service, session_store
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+if not logging.getLogger().handlers:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    )
 
 app = FastAPI(title="Wheelway AI Core")
 
@@ -43,14 +50,28 @@ async def unhandled_error_handler(request: Request, exc: Exception):
 
 @app.get("/health")
 def health():
+    logger.info("Health check requested")
     return {"status": "ok", "service": "wheelway-ai-core"}
 
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
+    logger.info(
+        "Chat request received: session_id=%s message_chars=%d has_context=%s",
+        req.session_id,
+        len(req.message),
+        req.context is not None,
+    )
     try:
-        return chat_service.chat(req)
+        response = chat_service.chat(req)
+        logger.info(
+            "Chat request succeeded: session_id=%s reply_chars=%d",
+            req.session_id,
+            len(response.message),
+        )
+        return response
     except AiCoreError:
+        logger.warning("Chat request failed with AiCoreError: session_id=%s", req.session_id)
         raise
     except Exception as exc:
         logger.error("Unexpected error in /chat: %s", exc, exc_info=True)
@@ -59,5 +80,6 @@ def chat(req: ChatRequest):
 
 @app.delete("/session/{session_id}")
 def delete_session(session_id: str):
+    logger.info("Clearing session: session_id=%s", session_id)
     session_store.clear_session(session_id)
     return {"status": "cleared", "session_id": session_id}

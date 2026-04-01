@@ -31,9 +31,23 @@ services:
     container_name: wheelway-ai-core
     ports:
       - "8000:8000"
+    command:
+      - sh
+      - -c
+      - |
+        if [ "${ENV:-development}" = "development" ]; then
+          uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/app --reload-dir /app/prompts
+        else
+          uvicorn app.main:app --host 0.0.0.0 --port 8000
+        fi
+    volumes:
+      # Mount AI source and prompts for live reload in development.
+      # In production this bind mount is harmless for local compose runs.
+      - ./ai-core/app:/app/app
+      - ./ai-core/prompts:/app/prompts
     environment:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-AIzaSyDKoD6Qp7SjObh4M6RjNhsbvuUeofF3cFs}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.1-flash-lite-preview}
       ROUTING_SERVER_URL: http://routing-server:8080
       ROUTING_API_KEY: "MYPATHg5rDJhV2ThPlHsbx1PUV6omQSHHno2YehXASoKoiSIrIh7Wz38ZUKLI9nGcHIHxIZgJQ20TwpOet7dpvnandXGenGzf9E7LGu8wLozshUrQcGYcq61g8bTL5Bi"
     depends_on:
