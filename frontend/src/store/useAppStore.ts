@@ -19,6 +19,11 @@ export interface FlyToTarget {
   zoom?: number;
 }
 
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 interface AppState {
   route: RouteResponse | null;
   activeStepIndex: number;
@@ -26,6 +31,9 @@ interface AppState {
   error: string | null;
   darkMode: boolean;
   chatOpen: boolean;
+  chatMessages: ChatMessage[];
+  chatSessionId: string;
+  isChatLoading: boolean;
   preferences: Preferences;
   origin: LocationPoint | null;
   destination: LocationPoint | null;
@@ -38,12 +46,19 @@ interface AppState {
   setError: (error: string | null) => void;
   toggleDarkMode: () => void;
   toggleChat: () => void;
+  addChatMessage: (msg: ChatMessage) => void;
+  clearChatMessages: () => void;
+  setChatLoading: (loading: boolean) => void;
   setPreferences: (prefs: Partial<Preferences>) => void;
   setOrigin: (origin: LocationPoint | null) => void;
   setDestination: (destination: LocationPoint | null) => void;
   clearRoute: () => void;
   setFlyTo: (target: FlyToTarget | null) => void;
   setActiveField: (field: 'origin' | 'destination' | null) => void;
+}
+
+function newSessionId(): string {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -53,6 +68,9 @@ export const useAppStore = create<AppState>((set) => ({
   error: null,
   darkMode: false,
   chatOpen: false,
+  chatMessages: [],
+  chatSessionId: newSessionId(),
+  isChatLoading: false,
   preferences: {
     maxIncline: 8,
     avoidCobblestones: false,
@@ -69,6 +87,15 @@ export const useAppStore = create<AppState>((set) => ({
   setError: (error) => set({ error }),
   toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
   toggleChat: () => set((state) => ({ chatOpen: !state.chatOpen })),
+
+  addChatMessage: (msg) =>
+    set((state) => ({ chatMessages: [...state.chatMessages, msg] })),
+
+  clearChatMessages: () =>
+    set({ chatMessages: [], chatSessionId: newSessionId() }),
+
+  setChatLoading: (isChatLoading) => set({ isChatLoading }),
+
   setPreferences: (prefs) =>
     set((state) => ({ preferences: { ...state.preferences, ...prefs } })),
   setOrigin: (origin) => set({ origin }),

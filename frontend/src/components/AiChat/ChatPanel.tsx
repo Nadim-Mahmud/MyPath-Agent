@@ -1,8 +1,79 @@
+import { useRef, useEffect, useState, useCallback } from 'react';
 import './AiChat.css';
 import { useAppStore } from '../../store/useAppStore';
+import { sendChat } from '../../services/chatService';
+
+const MAX_CHARS = 500;
 
 export default function ChatPanel() {
-  const { chatOpen, toggleChat } = useAppStore();
+  const {
+    chatOpen,
+    toggleChat,
+    chatMessages,
+    chatSessionId,
+    isChatLoading,
+    addChatMessage,
+    setChatLoading,
+    clearChatMessages,
+    route,
+    origin,
+    destination,
+  } = useAppStore();
+
+  const [input, setInput] = useState('');
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (bodyRef.current) {
+      bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
+  useEffect(() => {
+    if (chatOpen) {
+      setTimeout(() => inputRef.current?.focus(), 300);
+    }
+  }, [chatOpen]);
+
+  const buildContext = useCallback(() => {
+    return {
+      active_route: route ?? null,
+      map_center: origin
+        ? { lat: origin.lat, lng: origin.lng }
+        : destination
+        ? { lat: destination.lat, lng: destination.lng }
+        : null,
+    };
+  }, [route, origin, destination]);
+
+  const handleSend = useCallback(async () => {
+    const text = input.trim();
+    if (!text || isChatLoading) return;
+
+    setInput('');
+    addChatMessage({ role: 'user', content: text });
+    setChatLoading(true);
+
+    try {
+      const response = await sendChat(chatSessionId, text, buildContext());
+      addChatMessage({ role: 'assistant', content: response.message });
+    } catch (err) {
+      addChatMessage({
+        role: 'assistant',
+        content: (err as Error).message ?? 'Something went wrong. Please try again.',
+      });
+    } finally {
+      setChatLoading(false);
+    }
+  }, [input, isChatLoading, chatSessionId, buildContext, addChatMessage, setChatLoading]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   return (
     <div
@@ -11,59 +82,118 @@ export default function ChatPanel() {
       aria-label="AI Chat"
       aria-hidden={!chatOpen}
     >
+      {/* Header */}
       <div className="chat-panel-header">
         <div className="chat-panel-title">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
-          <span>Wheelway AI Assistant</span>
+          <span>Wheelway AI</span>
         </div>
-        <button className="chat-close-btn" onClick={toggleChat} aria-label="Close chat">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-
-      <div className="chat-panel-body">
-        <div className="chat-coming-soon">
-          <div className="chat-coming-soon-icon" aria-hidden="true">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/>
-              <path d="M12 6v6l4 2"/>
+        <div className="chat-header-actions">
+          {chatMessages.length > 0 && (
+            <button
+              className="chat-clear-btn"
+              onClick={clearChatMessages}
+              aria-label="Clear conversation"
+              title="Clear conversation"
+              disabled={isChatLoading}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+              </svg>
+            </button>
+          )}
+          <button className="chat-close-btn" onClick={toggleChat} aria-label="Close chat">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
-          </div>
-          <h3 className="chat-coming-soon-title">AI Chat — Coming Soon</h3>
-          <p className="chat-coming-soon-desc">
-            Our AI-powered accessibility assistant is currently in development. Soon you'll be able to:
-          </p>
-          <ul className="chat-feature-list">
-            <li>Ask about wheelchair-accessible routes and paths</li>
-            <li>Get real-time surface condition updates</li>
-            <li>Find accessible points of interest nearby</li>
-            <li>Report barriers and hazards on your route</li>
-          </ul>
-          <p className="chat-coming-soon-note">
-            The AI is powered by our Spring Boot backend and will be available in a future update.
-          </p>
+          </button>
         </div>
       </div>
 
+      {/* Message thread */}
+      <div className="chat-panel-body" ref={bodyRef} role="log" aria-live="polite" aria-label="Chat messages">
+        {chatMessages.length === 0 ? (
+          <div className="chat-empty-state">
+            <div className="chat-empty-icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
+                <circle cx="12" cy="4" r="1.5" fill="currentColor" stroke="none"/>
+                <path d="M12 6v5l3 3" strokeLinecap="round"/>
+                <path d="M9 11H7l-2 6h10l-1-3" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="8" cy="19" r="2"/>
+                <circle cx="15" cy="19" r="2"/>
+              </svg>
+            </div>
+            <p className="chat-empty-title">Ask Wheelway AI</p>
+            <p className="chat-empty-hint">
+              Try: <em>"Find me an accessible route to Central Park"</em> or{' '}
+              <em>"Are there ramps near my location?"</em>
+            </p>
+          </div>
+        ) : (
+          <div className="chat-messages">
+            {chatMessages.map((msg, i) => (
+              <div
+                key={i}
+                className={`chat-message chat-message--${msg.role}`}
+                aria-label={`${msg.role === 'user' ? 'You' : 'Wheelway AI'}: ${msg.content}`}
+              >
+                <div className="chat-bubble">{msg.content}</div>
+              </div>
+            ))}
+            {isChatLoading && (
+              <div className="chat-message chat-message--assistant" aria-label="Wheelway AI is typing">
+                <div className="chat-bubble chat-bubble--typing" aria-hidden="true">
+                  <span /><span /><span />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Input footer */}
       <div className="chat-panel-footer">
-        <input
-          type="text"
-          className="chat-input"
-          placeholder="AI chat coming soon…"
-          disabled
-          aria-disabled="true"
-          aria-label="Chat input (not yet available)"
-        />
-        <button className="chat-send-btn" disabled aria-label="Send message (not available)" aria-disabled="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
+        <div className="chat-input-wrapper">
+          <input
+            ref={inputRef}
+            type="text"
+            className="chat-input"
+            placeholder="Ask about accessible routes, ramps, elevators…"
+            value={input}
+            onChange={(e) => setInput(e.target.value.slice(0, MAX_CHARS))}
+            onKeyDown={handleKeyDown}
+            disabled={isChatLoading}
+            aria-label="Chat input"
+            aria-disabled={isChatLoading}
+            maxLength={MAX_CHARS}
+          />
+          {input.length > MAX_CHARS - 60 && (
+            <span className="chat-char-count" aria-live="polite">
+              {input.length}/{MAX_CHARS}
+            </span>
+          )}
+        </div>
+        <button
+          className={`chat-send-btn${!isChatLoading && input.trim() ? ' chat-send-btn--active' : ''}`}
+          onClick={handleSend}
+          disabled={isChatLoading || !input.trim()}
+          aria-label="Send message"
+        >
+          {isChatLoading ? (
+            <svg className="chat-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          )}
         </button>
       </div>
     </div>

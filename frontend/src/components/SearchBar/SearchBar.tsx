@@ -49,6 +49,7 @@ export default function SearchBar() {
   const [toSuggestions, setToSuggestions] = useState<NominatimResult[]>([]);
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
+  const [gpsLoading, setGpsLoading] = useState<'origin' | 'destination' | null>(null);
 
   // Keep store actions in a ref so the auto-fetch effect always uses the latest version
   const storeRef = useRef({ setLoading, setError, setRoute });
@@ -67,6 +68,7 @@ export default function SearchBar() {
       const result = await fetchRoute(o.lat, o.lng, d.lat, d.lng);
       setRoute(result);
     } catch (err) {
+      setRoute(null);
       setError(err instanceof Error ? err.message : 'Failed to fetch route.');
     } finally {
       setLoading(false);
@@ -147,6 +149,43 @@ export default function SearchBar() {
     setRoute(null);
   };
 
+  const setGpsLocation = useCallback((field: 'origin' | 'destination') => {
+    setActiveField(field);
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by your browser.');
+      return;
+    }
+    setGpsLoading(field);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const point: LocationPoint = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          label: 'My Location',
+        };
+        if (field === 'origin') {
+          setOrigin(point);
+          setFlyTo({ lat: point.lat, lng: point.lng });
+        } else {
+          setDestination(point);
+          setFlyTo({ lat: point.lat, lng: point.lng });
+        }
+        setGpsLoading(null);
+      },
+      (err) => {
+        if (err.code === err.PERMISSION_DENIED) {
+          setError('Location access was denied. Please allow location in your browser settings.');
+        } else if (err.code === err.TIMEOUT) {
+          setError('Location request timed out. Please try again.');
+        } else {
+          setError('Unable to retrieve your location.');
+        }
+        setGpsLoading(null);
+      },
+      { timeout: 10000, enableHighAccuracy: false, maximumAge: 60000 }
+    );
+  }, [setOrigin, setDestination, setFlyTo, setError, setActiveField]);
+
   return (
     <div className="search-bar-container" role="search" aria-label="Route search">
       <div className="search-bar-inner">
@@ -157,7 +196,14 @@ export default function SearchBar() {
             className={`input-group${activeField === 'origin' ? ' input-group--active input-group--origin' : ''}`}
             onClick={() => setActiveField('origin')}
           >
-            <span className="input-icon origin-dot" aria-hidden="true" />
+            <button
+              className={`gps-dot-btn origin-dot${gpsLoading === 'origin' ? ' gps-dot-btn--loading' : ''}`}
+              onClick={(e) => { e.stopPropagation(); setGpsLocation('origin'); }}
+              aria-label="Use current GPS location as origin"
+              title="Use my current location"
+              disabled={gpsLoading !== null}
+              tabIndex={0}
+            />
             <div className="autocomplete-wrapper">
               <input
                 type="text"
@@ -201,7 +247,14 @@ export default function SearchBar() {
             className={`input-group${activeField === 'destination' ? ' input-group--active input-group--destination' : ''}`}
             onClick={() => setActiveField('destination')}
           >
-            <span className="input-icon dest-dot" aria-hidden="true" />
+            <button
+              className={`gps-dot-btn dest-dot${gpsLoading === 'destination' ? ' gps-dot-btn--loading' : ''}`}
+              onClick={(e) => { e.stopPropagation(); setGpsLocation('destination'); }}
+              aria-label="Use current GPS location as destination"
+              title="Use my current location"
+              disabled={gpsLoading !== null}
+              tabIndex={0}
+            />
             <div className="autocomplete-wrapper">
               <input
                 type="text"

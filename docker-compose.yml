@@ -23,18 +23,55 @@ services:
       # GraphHopper loading or OSM download can take several minutes on first boot
       start_period: 180s
 
-  # ── Frontend (React + nginx) ───────────────────────────────────────────────
+  # ── AI Core (Python FastAPI + Gemini + MCP) ───────────────────────────────
+  ai-core:
+    build:
+      context: ./ai-core
+      dockerfile: Dockerfile
+    container_name: wheelway-ai-core
+    ports:
+      - "8000:8000"
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-AIzaSyDKoD6Qp7SjObh4M6RjNhsbvuUeofF3cFs}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      ROUTING_SERVER_URL: http://routing-server:8080
+      ROUTING_API_KEY: "MYPATHg5rDJhV2ThPlHsbx1PUV6omQSHHno2YehXASoKoiSIrIh7Wz38ZUKLI9nGcHIHxIZgJQ20TwpOet7dpvnandXGenGzf9E7LGu8wLozshUrQcGYcq61g8bTL5Bi"
+    depends_on:
+      routing-server:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ── Frontend (React + Vite/nginx) ─────────────────────────────────────────
+  # ENV=development (default) → Vite dev server with hot reload
+  # ENV=production            → nginx serving optimised static build
+  # Usage: ENV=production docker compose up -d --build
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: ${ENV:-development}
       args:
         # The static API key used by the routing server's ApiKeyFilter
         VITE_API_KEY: "0aed6a955c59dc3c75dba711c6b74edb"
+        # AI core URL for the chat widget (direct connection; routing server proxy is planned)
+        VITE_AI_CORE_URL: "http://localhost:8000"
     container_name: wheelway-frontend
     ports:
       - "3000:80"
+    volumes:
+      # Mount source for hot reload in dev.
+      # In production these paths are unused by nginx and are a no-op.
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
     depends_on:
       routing-server:
+        condition: service_healthy
+      ai-core:
         condition: service_healthy
     restart: unless-stopped

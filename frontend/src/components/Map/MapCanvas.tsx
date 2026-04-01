@@ -140,6 +140,16 @@ async function reverseGeocode(lat: number, lng: number): Promise<string> {
   }
 }
 
+const userLocationIcon = L.divIcon({
+  className: '',
+  html: `<div class="user-location-dot">
+    <div class="user-location-dot__pulse"></div>
+    <div class="user-location-dot__inner"></div>
+  </div>`,
+  iconSize: [20, 20],
+  iconAnchor: [10, 10],
+});
+
 export default function MapCanvas() {
   const {
     route, activeStepIndex, origin, destination,
@@ -149,8 +159,40 @@ export default function MapCanvas() {
   } = useAppStore();
 
   const mapRef = useRef<L.Map | null>(null);
+  const watchIdRef = useRef<number | null>(null);
+  const hasCenteredRef = useRef(false);
+  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
+  const [gpsPermission, setGpsPermission] = useState<'pending' | 'granted' | 'denied' | 'unsupported'>('pending');
   const [locating, setLocating] = useState(false);
   const [locateError, setLocateError] = useState<string | null>(null);
+
+  // Request permission and watch position on first load
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setGpsPermission('unsupported');
+      return;
+    }
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (pos) => {
+        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+        setUserPosition(coords);
+        setGpsPermission('granted');
+        if (!hasCenteredRef.current && mapRef.current) {
+          mapRef.current.setView(coords, 14, { animate: false });
+          hasCenteredRef.current = true;
+        }
+      },
+      () => {
+        setGpsPermission('denied');
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+    );
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+      }
+    };
+  }, []);
 
   // Pan map when flyTo is triggered from search bar
   useEffect(() => {
@@ -159,18 +201,6 @@ export default function MapCanvas() {
       setFlyTo(null);
     }
   }, [flyTo, setFlyTo]);
-
-  // Auto-focus on user's location on first load
-  useEffect(() => {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        mapRef.current?.setView([pos.coords.latitude, pos.coords.longitude], 14, { animate: false });
-      },
-      () => {},
-      { enableHighAccuracy: false, timeout: 8000 }
-    );
-  }, []);
 
   const handleMapClick = useCallback(
     async (lat: number, lng: number) => {
@@ -185,15 +215,25 @@ export default function MapCanvas() {
   );
 
   const handleLocateMe = useCallback(() => {
-    if (!navigator.geolocation) {
+    if (gpsPermission === 'unsupported') {
       setLocateError('Geolocation is not supported by your browser');
       return;
     }
+    if (gpsPermission === 'denied') {
+      setLocateError('Location access was denied. Enable it in browser settings.');
+      return;
+    }
+    if (userPosition && mapRef.current) {
+      mapRef.current.setView(userPosition, 16, { animate: true });
+      return;
+    }
+    // Still waiting for first fix
     setLocating(true);
     setLocateError(null);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        mapRef.current?.setView([pos.coords.latitude, pos.coords.longitude], 16, { animate: true });
+        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+        mapRef.current?.setView(coords, 16, { animate: true });
         setLocating(false);
       },
       () => {
@@ -202,7 +242,7 @@ export default function MapCanvas() {
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
-  }, []);
+  }, [gpsPermission, userPosition]);
 
   const routePoints = route?.routes?.points ?? [];
 
@@ -277,6 +317,11 @@ export default function MapCanvas() {
         {/* Destination marker */}
         {endCoord && endCoord[0] !== 0 && (
           <Marker position={endCoord} icon={endIcon} />
+        )}
+
+        {/* User current location */}
+        {userPosition && (
+          <Marker position={userPosition} icon={userLocationIcon} zIndexOffset={-100} />
         )}
       </MapContainer>
 

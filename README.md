@@ -6,11 +6,11 @@ Wheelchair-accessible navigation platform. Every path, accessible.
 
 ## Services
 
-| Service        | Technology                        | Port |
-|----------------|-----------------------------------|------|
-| Frontend       | React 19 + TypeScript + nginx     | 3000 |
-| Routing Server | Java 17, Spring Boot, GraphHopper | 8080 |
-| AI Core        | Python FastAPI *(planned)*        | 8000 |
+| Service        | Technology                                              | Port |
+|----------------|---------------------------------------------------------|------|
+| Frontend       | React 19 + TypeScript + Vite (dev) / nginx (prod)       | 3000 |
+| Routing Server | Java 17, Spring Boot, GraphHopper                       | 8080 |
+| AI Core        | Python 3.11, FastAPI, Gemini 2.0 Flash, MCP tools       | 8000 |
 
 ---
 
@@ -25,27 +25,49 @@ Wheelchair-accessible navigation platform. Every path, accessible.
 
 ## Running with Docker Compose
 
-### First-time setup
+The project supports two modes selected by the `ENV` variable (defaults to `development`):
 
-**If you have the pre-built graph cache** (the `routing-server/myPathDataStore/` directory is already present), the routing server loads in ~30 seconds. Just run:
+| Mode | Frontend | Command |
+|------|----------|---------|
+| `development` | Vite dev server — hot reload on every save | `make dev` |
+| `production` | nginx serving an optimised static build | `make prod` |
+
+### Development (hot reload)
 
 ```bash
-docker compose up --build
+make dev
 ```
 
-Then open [http://localhost:3000](http://localhost:3000).
+Then open [http://localhost:3000](http://localhost:3000). Changes to `frontend/src/` reload instantly without rebuilding the image.
+
+### Production build
+
+```bash
+make prod
+# Builds the optimised bundle and serves it via nginx
+```
+
+### Stop
+
+```bash
+make down
+```
 
 ---
+
+### First-time setup notes
+
+**If you have the pre-built graph cache** (the `routing-server/myPathDataStore/` directory is already present), the routing server loads in ~30 seconds.
 
 **If the graph cache is missing**, the routing server will automatically download the US OpenStreetMap PBF file from Geofabrik and build the routing graph on first boot. This process:
 - Downloads ~1 GB of OSM data
 - Builds the wheelchair routing graph (can take 10–30 minutes depending on hardware)
 - Stores the result in `routing-server/myPathDataStore/` for future runs
 
-The frontend will wait (via healthcheck) until the routing server is ready before starting.
+The frontend waits (via Docker healthcheck) until both the routing server and AI core are ready before starting.
 
 ```bash
-docker compose up --build
+make dev
 # Go get a coffee — first boot takes a while if the cache is not present
 ```
 
@@ -56,13 +78,7 @@ docker compose up --build
 The graph cache is persisted in `routing-server/myPathDataStore/` on your host machine. After the first build, starting up is fast:
 
 ```bash
-docker compose up
-```
-
-### Stop
-
-```bash
-docker compose down
+make dev   # or: make prod
 ```
 
 ---
@@ -88,6 +104,42 @@ curl -H "Authorization: Bearer MYPATHg5rDJhV2ThPlHsbx1PUV6omQSHHno2YehXASoKoiSIr
   "http://localhost:8080/route/getSingleRoute?srcLat=40.7128&srcLon=-74.006&destLat=40.7580&destLon=-73.9855"
 ```
 
+### AI Core
+
+```bash
+cd ai-core
+
+# Set your Gemini API key first
+export GEMINI_API_KEY=your-key-here
+
+pip install -r requirements.txt
+
+# Run (default port 8000)
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+Test the AI core:
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Send a chat message
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "session_id": "test-session",
+    "message": "Find me an accessible route from Times Square to Central Park",
+    "context": {
+      "user_location": { "lat": 40.7580, "lng": -73.9855 },
+      "map_center": { "lat": 40.7580, "lng": -73.9855 }
+    }
+  }'
+
+# Stream a response (SSE)
+curl "http://localhost:8000/chat/stream?session_id=test&message=What+are+curb+cuts%3F"
+```
+
 ### Frontend
 
 ```bash
@@ -96,13 +148,50 @@ npm install
 npm run dev      # → http://localhost:5173
 ```
 
-The dev server proxies are not configured by default — the frontend talks directly to `http://localhost:8080` in dev mode.
+---
+
+## AI Core — Architecture
+
+The AI core is a **Python 3.11 FastAPI** microservice powered by **Google Gemini 2.0 Flash** with embedded **MCP (Model Context Protocol) tools**. It calls the Gemini REST API directly via `httpx` and runs an agentic tool-calling loop.
+
+```
+Frontend (React)
+    │  SSE / POST  (direct in dev; via routing server proxy in prod)
+    ▼
+AI Core (FastAPI :8000)
+    │  Agentic loop (gemini_service.py)
+    ▼
+Gemini 2.0 Flash ──► mcp_server.py
+                          │
+                          ├── get_route       → GET /route/getSingleRoute  (routing server :8080)
+                          ├── get_obstacles   → planned
+                          └── report_obstacle → planned
+```
+
+### MCP Tools
+
+| Tool              | Description                                       | Status      |
+|-------------------|---------------------------------------------------|-------------|
+| `get_route`       | Fetch wheelchair-accessible route from routing server | Implemented |
+| `report_obstacle` | Report an accessibility barrier at a location     | Stub (storage planned) |
+| `get_obstacles`   | Retrieve known obstacles near a location          | Stub (storage planned) |
+
+### Configuration (environment variables)
+
+| Env Var              | Default                      | Description                       |
+|----------------------|------------------------------|-----------------------------------|
+| `GEMINI_API_KEY`     | _(required)_                 | Google Gemini API key             |
+| `GEMINI_MODEL`       | `gemini-2.0-flash`           | Gemini model ID                   |
+| `ROUTING_SERVER_URL` | `http://routing-server:8080` | Internal routing server URL       |
+| `ROUTING_API_KEY`    | _(set in compose)_           | Bearer key for routing server     |
 
 ---
 
 ## API Reference
 
-### `GET /route/getSingleRoute`
+### Routing Server
+
+#### `GET /route/getSingleRoute`
 
 Generates a wheelchair-accessible route between two coordinates.
 
@@ -143,7 +232,39 @@ Authorization: Bearer <api-key>
 }
 ```
 
-Each element in `points` is a route segment grouped by surface type and split at each maneuver (turn). Incline is a percentage grade; segments > 5% are flagged in the UI.
+---
+
+### AI Core
+
+#### `POST /chat`
+
+Synchronous LLM response (full message returned at once).
+
+```json
+{
+  "session_id": "string",
+  "message": "Find me an accessible route to Central Park",
+  "context": {
+    "user_location": { "lat": 40.7128, "lng": -74.006 },
+    "map_center": { "lat": 40.7128, "lng": -74.006 },
+    "active_route": null
+  }
+}
+```
+
+#### `GET /chat/stream`
+
+SSE streaming response. Query params: `session_id`, `message`, `context` (JSON string).
+
+Each SSE event: `data: {"token": "..."}` or `data: [DONE]`
+
+#### `DELETE /session/{session_id}`
+
+Clear conversation history for a session.
+
+#### `GET /health`
+
+Returns `{"status": "ok", "service": "wheelway-ai-core"}`.
 
 ---
 
@@ -152,6 +273,8 @@ Each element in `points` is a route segment grouped by surface type and split at
 ```
 wheelway/
 ├── docker-compose.yml
+├── Makefile                 # make dev / make prod / make down
+├── .env                     # ENV=development (docker-compose target selector)
 ├── README.md
 ├── routing-server/          # Java 17 Spring Boot — wheelchair routing engine
 │   ├── Dockerfile
@@ -159,14 +282,31 @@ wheelway/
 │   ├── myPathDataStore/     # GraphHopper graph cache (gitignored, generated at runtime)
 │   └── src/
 ├── frontend/                # React 19 + TypeScript — map UI
-│   ├── Dockerfile
+│   ├── Dockerfile           # 3-stage: builder / development / production
 │   ├── nginx.conf
 │   └── src/
 │       ├── components/      # Map, SearchBar, RoutePanel, AiChat, Preferences
-│       ├── services/        # routingService.ts (Axios)
+│       ├── services/        # routingService.ts, chatService.ts
 │       ├── store/           # useAppStore.ts (Zustand)
 │       └── types/           # route.ts
-└── ai-core/                 # Python FastAPI — AI chat assistant (planned)
+└── ai-core/                 # Python 3.11 FastAPI — AI chat assistant (Gemini + MCP)
+    ├── Dockerfile           # python:3.11-slim, pip install, uvicorn
+    ├── requirements.txt
+    ├── prompts/
+    │   └── system_prompt.txt
+    └── app/
+        ├── main.py          # FastAPI app, routes: /chat, /chat/stream, /session, /health
+        ├── config.py        # Env vars (GEMINI_API_KEY, ROUTING_SERVER_URL, …)
+        ├── models.py        # Pydantic models: ChatRequest, ChatResponse, ChatContext
+        ├── session_store.py # In-memory session store (bounded deque, thread-safe)
+        ├── gemini_service.py# Agentic loop — calls Gemini REST API via httpx
+        ├── chat_service.py  # Orchestrates session + Gemini + context enrichment
+        └── mcp/
+            ├── mcp_server.py        # Tool registry + dispatcher
+            └── tools/
+                ├── get_route.py         # Calls routing-server GET /route/getSingleRoute
+                ├── report_obstacle.py   # Stub — storage planned
+                └── get_obstacles.py     # Stub — storage planned
 ```
 
 ---

@@ -5,7 +5,7 @@
 |                  |              |                     |                |
 | ---------------- | ------------ | ------------------- | -------------- |
 | **Product Name** | Wheelway     | **Version**         | 1.0            |
-| **Status**       | Draft        | **Date**            | March 31, 2025 |
+| **Status**       | In Progress  | **Date**            | April 1, 2025  |
 | **Author**       | Product Team | **Confidentiality** | Internal       |
 
 > _Every path, accessible._
@@ -117,6 +117,8 @@ By combining a purpose-built accessible routing engine with a modern map UI and 
 
 Wheelway is a three-tier system. The frontend (React) communicates exclusively with the routing server (Spring Boot). The routing server acts as the orchestration layer — it handles authentication, caching, and routes calls to both the routing engine and the AI core service. **The frontend never calls the AI core directly**, ensuring security and rate-limiting are centralized.
 
+The AI core embeds an MCP (Model Context Protocol) server that exposes routing and obstacle tools to the LLM. When the LLM needs route data or system information, it calls these MCP tools — which in turn call the Spring Boot routing server via HTTP.
+
 ```
 Browser (React App) :5173
         |  REST / WebSocket
@@ -124,20 +126,21 @@ Browser (React App) :5173
 Spring Boot routing server :8080
    |              |
    v              v
-PostgreSQL     AI Core (FastAPI) :8000
+PostgreSQL     AI Core (FastAPI + MCP Server) :8000
 (PostGIS)           |
+                    ├── MCP tools → HTTP → Spring Boot :8080
                     v
               LLM API (OpenAI / Claude)
 ```
 
 ### 5.2 Component Summary
 
-| Component | Technology                                     | Port |
-| --------- | ---------------------------------------------- | ---- |
-| Frontend  | React 18, TypeScript, Vite, Leaflet / Mapbox   | 5173 |
-| routing server   | Java 21, Spring Boot 3.x, Spring Security, JPA | 8080 |
-| AI Core   | Python 3.11, FastAPI, LangChain / OpenAI SDK   | 8000 |
-| Database  | PostgreSQL 16 + PostGIS extension              | 5432 |
+| Component      | Technology                                                              | Port |
+| -------------- | ----------------------------------------------------------------------- | ---- |
+| Frontend       | React 19, TypeScript, Vite, Leaflet / Mapbox                            | 5173 |
+| Routing Server | Java 17, Spring Boot 3.4.3, Spring Security, GraphHopper                | 8080 |
+| AI Core + MCP  | Python 3.11, FastAPI, Google Gemini 2.0 Flash, MCP tools (in-process) | 8000 |
+| Database       | PostgreSQL 16 + PostGIS extension                                       | 5432 |
 
 ---
 
@@ -317,7 +320,13 @@ Each element in `points` represents one route segment, grouped by surface type a
 
 ### 8.1 Overview
 
-The AI core is a standalone Python microservice built with FastAPI. It is responsible for all LLM interactions — receiving structured requests from the Spring Boot routing server, managing conversation context, assembling prompts, and streaming responses back. The frontend never calls this service directly.
+> **Status: Implemented (Phase 3)**
+
+The AI core is a standalone Python 3.11 microservice built with FastAPI. It is responsible for all LLM interactions — receiving structured requests from the Spring Boot routing server, managing conversation context, assembling prompts, and streaming responses back. The frontend never calls this service directly.
+
+> **Note (dev):** The routing server's chat proxy endpoints are not yet implemented. During development the frontend calls the AI core directly at port 8000. This will be replaced by the routing server proxy in a future sprint.
+
+The AI core also embeds an **MCP (Model Context Protocol) server** that exposes Wheelway-specific tools to the LLM. Rather than hardcoding HTTP calls inside prompt logic, the LLM autonomously decides when to invoke MCP tools (e.g. fetching a route, querying obstacles) based on the user's message. MCP is not a separate service — it runs within the same Python process as the FastAPI app.
 
 ### 8.2 Functional Requirements
 
@@ -347,11 +356,27 @@ Each chat request from the routing server includes a context payload:
 - Token-by-token streaming from the LLM is proxied through the routing server to the frontend
 - First token must appear in the UI within **3 seconds** of request submission
 
-#### FR-AI-04: Swappable LLM routing server
+#### FR-AI-04: Swappable LLM Backend
 
-- The LLM client is abstracted behind a base interface (`BaseLLMClient`)
-- Concrete implementations provided for: OpenAI GPT-4o, Anthropic Claude
-- Active provider configurable via environment variable: `LLM_PROVIDER=openai|anthropic`
+- LLM calls are encapsulated in `gemini_service.py` — swapping providers requires implementing a new service module
+- Default implementation: **Google Gemini 2.0 Flash** via REST API (`app/gemini_service.py`)
+- Model configurable via environment variable `GEMINI_MODEL` (default: `gemini-2.0-flash`)
+
+#### FR-AI-07: Embedded MCP Server
+
+- The AI core runs an MCP server within the same process (no separate container)
+- MCP tools are defined in `mcp/tools/` and registered at startup
+- The LLM calls MCP tools autonomously based on user intent — no hardcoded routing logic in prompts
+- All MCP tool calls that require routing data make internal HTTP calls to the Spring Boot routing server
+
+**MCP Tools:**
+
+| Tool Name          | Description                                                  | Calls                          |
+| ------------------ | ------------------------------------------------------------ | ------------------------------ |
+| `get_route`        | Generate a wheelchair-accessible route between two points    | `GET /route/getSingleRoute`    |
+| `report_obstacle`  | Report an accessibility obstacle at a given location         | `POST /api/v1/obstacles`       |
+| `get_obstacles`    | Retrieve known obstacles near a location                     | `GET /api/v1/obstacles`        |
+| `get_map_context`  | Return current map center, active route, and user location   | Internal session state         |
 
 #### FR-AI-05: System Prompt & Persona
 
@@ -367,12 +392,14 @@ Each chat request from the routing server includes a context payload:
 
 ### 8.3 AI Core API
 
-| Method + Path          | Description                             | Caller              |
-| ---------------------- | --------------------------------------- | ------------------- |
+| Method + Path          | Description                             | Caller                     |
+| ---------------------- | --------------------------------------- | -------------------------- |
 | `POST /chat`           | Synchronous LLM call with full response | Spring Boot routing server |
 | `GET /chat/stream`     | SSE stream of LLM token output          | Spring Boot routing server |
 | `DELETE /session/{id}` | Clear session conversation history      | Spring Boot routing server |
-| `GET /health`          | Health check endpoint                   | Docker / Kubernetes |
+| `GET /health`          | Health check endpoint                   | Docker / Kubernetes        |
+
+> The MCP server runs as an internal transport within the Python process and is **not exposed externally**. It is accessible only to the LLM client inside the AI core.
 
 ### 8.4 Request / Response Schema
 
@@ -472,41 +499,43 @@ All components live in a single monorepo for unified AI context and a shared `CL
 ```
 wheelway/
 ├── README.md
-├── CLAUDE.md                        # AI context for the full monorepo
+├── CLAUDE.md
 ├── docker-compose.yml
-├── .gitignore
+├── Makefile
 │
-├── routing server/                         # Java Spring Boot
-│   ├── pom.xml
-│   └── src/main/java/com/wheelway/
-│       ├── controller/              # REST controllers
-│       ├── service/                 # Business logic
-│       ├── repository/              # JPA repositories
-│       ├── model/                   # JPA entities
-│       └── dto/                     # Request/Response DTOs
+├── routing-server/                  # Java 17 Spring Boot — wheelchair routing engine
+│   ├── build.gradle
+│   ├── settings.gradle
+│   └── src/main/java/com/wheelchair/mypath/
+│       ├── controller/
+│       ├── service/
+│       ├── model/
+│       ├── filter/
+│       ├── configurations/
+│       └── exceptionHandler/
 │
-├── frontend/                        # React + TypeScript
+├── frontend/                        # React 19 + TypeScript
 │   ├── package.json
 │   └── src/
 │       ├── components/
 │       │   ├── Map/
 │       │   ├── RoutePanel/
-│       │   └── AiChat/              # Chat UI components
-│       ├── pages/
-│       ├── hooks/
-│       ├── services/                # API call functions
-│       └── store/                   # Zustand state
+│       │   └── AiChat/              # ChatButton, ChatPanel (SSE streaming)
+│       ├── services/                # routingService.ts, chatService.ts
+│       └── store/                   # useAppStore.ts (Zustand)
 │
-└── ai-core/                         # Python FastAPI
-    ├── main.py
+└── ai-core/                         # Python 3.11 FastAPI — AI chat + MCP Server
     ├── requirements.txt
-    ├── api/routes/chat.py
-    ├── services/chat_service.py
-    ├── llm/
-    │   ├── base.py                  # Abstract LLM interface
-    │   ├── openai_client.py
-    │   └── anthropic_client.py
-    └── prompts/system_prompt.txt
+    ├── Dockerfile
+    └── app/
+        ├── main.py                  # FastAPI app entrypoint, route definitions, SSE endpoints
+        ├── gemini_service.py        # Agentic LLM loop (Google Gemini 2.0 Flash)
+        ├── chat_service.py          # Session management, request orchestration
+        ├── mcp/                     # MCP server + tool interface
+        │   └── tools/               # get_route.py, report_obstacle.py, get_obstacles.py
+        ├── models/                  # Pydantic models: ChatRequest, ChatResponse, gemini DTOs
+        ├── utils/                   # session_store.py (in-memory, bounded)
+        └── prompts/                 # system_prompt.txt
 ```
 
 ---
@@ -544,9 +573,9 @@ wheelway/
 | ----------------------------------------------------------------------------------------- | --------------------- |
 | Which map tile provider: Leaflet + OSM (free) or Mapbox (paid, better styling)?           | Product / Engineering |
 | Should AI chat support voice input (Web Speech API) in v1.0?                              | Product               |
-| What is the conversation memory strategy: in-memory (v1.0) or Redis from day one?         | AI Engineering        |
+| What is the conversation memory strategy: in-memory (v1.0) or Redis from day one?         | AI Engineering — **decided: in-memory (v1.0, implemented), Redis planned for v1.1** |
 | Should the routing engine support public transit connections alongside wheelchair routes? | Product               |
-| Which LLM do we default to: GPT-4o (OpenAI) or Claude (Anthropic)?                        | AI Engineering        |
+| Which LLM do we default to: GPT-4o (OpenAI) or Claude (Anthropic)?                        | AI Engineering — **decided: Google Gemini 2.0 Flash (implemented)** |
 | Do we need offline map support for areas with poor connectivity?                          | Product / Engineering |
 | Should users be required to create an account, or is anonymous usage supported?           | Product               |
 

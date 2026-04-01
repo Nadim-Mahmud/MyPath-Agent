@@ -55,24 +55,48 @@
 .input-separator {
   height: 1px;
   background: var(--border);
-  margin: 2px 0 2px 26px;
+  margin: 2px 0 2px 40px;
 }
 
-.input-icon {
-  width: 12px;
-  height: 12px;
+.gps-dot-btn {
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
+  border: none;
   flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.gps-dot-btn:hover {
+  transform: scale(1.2);
+}
+
+.gps-dot-btn:active {
+  transform: scale(0.95);
+}
+
+.gps-dot-btn--loading {
+  opacity: 0.5;
 }
 
 .origin-dot {
   background: #16a34a;
-  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.25);
+}
+
+.origin-dot:hover {
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.4);
 }
 
 .dest-dot {
   background: #dc2626;
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.25);
+}
+
+.dest-dot:hover {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.4);
 }
 
 .autocomplete-wrapper {

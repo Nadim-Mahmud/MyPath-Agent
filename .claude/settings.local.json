@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -f main.py requirements.txt .env.example Dockerfile)",
+      "Bash(rm -rf api/ services/ llm/ mcp/)",
+      "Bash(cp -r /Users/nadim/MyFiles/vscode/wheel-route/routing-server/gradle .)",
+      "Bash(cp /Users/nadim/MyFiles/vscode/wheel-route/routing-server/gradlew .)",
+      "Bash(cp /Users/nadim/MyFiles/vscode/wheel-route/routing-server/gradlew.bat .)"
+    ]
+  }
+}
