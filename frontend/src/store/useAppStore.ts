@@ -61,7 +61,7 @@ export const useAppStore = create<AppState>((set) => ({
   origin: null,
   destination: null,
   flyTo: null,
-  activeField: null,
+  activeField: 'origin',
 
   setRoute: (route) => set({ route, activeStepIndex: -1 }),
   setActiveStep: (index) => set({ activeStepIndex: index }),
@@ -80,7 +80,7 @@ export const useAppStore = create<AppState>((set) => ({
       error: null,
       origin: null,
       destination: null,
-      activeField: null,
+      activeField: 'origin',
     }),
   setFlyTo: (flyTo) => set({ flyTo }),
   setActiveField: (activeField) => set({ activeField }),

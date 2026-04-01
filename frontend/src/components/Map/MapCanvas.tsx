@@ -13,6 +13,23 @@ import './MapCanvas.css';
 import { useAppStore } from '../../store/useAppStore';
 import type { RoutePoint } from '../../types/route';
 
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+function toLatLng(coord: { latitude?: unknown; longitude?: unknown } | null | undefined): [number, number] | null {
+  if (!coord) return null;
+  if (!isFiniteNumber(coord.latitude) || !isFiniteNumber(coord.longitude)) return null;
+  return [coord.latitude, coord.longitude];
+}
+
+function getSegmentPolylinePoints(seg: Partial<RoutePoint> | null | undefined): [number, number][] {
+  if (!seg || !Array.isArray(seg.points)) return [];
+  return seg.points
+    .map((p) => toLatLng(p))
+    .filter((point): point is [number, number] => point !== null);
+}
+
 // Fix Leaflet default icon issue
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -93,9 +110,9 @@ function ActiveStepPanner({ activeStepIndex, routePoints }: ActiveStepPannerProp
   useEffect(() => {
     if (activeStepIndex >= 0 && routePoints[activeStepIndex]) {
       const step = routePoints[activeStepIndex];
-      const lat = step.start_location.latitude;
-      const lng = step.start_location.longitude;
-      if (lat !== 0 || lng !== 0) {
+      const startCoord = toLatLng(step.start_location);
+      if (startCoord && (startCoord[0] !== 0 || startCoord[1] !== 0)) {
+        const [lat, lng] = startCoord;
         map.panTo([lat, lng]);
       }
     }
@@ -189,9 +206,7 @@ export default function MapCanvas() {
 
   const routePoints = route?.routes?.points ?? [];
 
-  const allPolylinePoints = routePoints.flatMap((seg) =>
-    seg.points.map((p) => [p.latitude, p.longitude] as [number, number])
-  );
+  const allPolylinePoints = routePoints.flatMap((seg) => getSegmentPolylinePoints(seg));
 
   const startIcon = useMemo(() => makeStartIcon(activeField === 'origin'), [activeField]);
   const endIcon = useMemo(() => makeEndIcon(activeField === 'destination'), [activeField]);
@@ -199,13 +214,11 @@ export default function MapCanvas() {
   const originCoord = origin ? ([origin.lat, origin.lng] as [number, number]) : null;
   const destCoord = destination ? ([destination.lat, destination.lng] as [number, number]) : null;
 
-  const startCoord = originCoord ?? (routePoints.length > 0
-    ? ([routePoints[0].start_location.latitude, routePoints[0].start_location.longitude] as [number, number])
-    : null);
+  const startCoord = originCoord
+    ?? (routePoints.length > 0 ? toLatLng(routePoints[0]?.start_location) : null);
 
-  const endCoord = destCoord ?? (routePoints.length > 0
-    ? ([routePoints[routePoints.length - 1].end_location.latitude, routePoints[routePoints.length - 1].end_location.longitude] as [number, number])
-    : null);
+  const endCoord = destCoord
+    ?? (routePoints.length > 0 ? toLatLng(routePoints[routePoints.length - 1]?.end_location) : null);
 
   const showCrosshair = !!activeField;
 
@@ -215,7 +228,7 @@ export default function MapCanvas() {
         center={[40.7128, -74.006]}
         zoom={13}
         style={{ height: '100%', width: '100%' }}
-        zoomControl={true}
+        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -239,14 +252,16 @@ export default function MapCanvas() {
 
         {/* Colored segments by surface */}
         {routePoints.map((seg, idx) => {
-          const segPoints = seg.points.map((p) => [p.latitude, p.longitude] as [number, number]);
+          const segPoints = getSegmentPolylinePoints(seg);
+          if (segPoints.length < 2) return null;
           const isActive = idx === activeStepIndex;
+          const segmentColor = getSurfaceColor(seg.surface);
           return (
             <Polyline
               key={idx}
               positions={segPoints}
               pathOptions={{
-                color: getSurfaceColor(seg.surface),
+                color: isActive ? '#0ea5e9' : segmentColor,
                 weight: isActive ? 7 : 4,
                 opacity: isActive ? 1 : 0.75,
               }}

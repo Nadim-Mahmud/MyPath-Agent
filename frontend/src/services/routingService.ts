@@ -1,6 +1,13 @@
 import axios from 'axios';
 import type { RouteResponse } from '../types/route';
 
+function isRouteResponse(value: unknown): value is RouteResponse {
+  if (!value || typeof value !== 'object') return false;
+  const routes = (value as { routes?: unknown }).routes;
+  if (!routes || typeof routes !== 'object') return false;
+  return Array.isArray((routes as { points?: unknown }).points);
+}
+
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
   headers: {
@@ -18,6 +25,9 @@ export async function fetchRoute(
     const response = await apiClient.get<RouteResponse>('/route/getSingleRoute', {
       params: { srcLat, srcLon, destLat, destLon },
     });
+    if (!isRouteResponse(response.data)) {
+      throw new Error('Routing server returned an invalid response format.');
+    }
     return response.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {

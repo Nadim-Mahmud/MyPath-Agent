@@ -33,14 +33,12 @@ export default function SearchBar() {
   const {
     origin,
     destination,
-    isLoading,
     activeField,
     setOrigin,
     setDestination,
     setRoute,
     setLoading,
     setError,
-    clearRoute,
     setFlyTo,
     setActiveField,
   } = useAppStore();
@@ -53,22 +51,21 @@ export default function SearchBar() {
   const [toOpen, setToOpen] = useState(false);
 
   // Keep store actions in a ref so the auto-fetch effect always uses the latest version
-  const storeRef = useRef({ setLoading, setError, setRoute, setActiveField });
+  const storeRef = useRef({ setLoading, setError, setRoute });
   useEffect(() => {
-    storeRef.current = { setLoading, setError, setRoute, setActiveField };
+    storeRef.current = { setLoading, setError, setRoute };
   });
 
   useEffect(() => { setFromInput(origin?.label ?? ''); }, [origin]);
   useEffect(() => { setToInput(destination?.label ?? ''); }, [destination]);
 
   const doFetch = useCallback(async (o: LocationPoint, d: LocationPoint) => {
-    const { setLoading, setError, setRoute, setActiveField } = storeRef.current;
+    const { setLoading, setError, setRoute } = storeRef.current;
     setLoading(true);
     setError(null);
     try {
       const result = await fetchRoute(o.lat, o.lng, d.lat, d.lng);
       setRoute(result);
-      setActiveField(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch route.');
     } finally {
@@ -148,24 +145,6 @@ export default function SearchBar() {
     setToSuggestions([]);
     setToOpen(false);
     setRoute(null);
-  };
-
-  const handleGetRoute = () => {
-    if (!origin || !destination) {
-      setError('Please set both origin and destination.');
-      return;
-    }
-    doFetch(origin, destination);
-  };
-
-  const handleClear = () => {
-    clearRoute();
-    setFromInput('');
-    setToInput('');
-    setFromSuggestions([]);
-    setToSuggestions([]);
-    setFromOpen(false);
-    setToOpen(false);
   };
 
   return (
@@ -258,32 +237,6 @@ export default function SearchBar() {
               </button>
             )}
           </div>
-        </div>
-
-        <div className="search-actions">
-          <button
-            className="btn btn-primary"
-            onClick={handleGetRoute}
-            disabled={isLoading || !origin || !destination}
-            aria-label="Get accessible route"
-            aria-busy={isLoading}
-          >
-            {isLoading ? (
-              <span className="btn-spinner" aria-hidden="true" />
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            )}
-            {isLoading ? 'Routing…' : 'Get Route'}
-          </button>
-          <button
-            className="btn btn-secondary"
-            onClick={handleClear}
-            aria-label="Clear route and reset"
-          >
-            Clear
-          </button>
         </div>
       </div>
     </div>

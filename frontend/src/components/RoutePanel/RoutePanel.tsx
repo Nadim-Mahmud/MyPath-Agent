@@ -93,7 +93,7 @@ export default function RoutePanel({ onClose }: RoutePanelProps) {
 
   if (!route) return null;
 
-  const points = route.routes?.points ?? [];
+  const points = (route.routes?.points ?? []).filter((step): step is RoutePoint => !!step && typeof step === 'object');
 
   return (
     <div className="route-panel" role="complementary" aria-label="Turn-by-turn directions">
