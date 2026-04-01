@@ -170,10 +170,58 @@
   word-break: break-word;
 }
 
+.chat-bubble p {
+  margin: 0;
+}
+
+.chat-bubble p + p {
+  margin-top: 0.5rem;
+}
+
+.chat-bubble ul,
+.chat-bubble ol {
+  margin: 0.4rem 0 0.2rem 1.1rem;
+  padding: 0;
+}
+
+.chat-bubble li + li {
+  margin-top: 0.2rem;
+}
+
+.chat-bubble a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.chat-bubble code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.9em;
+  background: rgba(127, 127, 127, 0.18);
+  padding: 0.08rem 0.3rem;
+  border-radius: 6px;
+}
+
+.chat-bubble pre {
+  overflow-x: auto;
+  margin: 0.45rem 0 0.2rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(127, 127, 127, 0.16);
+}
+
+.chat-bubble pre code {
+  background: transparent;
+  padding: 0;
+}
+
 .chat-message--user .chat-bubble {
   background: var(--accent);
   color: #fff;
   border-bottom-right-radius: 4px;
+}
+
+.chat-message--user .chat-bubble * {
+  color: #fff;
 }
 
 .chat-message--assistant .chat-bubble {

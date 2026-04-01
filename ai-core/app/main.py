@@ -6,8 +6,8 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
 from app.exceptions import AiCoreError
-from app.models import ChatRequest, ChatResponse
-from app import chat_service, session_store
+from app.models import ChatRequest, ChatResponse, GeocodeRequest, GeocodeResponse
+from app import chat_service, session_store, geocoding_service
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -83,3 +83,25 @@ def delete_session(session_id: str):
     logger.info("Clearing session: session_id=%s", session_id)
     session_store.clear_session(session_id)
     return {"status": "cleared", "session_id": session_id}
+
+
+@app.post("/geocode", response_model=GeocodeResponse)
+async def geocode(req: GeocodeRequest):
+    logger.info(
+        "Geocode request received: query=%s has_bias=%s limit=%d",
+        req.query,
+        req.bias_lat is not None and req.bias_lon is not None,
+        req.limit,
+    )
+    try:
+        results = await geocoding_service.search_places(
+            query=req.query,
+            bias_lat=req.bias_lat,
+            bias_lon=req.bias_lon,
+            limit=req.limit,
+        )
+        logger.info("Geocode succeeded: query=%s results=%d", req.query, len(results))
+        return GeocodeResponse(query=req.query, results=results)
+    except Exception as exc:
+        logger.error("Geocode failed: %s", exc, exc_info=True)
+        return GeocodeResponse(query=req.query, results=[])

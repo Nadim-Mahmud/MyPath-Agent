@@ -1,8 +1,8 @@
 # Stage 1: Build the React app
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 
 # VITE_API_BASE_URL is left empty so all API calls are relative (proxied by nginx)
@@ -16,8 +16,8 @@ RUN npm run build
 # Polling env vars live here so they only apply to this stage, not production
 FROM node:20-alpine AS development
 WORKDIR /app
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 ENV CHOKIDAR_USEPOLLING=true
 ENV WATCHPACK_POLLING=true

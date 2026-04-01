@@ -2,6 +2,8 @@ import json
 import logging
 import pathlib
 import httpx
+from dataclasses import dataclass
+from typing import Any
 
 from app.config import GEMINI_API_KEY, GEMINI_MODEL, GEMINI_BASE_URL, MAX_TOOL_ROUNDS
 from app.exceptions import GeminiError
@@ -11,6 +13,12 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 _SYSTEM_PROMPT = pathlib.Path(__file__).parent.parent / "prompts" / "system_prompt.txt"
+
+
+@dataclass
+class CompletionResult:
+    message: str
+    route_action: dict[str, Any] | None = None
 
 
 def _load_system_prompt() -> str:
@@ -66,13 +74,44 @@ def _extract_function_calls(response: dict) -> list[dict]:
         return []
 
 
-def complete(user_message: str, history: list[dict]) -> str:
+def _build_route_action(
+    route_call_args: dict[str, Any] | None,
+    geocoded_locations: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    if not route_call_args:
+        return None
+
+    try:
+        src_lat = float(route_call_args["src_lat"])
+        src_lng = float(route_call_args["src_lon"])
+        dest_lat = float(route_call_args["dest_lat"])
+        dest_lng = float(route_call_args["dest_lon"])
+    except (KeyError, TypeError, ValueError):
+        return None
+
+    origin_label = None
+    destination_label = None
+    if geocoded_locations:
+        if len(geocoded_locations) >= 1:
+            origin_label = geocoded_locations[0].get("label")
+        if len(geocoded_locations) >= 2:
+            destination_label = geocoded_locations[1].get("label")
+
+    return {
+        "origin": {"lat": src_lat, "lng": src_lng, "label": origin_label},
+        "destination": {"lat": dest_lat, "lng": dest_lng, "label": destination_label},
+    }
+
+
+def complete(user_message: str, history: list[dict]) -> CompletionResult:
     contents = list(history) + [{"role": "user", "parts": [{"text": user_message}]}]
     logger.info(
         "Starting completion: history_messages=%d user_message_chars=%d",
         len(history),
         len(user_message),
     )
+    last_route_call_args: dict[str, Any] | None = None
+    geocoded_locations: list[dict[str, Any]] = []
 
     for round_number in range(1, MAX_TOOL_ROUNDS + 1):
         logger.info("Completion round started: round=%d", round_number)
@@ -82,7 +121,10 @@ def complete(user_message: str, history: list[dict]) -> str:
 
         if not function_calls:
             logger.info("Completion finished without tool calls: round=%d", round_number)
-            return _extract_text(response)
+            return CompletionResult(
+                message=_extract_text(response),
+                route_action=_build_route_action(last_route_call_args, geocoded_locations),
+            )
 
         try:
             model_content = response["candidates"][0]["content"]
@@ -96,10 +138,24 @@ def complete(user_message: str, history: list[dict]) -> str:
             tool_name = fc.get("name", "<unknown>")
             logger.info("Executing tool call: round=%d tool=%s", round_number, tool_name)
             try:
-                result = execute_tool(fc["name"], fc.get("args", {}))
+                tool_args = fc.get("args", {})
+                result = execute_tool(fc["name"], tool_args)
             except Exception as exc:
                 logger.error("Tool '%s' execution failed: %s", fc["name"], exc)
                 result = {"error": "Tool execution failed"}
+
+            if fc.get("name") == "get_route" and isinstance(fc.get("args"), dict):
+                last_route_call_args = fc["args"]
+            if fc.get("name") == "geocode_place" and isinstance(result, dict):
+                top_result = None
+                results = result.get("results")
+                if isinstance(results, list) and results:
+                    first = results[0]
+                    if isinstance(first, dict):
+                        top_result = first
+                if top_result:
+                    geocoded_locations.append(top_result)
+
             tool_response_parts.append({
                 "functionResponse": {
                     "name": fc["name"],
@@ -110,4 +166,7 @@ def complete(user_message: str, history: list[dict]) -> str:
 
     logger.warning("Completion reached max tool rounds: max_rounds=%d", MAX_TOOL_ROUNDS)
     response = _call_gemini(contents)
-    return _extract_text(response)
+    return CompletionResult(
+        message=_extract_text(response),
+        route_action=_build_route_action(last_route_call_args, geocoded_locations),
+    )

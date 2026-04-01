@@ -9,6 +9,10 @@ export interface ChatContext {
 export interface ChatResponse {
   session_id: string;
   message: string;
+  route_action?: {
+    origin: { lat: number; lng: number; label?: string | null };
+    destination: { lat: number; lng: number; label?: string | null };
+  } | null;
 }
 
 export async function sendChat(

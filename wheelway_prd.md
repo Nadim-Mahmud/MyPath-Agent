@@ -210,9 +210,11 @@ The Wheelway frontend delivers a Google Maps-style interactive map experience pu
 
 #### FR-08: Map–Chat Integration
 
-- If the AI response includes a location or route suggestion, display a **"Show on Map"** button
-- Clicking "Show on Map" pans the map to the relevant location and optionally draws a route
+- If the user asks for a route using place names (e.g., "from X to Y"), AI must geocode both places, fetch an accessible route, and automatically render it on the map
+- The app must auto-populate origin and destination fields from AI-resolved locations and trigger routing without requiring a separate "Show on Map" click
 - Chat context is passed to the AI: current map center, active route (if any), user location
+- If a route is successfully computed and rendered, the chat message must be positive and confirm the route is ready, regardless of intermediate failures or Gemini response quirks
+- The backend automatically tries multiple geocoding candidates to handle full addresses (e.g., "Roberts Apartments at 211 North Beech Street") and returns the first successful match
 
 ---
 

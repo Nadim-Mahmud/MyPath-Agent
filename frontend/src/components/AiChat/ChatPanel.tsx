@@ -1,9 +1,38 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import './AiChat.css';
 import { useAppStore } from '../../store/useAppStore';
 import { sendChat } from '../../services/chatService';
 
 const MAX_CHARS = 500;
+const CURRENT_LOCATION_ROUTE_INTENT = /(?:my|current)\s+location|from\s+here|route\s+me\s+to|directions\s+to|navigate\s+to/i;
+
+async function reverseGeocodeLabel(lat: number, lng: number): Promise<string> {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+      { headers: { 'User-Agent': 'Wheelway/1.0 (wheelchair-navigation)' } },
+    );
+    const data = await response.json();
+    if (typeof data?.display_name === 'string' && data.display_name.trim()) {
+      return data.display_name.trim();
+    }
+  } catch {
+    // Fallback handled below
+  }
+  return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+}
+
+async function resolveRouteLabel(
+  point: { lat: number; lng: number; label?: string | null },
+  fallbackText: string,
+): Promise<string> {
+  const provided = point.label?.trim();
+  if (provided) return provided;
+  const resolved = await reverseGeocodeLabel(point.lat, point.lng);
+  return resolved || fallbackText;
+}
 
 export default function ChatPanel() {
   const {
@@ -19,6 +48,10 @@ export default function ChatPanel() {
     origin,
     destination,
     userPosition,
+    setOrigin,
+    setDestination,
+    setFlyTo,
+    setError,
   } = useAppStore();
 
   const [input, setInput] = useState('');
@@ -79,8 +112,39 @@ export default function ChatPanel() {
 
     try {
       const context = await buildContext();
+      const wantsCurrentLocationRoute = CURRENT_LOCATION_ROUTE_INTENT.test(text);
+      if (wantsCurrentLocationRoute && !context.user_location) {
+        setError('Location is required for current-location routing. Enable GPS permission and try again.');
+        addChatMessage({
+          role: 'assistant',
+          content: 'Please enable location access so I can route from your current location.',
+        });
+        return;
+      }
+
       const response = await sendChat(chatSessionId, text, context);
       addChatMessage({ role: 'assistant', content: response.message });
+
+      if (response.route_action) {
+        const nextOrigin = response.route_action.origin;
+        const nextDestination = response.route_action.destination;
+        const [originLabel, destinationLabel] = await Promise.all([
+          resolveRouteLabel(nextOrigin, 'AI selected origin'),
+          resolveRouteLabel(nextDestination, 'AI selected destination'),
+        ]);
+
+        setOrigin({
+          lat: nextOrigin.lat,
+          lng: nextOrigin.lng,
+          label: originLabel,
+        });
+        setDestination({
+          lat: nextDestination.lat,
+          lng: nextDestination.lng,
+          label: destinationLabel,
+        });
+        setFlyTo({ lat: nextOrigin.lat, lng: nextOrigin.lng, zoom: 14 });
+      }
     } catch (err) {
       addChatMessage({
         role: 'assistant',
@@ -89,7 +153,18 @@ export default function ChatPanel() {
     } finally {
       setChatLoading(false);
     }
-  }, [input, isChatLoading, chatSessionId, buildContext, addChatMessage, setChatLoading]);
+  }, [
+    input,
+    isChatLoading,
+    chatSessionId,
+    buildContext,
+    addChatMessage,
+    setChatLoading,
+    setOrigin,
+    setDestination,
+    setFlyTo,
+    setError,
+  ]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -165,7 +240,9 @@ export default function ChatPanel() {
                 className={`chat-message chat-message--${msg.role}`}
                 aria-label={`${msg.role === 'user' ? 'You' : 'Wheelway AI'}: ${msg.content}`}
               >
-                <div className="chat-bubble">{msg.content}</div>
+                <div className="chat-bubble">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                </div>
               </div>
             ))}
             {isChatLoading && (

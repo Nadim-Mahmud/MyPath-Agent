@@ -4,18 +4,52 @@ import { useAppStore } from '../../store/useAppStore';
 import { fetchRoute } from '../../services/routingService';
 import type { LocationPoint } from '../../store/useAppStore';
 
-interface NominatimResult {
-  place_id: number;
-  display_name: string;
-  lat: string;
-  lon: string;
+const AI_CORE_URL = import.meta.env.VITE_AI_CORE_URL || 'http://localhost:8000';
+
+interface GeocodeResult {
+  label: string;
+  lat: string | number;
+  lon: string | number;
 }
 
-async function nominatimSearch(query: string): Promise<NominatimResult[]> {
+async function searchPlaces(
+  query: string,
+  biasLat?: number,
+  biasLon?: number,
+): Promise<GeocodeResult[]> {
   if (!query.trim()) return [];
-  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`;
-  const resp = await fetch(url, { headers: { 'User-Agent': 'Wheelway/1.0 (wheelchair-navigation)' } });
-  return resp.json();
+
+  const requestBody: Record<string, unknown> = {
+    query,
+    limit: 5,
+  };
+  if (biasLat !== undefined && biasLon !== undefined) {
+    requestBody.bias_lat = biasLat;
+    requestBody.bias_lon = biasLon;
+  }
+
+  try {
+    const response = await fetch(`${AI_CORE_URL}/geocode`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      console.error('Geocode API error:', response.status);
+      return [];
+    }
+
+    const data = await response.json();
+    return (data.results || []).map((r: Record<string, unknown>) => ({
+      label: String(r.label || query),
+      lat: String(r.lat),
+      lon: String(r.lng || r.lon),
+    }));
+  } catch (err) {
+    console.error('Geocode search failed:', err);
+    return [];
+  }
 }
 
 function useDebounce<T extends (...args: Parameters<T>) => void>(fn: T, delay: number): T {
@@ -46,8 +80,8 @@ export default function SearchBar() {
 
   const [fromInput, setFromInput] = useState('');
   const [toInput, setToInput] = useState('');
-  const [fromSuggestions, setFromSuggestions] = useState<NominatimResult[]>([]);
-  const [toSuggestions, setToSuggestions] = useState<NominatimResult[]>([]);
+  const [fromSuggestions, setFromSuggestions] = useState<GeocodeResult[]>([]);
+  const [toSuggestions, setToSuggestions] = useState<GeocodeResult[]>([]);
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
   const [gpsLoading, setGpsLoading] = useState<'origin' | 'destination' | null>(null);
@@ -83,17 +117,23 @@ export default function SearchBar() {
     }
   }, [origin, destination, doFetch]);
 
-  const searchFrom = useCallback(async (q: string) => {
-    const results = await nominatimSearch(q);
-    setFromSuggestions(results);
-    setFromOpen(results.length > 0);
-  }, []);
+  const searchFrom = useCallback(
+    async (q: string) => {
+      const results = await searchPlaces(q, origin?.lat, origin?.lng);
+      setFromSuggestions(results);
+      setFromOpen(results.length > 0);
+    },
+    [origin]
+  );
 
-  const searchTo = useCallback(async (q: string) => {
-    const results = await nominatimSearch(q);
-    setToSuggestions(results);
-    setToOpen(results.length > 0);
-  }, []);
+  const searchTo = useCallback(
+    async (q: string) => {
+      const results = await searchPlaces(q, destination?.lat, destination?.lng);
+      setToSuggestions(results);
+      setToOpen(results.length > 0);
+    },
+    [destination]
+  );
 
   const debouncedSearchFrom = useDebounce(searchFrom, 300);
   const debouncedSearchTo = useDebounce(searchTo, 300);
@@ -114,20 +154,20 @@ export default function SearchBar() {
     else { setToSuggestions([]); setToOpen(false); }
   };
 
-  const selectFrom = (r: NominatimResult) => {
-    const newOrigin: LocationPoint = { lat: parseFloat(r.lat), lng: parseFloat(r.lon), label: r.display_name };
+  const selectFrom = (r: GeocodeResult) => {
+    const newOrigin: LocationPoint = { lat: parseFloat(String(r.lat)), lng: parseFloat(String(r.lon)), label: r.label };
     setOrigin(newOrigin);
     setFlyTo({ lat: newOrigin.lat, lng: newOrigin.lng });
-    setFromInput(r.display_name);
+    setFromInput(r.label);
     setFromOpen(false);
     setFromSuggestions([]);
   };
 
-  const selectTo = (r: NominatimResult) => {
-    const newDest: LocationPoint = { lat: parseFloat(r.lat), lng: parseFloat(r.lon), label: r.display_name };
+  const selectTo = (r: GeocodeResult) => {
+    const newDest: LocationPoint = { lat: parseFloat(String(r.lat)), lng: parseFloat(String(r.lon)), label: r.label };
     setDestination(newDest);
     setFlyTo({ lat: newDest.lat, lng: newDest.lng });
-    setToInput(r.display_name);
+    setToInput(r.label);
     setToOpen(false);
     setToSuggestions([]);
   };
@@ -234,9 +274,9 @@ export default function SearchBar() {
               />
               {fromOpen && fromSuggestions.length > 0 && (
                 <ul className="suggestions-list" role="listbox" aria-label="Origin suggestions">
-                  {fromSuggestions.map((r) => (
-                    <li key={r.place_id} role="option" className="suggestion-item" onMouseDown={() => selectFrom(r)}>
-                      {r.display_name}
+                  {fromSuggestions.map((r, idx) => (
+                    <li key={idx} role="option" className="suggestion-item" onMouseDown={() => selectFrom(r)}>
+                      {r.label}
                     </li>
                   ))}
                 </ul>
@@ -285,9 +325,9 @@ export default function SearchBar() {
               />
               {toOpen && toSuggestions.length > 0 && (
                 <ul className="suggestions-list" role="listbox" aria-label="Destination suggestions">
-                  {toSuggestions.map((r) => (
-                    <li key={r.place_id} role="option" className="suggestion-item" onMouseDown={() => selectTo(r)}>
-                      {r.display_name}
+                  {toSuggestions.map((r, idx) => (
+                    <li key={idx} role="option" className="suggestion-item" onMouseDown={() => selectTo(r)}>
+                      {r.label}
                     </li>
                   ))}
                 </ul>

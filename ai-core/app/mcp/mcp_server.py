@@ -1,7 +1,8 @@
-from app.mcp.tools import get_route, report_obstacle, get_obstacles
+from app.mcp.tools import get_route, report_obstacle, get_obstacles, geocode_place
 
 _TOOLS = {
     "get_route":        get_route,
+    "geocode_place":    geocode_place,
     "report_obstacle":  report_obstacle,
     "get_obstacles":    get_obstacles,
 }

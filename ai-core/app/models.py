@@ -20,6 +20,36 @@ class ChatRequest(BaseModel):
     context: Optional[ChatContext] = None
 
 
+class RouteLocation(BaseModel):
+    lat: float
+    lng: float
+    label: Optional[str] = None
+
+
+class RouteAction(BaseModel):
+    origin: RouteLocation
+    destination: RouteLocation
+
+
 class ChatResponse(BaseModel):
     session_id: str
     message: str
+    route_action: Optional[RouteAction] = None
+
+
+class GeocodeResult(BaseModel):
+    label: str
+    lat: float
+    lng: float
+
+
+class GeocodeRequest(BaseModel):
+    query: str
+    bias_lat: Optional[float] = None
+    bias_lon: Optional[float] = None
+    limit: int = 5
+
+
+class GeocodeResponse(BaseModel):
+    query: str
+    results: list[GeocodeResult]
