@@ -39,6 +39,7 @@ interface AppState {
   destination: LocationPoint | null;
   flyTo: FlyToTarget | null;
   activeField: 'origin' | 'destination' | null;
+  userPosition: [number, number] | null;
 
   setRoute: (route: RouteResponse | null) => void;
   setActiveStep: (index: number) => void;
@@ -55,6 +56,7 @@ interface AppState {
   clearRoute: () => void;
   setFlyTo: (target: FlyToTarget | null) => void;
   setActiveField: (field: 'origin' | 'destination' | null) => void;
+  setUserPosition: (pos: [number, number] | null) => void;
 }
 
 function newSessionId(): string {
@@ -80,6 +82,7 @@ export const useAppStore = create<AppState>((set) => ({
   destination: null,
   flyTo: null,
   activeField: 'origin',
+  userPosition: null,
 
   setRoute: (route) => set({ route, activeStepIndex: -1 }),
   setActiveStep: (index) => set({ activeStepIndex: index }),
@@ -111,4 +114,5 @@ export const useAppStore = create<AppState>((set) => ({
     }),
   setFlyTo: (flyTo) => set({ flyTo }),
   setActiveField: (activeField) => set({ activeField }),
+  setUserPosition: (userPosition) => set({ userPosition }),
 }));

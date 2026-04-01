@@ -41,6 +41,7 @@ export default function SearchBar() {
     setError,
     setFlyTo,
     setActiveField,
+    userPosition,
   } = useAppStore();
 
   const [fromInput, setFromInput] = useState('');
@@ -151,6 +152,16 @@ export default function SearchBar() {
 
   const setGpsLocation = useCallback((field: 'origin' | 'destination') => {
     setActiveField(field);
+    if (userPosition) {
+      const point: LocationPoint = { lat: userPosition[0], lng: userPosition[1], label: 'My Location' };
+      if (field === 'origin') {
+        setOrigin(point);
+      } else {
+        setDestination(point);
+      }
+      setFlyTo({ lat: point.lat, lng: point.lng });
+      return;
+    }
     if (!navigator.geolocation) {
       setError('Geolocation is not supported by your browser.');
       return;
@@ -184,7 +195,7 @@ export default function SearchBar() {
       },
       { timeout: 10000, enableHighAccuracy: false, maximumAge: 60000 }
     );
-  }, [setOrigin, setDestination, setFlyTo, setError, setActiveField]);
+  }, [userPosition, setOrigin, setDestination, setFlyTo, setError, setActiveField]);
 
   return (
     <div className="search-bar-container" role="search" aria-label="Route search">

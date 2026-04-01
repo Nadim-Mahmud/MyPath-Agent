@@ -156,12 +156,12 @@ export default function MapCanvas() {
     setOrigin, setDestination,
     flyTo, setFlyTo,
     activeField,
+    userPosition, setUserPosition,
   } = useAppStore();
 
   const mapRef = useRef<L.Map | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const hasCenteredRef = useRef(false);
-  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
   const [gpsPermission, setGpsPermission] = useState<'pending' | 'granted' | 'denied' | 'unsupported'>('pending');
   const [locating, setLocating] = useState(false);
   const [locateError, setLocateError] = useState<string | null>(null);

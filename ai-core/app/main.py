@@ -48,7 +48,13 @@ def health():
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
-    return chat_service.chat(req)
+    try:
+        return chat_service.chat(req)
+    except AiCoreError:
+        raise
+    except Exception as exc:
+        logger.error("Unexpected error in /chat: %s", exc, exc_info=True)
+        raise AiCoreError(f"Unexpected error: {exc}") from exc
 
 
 @app.delete("/session/{session_id}")

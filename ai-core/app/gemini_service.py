@@ -30,7 +30,11 @@ def _call_gemini(contents: list[dict]) -> dict:
         with httpx.Client(timeout=60) as client:
             resp = client.post(url, json=body)
             resp.raise_for_status()
-            return resp.json()
+            try:
+                return resp.json()
+            except ValueError as exc:
+                logger.error("Gemini API returned non-JSON response: %s", exc)
+                raise GeminiError("The AI service returned an unreadable response. Please try again.")
     except httpx.TimeoutException:
         logger.error("Gemini API request timed out")
         raise GeminiError("The AI service took too long to respond. Please try again.")
@@ -69,7 +73,11 @@ def complete(user_message: str, history: list[dict]) -> str:
         if not function_calls:
             return _extract_text(response)
 
-        model_content = response["candidates"][0]["content"]
+        try:
+            model_content = response["candidates"][0]["content"]
+        except (KeyError, IndexError) as exc:
+            logger.error("Unexpected Gemini response structure in tool loop: %s", exc)
+            raise GeminiError("Received an unexpected response from the AI service.")
         contents.append(model_content)
 
         tool_response_parts = []
