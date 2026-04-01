@@ -205,6 +205,7 @@ The Wheelway frontend delivers a Google Maps-style interactive map experience pu
 
 - Text input field with placeholder: _"Ask about accessible routes, ramps, elevators..."_
 - Send on Enter key or click of Send button
+- Voice input button using browser speech-to-text: user can tap mic, speak a prompt, and the recognized text is sent through the same AI chat pipeline
 - Input disabled while AI is generating a response (spinner shown)
 - Character limit: 500 characters with live counter
 
@@ -215,6 +216,14 @@ The Wheelway frontend delivers a Google Maps-style interactive map experience pu
 - Chat context is passed to the AI: current map center, active route (if any), user location
 - If a route is successfully computed and rendered, the chat message must be positive and confirm the route is ready, regardless of intermediate failures or Gemini response quirks
 - The backend automatically tries multiple geocoding candidates to handle full addresses (e.g., "Roberts Apartments at 211 North Beech Street") and returns the first successful match
+- For route accessibility-status questions, AI receives a compact route summary only (per segment: `surface`, `distance`, `duration`, `maneuver`, `incline`) and excludes start/end coordinates and route polyline point lists to reduce token usage
+- AI inference uses a short rolling history window and prioritizes the latest user query; stale context blocks from older turns are stripped before model calls to reduce history interference
+- **Retry Recovery Strategy**: When a user provides more specific location details after a previous failed geocoding attempt (e.g., retrying with full address "McVey Data Science Building at 105 Tallawanda Rd"), the system:
+  - Detects the retry via history analysis (identifies prior negative geocoding message + current location request)
+  - Strips the previous failed geocoding message from chat history to prevent negative anchoring
+  - Uses increased geocoding candidate limit (10 instead of 5) for full addresses (detected by presence of number + street keywords)
+  - Never assumes prior inability to find a location precludes success with more specific details
+  - Instructs the model: "Previously failed lookups do not preclude success with a more specific address"
 
 ---
 
@@ -377,12 +386,13 @@ In client applications, `user_location` should be auto-populated from browser/ap
 
 **MCP Tools:**
 
-| Tool Name         | Description                                                | Calls                       |
-| ----------------- | ---------------------------------------------------------- | --------------------------- |
-| `get_route`       | Generate a wheelchair-accessible route between two points  | `GET /route/getSingleRoute` |
-| `report_obstacle` | Report an accessibility obstacle at a given location       | `POST /api/v1/obstacles`    |
-| `get_obstacles`   | Retrieve known obstacles near a location                   | `GET /api/v1/obstacles`     |
-| `get_map_context` | Return current map center, active route, and user location | Internal session state      |
+| Tool Name                  | Description                                                              | Calls                          |
+| -------------------------- | ------------------------------------------------------------------------ | ------------------------------ |
+| `get_route`                | Generate a wheelchair-accessible route between two points                | `GET /route/getSingleRoute`    |
+| `report_obstacle`          | Report an accessibility obstacle at a given location                     | `POST /api/v1/obstacles`       |
+| `get_obstacles`            | Retrieve known obstacles near a location                                 | `GET /api/v1/obstacles`        |
+| `get_map_context`          | Return current map center, active route, and user location               | Internal session state         |
+| `get_place_accessibility`  | Look up wheelchair accessibility tags (entrance, ramp, door) for a named building via OSM Nominatim + Overpass | OSM Nominatim + Overpass API |
 
 #### FR-AI-05: System Prompt & Persona
 
@@ -543,7 +553,7 @@ wheelway/
         ├── gemini_service.py        # Agentic LLM loop (Google Gemini 2.0 Flash)
         ├── chat_service.py          # Session management, request orchestration
         ├── mcp/                     # MCP server + tool interface
-        │   └── tools/               # get_route.py, report_obstacle.py, get_obstacles.py
+        │   └── tools/               # get_route.py, report_obstacle.py, get_obstacles.py, get_place_accessibility.py
         ├── models/                  # Pydantic models: ChatRequest, ChatResponse, gemini DTOs
         ├── utils/                   # session_store.py (in-memory, bounded)
         └── prompts/                 # system_prompt.txt

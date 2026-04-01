@@ -133,3 +133,96 @@ async def search_places(
 
     logger.info("Geocoded '%s' with bias(%s,%s): returned %d candidates", query, bias_lat, bias_lon, len(results))
     return results
+
+
+async def search_place_with_osm_meta(
+    query: str,
+    bias_lat: float | None = None,
+    bias_lon: float | None = None,
+) -> dict | None:
+    """
+    Like search_places() but returns the top result with full OSM metadata
+    (osm_id, osm_type, extratags) needed for Overpass queries.
+
+    Tries the query as-is, then strips institution words from a comma-separated
+    name (e.g. "Benton Hall, Miami University, Ohio" → "Benton Hall, Ohio")
+    before giving up.
+
+    Returns a dict with keys: label, lat, lng, osm_id, osm_type, extratags
+    or None if nothing was found.
+    """
+    import re
+    _INSTITUTION_RE = re.compile(
+        r"\b(university|college|campus|institute|school)\b", re.IGNORECASE
+    )
+
+    async def _raw_search(q: str) -> dict | None:
+        params = {
+            "q": q,
+            "format": "json",
+            "limit": 5,
+            "extratags": 1,
+        }
+        if bias_lat is not None and bias_lon is not None:
+            box_delta = 0.45
+            params["viewbox"] = (
+                f"{bias_lon - box_delta},{bias_lat - box_delta},"
+                f"{bias_lon + box_delta},{bias_lat + box_delta}"
+            )
+            params["bounded"] = "0"
+
+        headers = {"User-Agent": "Wheelway/1.0 (wheelchair-navigation-ai)"}
+        try:
+            async with httpx.AsyncClient(timeout=20) as client:
+                resp = await client.get(
+                    "https://nominatim.openstreetmap.org/search", params=params, headers=headers
+                )
+                resp.raise_for_status()
+                raw = resp.json()
+        except Exception as exc:
+            logger.error("Nominatim raw search failed: %s", exc)
+            return None
+
+        if not isinstance(raw, list) or not raw:
+            return None
+
+        # Score using existing logic, pick best
+        scored = []
+        for item in raw:
+            if not isinstance(item, dict):
+                continue
+            score, _ = _score_candidate(item, q, bias_lat, bias_lon)
+            scored.append((score, item))
+        scored.sort(key=lambda x: x[0], reverse=True)
+        best = scored[0][1]
+
+        return {
+            "label": str(best.get("display_name", q)),
+            "lat": float(best["lat"]),
+            "lng": float(best["lon"]),
+            "osm_id": int(best.get("osm_id", 0)),
+            "osm_type": str(best.get("osm_type", "way")),
+            "extratags": best.get("extratags") or {},
+        }
+
+    # Attempt 1: query as-is
+    result = await _raw_search(query)
+    if result:
+        logger.info("OSM meta search succeeded on first attempt: query=%r", query)
+        return result
+
+    # Attempt 2: strip institution-name segments from comma-separated query
+    parts = [p.strip() for p in query.split(",")]
+    if len(parts) > 1:
+        filtered = [parts[0]] + [
+            p for p in parts[1:] if not _INSTITUTION_RE.search(p.strip())
+        ]
+        simplified = ", ".join(filtered)
+        if simplified != query:
+            result = await _raw_search(simplified)
+            if result:
+                logger.info("OSM meta search succeeded on simplified query: query=%r", simplified)
+                return result
+
+    logger.warning("OSM meta search found nothing: query=%r", query)
+    return None

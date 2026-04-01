@@ -333,6 +333,37 @@
   transition: background 0.2s, opacity 0.2s;
 }
 
+.chat-mic-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.chat-mic-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.chat-mic-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chat-mic-btn--active {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: #fff;
+}
+
 .chat-send-btn--active {
   background: var(--accent);
   border-color: var(--accent);

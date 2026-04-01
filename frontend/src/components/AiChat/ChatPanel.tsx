@@ -8,6 +8,41 @@ import { sendChat } from '../../services/chatService';
 const MAX_CHARS = 500;
 const CURRENT_LOCATION_ROUTE_INTENT = /(?:my|current)\s+location|from\s+here|route\s+me\s+to|directions\s+to|navigate\s+to/i;
 
+type SpeechRecognitionCtor = new () => SpeechRecognition;
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+interface SpeechRecognitionEvent {
+  resultIndex: number;
+  results: {
+    length: number;
+    [index: number]: {
+      isFinal: boolean;
+      [index: number]: { transcript: string };
+    };
+  };
+}
+
+interface SpeechRecognitionErrorEvent {
+  error: string;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition?: SpeechRecognitionCtor;
+    webkitSpeechRecognition?: SpeechRecognitionCtor;
+  }
+}
+
 async function reverseGeocodeLabel(lat: number, lng: number): Promise<string> {
   try {
     const response = await fetch(
@@ -55,8 +90,17 @@ export default function ChatPanel() {
   } = useAppStore();
 
   const [input, setInput] = useState('');
+  const [isListening, setIsListening] = useState(false);
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const speechRef = useRef<SpeechRecognition | null>(null);
+
+  const stopListening = useCallback(() => {
+    if (speechRef.current) {
+      speechRef.current.stop();
+    }
+    setIsListening(false);
+  }, []);
 
   useEffect(() => {
     if (bodyRef.current) {
@@ -102,8 +146,8 @@ export default function ChatPanel() {
     };
   }, [resolveUserLocation, route, origin, destination]);
 
-  const handleSend = useCallback(async () => {
-    const text = input.trim();
+  const sendMessage = useCallback(async (rawText: string) => {
+    const text = rawText.trim();
     if (!text || isChatLoading) return;
 
     setInput('');
@@ -166,6 +210,74 @@ export default function ChatPanel() {
     setError,
   ]);
 
+  const handleSend = useCallback(async () => {
+    await sendMessage(input);
+  }, [input, sendMessage]);
+
+  const handleVoiceInput = useCallback(() => {
+    if (isChatLoading) return;
+    if (isListening) {
+      stopListening();
+      return;
+    }
+
+    const RecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!RecognitionCtor) {
+      setError('Speech recognition is not supported in this browser.');
+      return;
+    }
+
+    const recognition = new RecognitionCtor();
+    speechRef.current = recognition;
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = navigator.language || 'en-US';
+
+    recognition.onresult = (event) => {
+      let finalText = '';
+      let interimText = '';
+
+      for (let i = event.resultIndex; i < event.results.length; i += 1) {
+        const transcript = event.results[i][0]?.transcript ?? '';
+        if (event.results[i].isFinal) {
+          finalText += transcript;
+        } else {
+          interimText += transcript;
+        }
+      }
+
+      const nextText = (finalText || interimText).trim();
+      if (nextText) {
+        setInput(nextText.slice(0, MAX_CHARS));
+      }
+
+      if (finalText.trim()) {
+        stopListening();
+        void sendMessage(finalText.slice(0, MAX_CHARS));
+      }
+    };
+
+    recognition.onerror = () => {
+      setError('Could not capture voice input. Please try again.');
+      stopListening();
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      speechRef.current = null;
+    };
+
+    try {
+      recognition.start();
+      setIsListening(true);
+    } catch {
+      setError('Could not start voice input. Please try again.');
+      stopListening();
+    }
+  }, [isChatLoading, isListening, sendMessage, setError, stopListening]);
+
+  useEffect(() => () => stopListening(), [stopListening]);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -186,7 +298,7 @@ export default function ChatPanel() {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
-          <span>Wheelway AI</span>
+          <span>MyPath AI</span>
         </div>
         <div className="chat-header-actions">
           {chatMessages.length > 0 && (
@@ -226,7 +338,7 @@ export default function ChatPanel() {
                 <circle cx="15" cy="19" r="2"/>
               </svg>
             </div>
-            <p className="chat-empty-title">Ask Wheelway AI</p>
+            <p className="chat-empty-title">Ask MyPath AI</p>
             <p className="chat-empty-hint">
               Try: <em>"Find me an accessible route to Central Park"</em> or{' '}
               <em>"Are there ramps near my location?"</em>
@@ -238,7 +350,7 @@ export default function ChatPanel() {
               <div
                 key={i}
                 className={`chat-message chat-message--${msg.role}`}
-                aria-label={`${msg.role === 'user' ? 'You' : 'Wheelway AI'}: ${msg.content}`}
+                aria-label={`${msg.role === 'user' ? 'You' : 'MyPath AI'}: ${msg.content}`}
               >
                 <div className="chat-bubble">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
@@ -246,7 +358,7 @@ export default function ChatPanel() {
               </div>
             ))}
             {isChatLoading && (
-              <div className="chat-message chat-message--assistant" aria-label="Wheelway AI is typing">
+              <div className="chat-message chat-message--assistant" aria-label="MyPath AI is typing">
                 <div className="chat-bubble chat-bubble--typing" aria-hidden="true">
                   <span /><span /><span />
                 </div>
@@ -278,6 +390,20 @@ export default function ChatPanel() {
             </span>
           )}
         </div>
+        <button
+          className={`chat-mic-btn${isListening ? ' chat-mic-btn--active' : ''}`}
+          onClick={handleVoiceInput}
+          disabled={isChatLoading}
+          aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
+          title={isListening ? 'Stop voice input' : 'Voice input'}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 1 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </button>
         <button
           className={`chat-send-btn${!isChatLoading && input.trim() ? ' chat-send-btn--active' : ''}`}
           onClick={handleSend}
