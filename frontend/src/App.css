@@ -61,30 +61,31 @@
 /* Reopen route panel button */
 .reopen-panel-btn {
   position: absolute;
-  top: 50%;
+  top: 16px;
   left: 16px;
-  transform: translateY(-50%);
-  z-index: 950;
+  z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 16px;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 14px;
   height: 44px;
   background: var(--bg-primary);
   border: 1px solid var(--border);
-  border-radius: 22px;
+  border-radius: 10px;
   cursor: pointer;
   color: var(--text-primary);
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .reopen-panel-btn:hover {
   background: var(--bg-secondary);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
 }
 
 /* Error toast popup */
@@ -149,9 +150,7 @@
   }
 
   .reopen-panel-btn {
-    top: auto;
-    bottom: 160px;
-    left: 16px;
-    transform: none;
+    top: 8px;
+    left: 8px;
   }
 }
