@@ -7,6 +7,9 @@
       "Bash(cp /Users/nadim/MyFiles/vscode/wheel-route/routing-server/gradlew .)",
       "Bash(cp /Users/nadim/MyFiles/vscode/wheel-route/routing-server/gradlew.bat .)",
       "Bash(docker compose:*)"
+    ],
+    "additionalDirectories": [
+      "/Users/nadim/MyFiles/vscode/wheel-route/docs"
     ]
   }
 }

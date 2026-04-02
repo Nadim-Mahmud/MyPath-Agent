@@ -1,60 +1,85 @@
-import logging
-import asyncio
+"""MCP tool: resolve a place name into coordinates via Nominatim geocoding."""
 
-from app.geocoding_service import search_places
+from __future__ import annotations
+
+import asyncio
+import logging
+from typing import TYPE_CHECKING
+
+from app.constants import TOOL_GEOCODE_PLACE
+from app.mcp.base_tool import BaseTool
+
+if TYPE_CHECKING:
+    from app.services.geocoding_service import GeocodingService
 
 logger = logging.getLogger(__name__)
 
-
-DECLARATION = {
-    "name": "geocode_place",
-    "description": "Resolve a place name into latitude/longitude coordinates with context bias.",
-    "parameters": {
-        "type": "OBJECT",
-        "properties": {
-            "query": {"type": "STRING", "description": "Place name or address to search"},
-            "limit": {"type": "NUMBER", "description": "Maximum number of matches (default 3)"},
-            "bias_lat": {"type": "NUMBER", "description": "Latitude to bias search toward (optional)"},
-            "bias_lon": {"type": "NUMBER", "description": "Longitude to bias search toward (optional)"},
-        },
-        "required": ["query"],
-    },
-}
+_DEFAULT_LIMIT: int = 3
+_MIN_LIMIT: int = 1
+_MAX_LIMIT: int = 5
 
 
-def execute(args: dict) -> dict:
-    query = str(args.get("query", "")).strip()
-    if not query:
-        return {"error": "Missing place query."}
+class GeocodePlace(BaseTool):
+    """Resolve a place name or address into latitude/longitude coordinates."""
 
-    requested_limit = args.get("limit", 3)
-    try:
-        limit = max(1, min(int(requested_limit), 5))
-    except (TypeError, ValueError):
-        limit = 3
+    def __init__(self, geocoding_service: "GeocodingService") -> None:
+        self._geocoding = geocoding_service
 
-    bias_lat = None
-    bias_lon = None
-    try:
-        if "bias_lat" in args:
-            bias_lat = float(args["bias_lat"])
-        if "bias_lon" in args:
-            bias_lon = float(args["bias_lon"])
-    except (TypeError, ValueError):
-        pass
+    @property
+    def name(self) -> str:
+        return TOOL_GEOCODE_PLACE
 
-    try:
-        results = asyncio.run(
-            search_places(query=query, bias_lat=bias_lat, bias_lon=bias_lon, limit=limit)
-        )
-    except Exception as exc:
-        logger.error("Geocoding request failed: %s", exc)
-        return {"error": "Could not resolve that place right now."}
+    @property
+    def declaration(self) -> dict:
+        return {
+            "name": self.name,
+            "description": "Resolve a place name into latitude/longitude coordinates with context bias.",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "query":    {"type": "STRING", "description": "Place name or address to search"},
+                    "limit":    {"type": "NUMBER", "description": "Maximum number of matches (default 3)"},
+                    "bias_lat": {"type": "NUMBER", "description": "Latitude to bias search toward (optional)"},
+                    "bias_lon": {"type": "NUMBER", "description": "Longitude to bias search toward (optional)"},
+                },
+                "required": ["query"],
+            },
+        }
 
-    if not results:
-        return {"error": f"No location found for '{query}'."}
+    def execute(self, args: dict) -> dict:
+        query = str(args.get("query", "")).strip()
+        if not query:
+            return {"error": "Missing place query."}
 
-    return {
-        "query": query,
-        "results": results,
-    }
+        try:
+            limit = max(_MIN_LIMIT, min(int(args.get("limit", _DEFAULT_LIMIT)), _MAX_LIMIT))
+        except (TypeError, ValueError):
+            limit = _DEFAULT_LIMIT
+
+        bias_lat: float | None = None
+        bias_lon: float | None = None
+        try:
+            if "bias_lat" in args:
+                bias_lat = float(args["bias_lat"])
+            if "bias_lon" in args:
+                bias_lon = float(args["bias_lon"])
+        except (TypeError, ValueError):
+            pass
+
+        try:
+            results = asyncio.run(
+                self._geocoding.search_places(
+                    query=query,
+                    bias_lat=bias_lat,
+                    bias_lon=bias_lon,
+                    limit=limit,
+                )
+            )
+        except Exception as exc:
+            logger.error("Geocoding request failed: %s", exc)
+            return {"error": "Could not resolve that place right now."}
+
+        if not results:
+            return {"error": f"No location found for '{query}'."}
+
+        return {"query": query, "results": results}
