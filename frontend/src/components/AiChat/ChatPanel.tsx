@@ -87,6 +87,9 @@ export default function ChatPanel() {
     setDestination,
     setFlyTo,
     setError,
+    setMapPins,
+    clearMapPins,
+    clearRoute,
   } = useAppStore();
 
   const [input, setInput] = useState('');
@@ -170,6 +173,7 @@ export default function ChatPanel() {
       addChatMessage({ role: 'assistant', content: response.message });
 
       if (response.route_action) {
+        clearMapPins();
         const nextOrigin = response.route_action.origin;
         const nextDestination = response.route_action.destination;
         const [originLabel, destinationLabel] = await Promise.all([
@@ -188,6 +192,12 @@ export default function ChatPanel() {
           label: destinationLabel,
         });
         setFlyTo({ lat: nextOrigin.lat, lng: nextOrigin.lng, zoom: 14 });
+      }
+
+      if (response.map_pins && response.map_pins.length > 0) {
+        clearRoute();
+        setMapPins(response.map_pins);
+        setFlyTo({ lat: response.map_pins[0].lat, lng: response.map_pins[0].lng, zoom: 18 });
       }
     } catch (err) {
       addChatMessage({
@@ -208,6 +218,9 @@ export default function ChatPanel() {
     setDestination,
     setFlyTo,
     setError,
+    setMapPins,
+    clearMapPins,
+    clearRoute,
   ]);
 
   const handleSend = useCallback(async () => {

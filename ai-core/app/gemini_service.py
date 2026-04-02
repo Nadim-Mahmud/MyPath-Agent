@@ -19,6 +19,7 @@ _SYSTEM_PROMPT = pathlib.Path(__file__).parent.parent / "prompts" / "system_prom
 class CompletionResult:
     message: str
     route_action: dict[str, Any] | None = None
+    map_pins: list[dict[str, Any]] | None = None
 
 
 def _load_system_prompt() -> str:
@@ -74,6 +75,66 @@ def _extract_function_calls(response: dict) -> list[dict]:
         return []
 
 
+def _build_map_pins(accessibility_result: dict[str, Any]) -> list[dict[str, Any]] | None:
+    """Convert a get_place_accessibility tool result into a list of MapPin dicts."""
+    if not isinstance(accessibility_result, dict) or not accessibility_result.get("found"):
+        return None
+
+    pins: list[dict[str, Any]] = []
+
+    # Building-level pin — only if confirmed accessible
+    building_lat = accessibility_result.get("lat")
+    building_lon = accessibility_result.get("lon")
+    if building_lat is not None and building_lon is not None:
+        place_tags = accessibility_result.get("place_tags", {})
+        wheelchair = place_tags.get("wheelchair", "")
+        if "fully" in wheelchair:
+            pins.append({
+                "lat": building_lat,
+                "lng": building_lon,
+                "label": accessibility_result.get("place", "Building"),
+                "pin_type": "accessible",
+            })
+
+    # Entrance pins — only confirmed accessible entrances
+    for entrance in accessibility_result.get("entrances", []):
+        elat = entrance.get("lat")
+        elon = entrance.get("lon")
+        if elat is None or elon is None:
+            continue
+        wheelchair = entrance.get("wheelchair", "")
+        if "fully" not in wheelchair:
+            continue
+
+        label_parts = ["Accessible entrance"]
+        if entrance.get("door"):
+            label_parts.append(f"({entrance['door']} door)")
+        if entrance.get("ramp"):
+            label_parts.append("· ramp")
+
+        pins.append({
+            "lat": elat,
+            "lng": elon,
+            "label": " ".join(label_parts),
+            "pin_type": "accessible",
+        })
+
+    # Ramp pins
+    for ramp in accessibility_result.get("ramps", []):
+        rlat = ramp.get("lat")
+        rlon = ramp.get("lon")
+        if rlat is None or rlon is None:
+            continue
+        pins.append({
+            "lat": rlat,
+            "lng": rlon,
+            "label": "Wheelchair ramp",
+            "pin_type": "ramp",
+        })
+
+    return pins if pins else None
+
+
 def _build_route_action(
     route_call_args: dict[str, Any] | None,
     geocoded_locations: list[dict[str, Any]],
@@ -112,6 +173,7 @@ def complete(user_message: str, history: list[dict]) -> CompletionResult:
     )
     last_route_call_args: dict[str, Any] | None = None
     geocoded_locations: list[dict[str, Any]] = []
+    map_pins: list[dict[str, Any]] | None = None
 
     for round_number in range(1, MAX_TOOL_ROUNDS + 1):
         logger.info("Completion round started: round=%d", round_number)
@@ -124,6 +186,7 @@ def complete(user_message: str, history: list[dict]) -> CompletionResult:
             return CompletionResult(
                 message=_extract_text(response),
                 route_action=_build_route_action(last_route_call_args, geocoded_locations),
+                map_pins=map_pins,
             )
 
         try:
@@ -156,6 +219,11 @@ def complete(user_message: str, history: list[dict]) -> CompletionResult:
                 if top_result:
                     geocoded_locations.append(top_result)
 
+            if fc.get("name") == "get_place_accessibility" and isinstance(result, dict):
+                pins = _build_map_pins(result)
+                if pins:
+                    map_pins = pins
+
             tool_response_parts.append({
                 "functionResponse": {
                     "name": fc["name"],
@@ -169,4 +237,5 @@ def complete(user_message: str, history: list[dict]) -> CompletionResult:
     return CompletionResult(
         message=_extract_text(response),
         route_action=_build_route_action(last_route_call_args, geocoded_locations),
+        map_pins=map_pins,
     )

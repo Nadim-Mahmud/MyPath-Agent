@@ -31,10 +31,18 @@ class RouteAction(BaseModel):
     destination: RouteLocation
 
 
+class MapPin(BaseModel):
+    lat: float
+    lng: float
+    label: str
+    pin_type: str  # "accessible" | "ramp"
+
+
 class ChatResponse(BaseModel):
     session_id: str
     message: str
     route_action: Optional[RouteAction] = None
+    map_pins: Optional[list[MapPin]] = None
 
 
 class GeocodeResult(BaseModel):

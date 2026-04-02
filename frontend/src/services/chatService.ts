@@ -6,6 +6,13 @@ export interface ChatContext {
   map_center?: { lat: number; lng: number } | null;
 }
 
+export interface MapPin {
+  lat: number;
+  lng: number;
+  label: string;
+  pin_type: 'accessible' | 'ramp';
+}
+
 export interface ChatResponse {
   session_id: string;
   message: string;
@@ -13,6 +20,7 @@ export interface ChatResponse {
     origin: { lat: number; lng: number; label?: string | null };
     destination: { lat: number; lng: number; label?: string | null };
   } | null;
+  map_pins?: MapPin[] | null;
 }
 
 export async function sendChat(

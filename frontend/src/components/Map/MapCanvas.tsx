@@ -12,6 +12,7 @@ import 'leaflet/dist/leaflet.css';
 import './MapCanvas.css';
 import { useAppStore } from '../../store/useAppStore';
 import type { RoutePoint } from '../../types/route';
+import type { MapPin } from '../../services/chatService';
 
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
@@ -63,6 +64,17 @@ function makeEndIcon(active: boolean) {
     </div>`,
     iconSize: [28, 36],
     iconAnchor: [14, 36],
+  });
+}
+
+function makeAccessibilityPinIcon(pin: MapPin) {
+  const escaped = pin.label.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const emoji = pin.pin_type === 'ramp' ? '🔼' : '♿';
+  return L.divIcon({
+    className: '',
+    html: `<div class="acc-pin acc-pin--${pin.pin_type}" title="${escaped}">${emoji}<span class="acc-pin__tooltip">${escaped}</span></div>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
   });
 }
 
@@ -157,6 +169,7 @@ export default function MapCanvas() {
     flyTo, setFlyTo,
     activeField,
     userPosition, setUserPosition,
+    mapPins,
   } = useAppStore();
 
   const mapRef = useRef<L.Map | null>(null);
@@ -323,6 +336,16 @@ export default function MapCanvas() {
         {userPosition && (
           <Marker position={userPosition} icon={userLocationIcon} zIndexOffset={-100} />
         )}
+
+        {/* Accessibility pins from AI chat (entrances, buildings) */}
+        {mapPins.map((pin, idx) => (
+          <Marker
+            key={`acc-pin-${idx}`}
+            position={[pin.lat, pin.lng]}
+            icon={makeAccessibilityPinIcon(pin)}
+            zIndexOffset={200}
+          />
+        ))}
       </MapContainer>
 
       {/* Locate me button */}

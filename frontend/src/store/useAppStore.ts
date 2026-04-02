@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { RouteResponse } from '../types/route';
+import type { MapPin } from '../services/chatService';
 
 export interface Preferences {
   maxIncline: number;
@@ -40,6 +41,7 @@ interface AppState {
   flyTo: FlyToTarget | null;
   activeField: 'origin' | 'destination' | null;
   userPosition: [number, number] | null;
+  mapPins: MapPin[];
 
   setRoute: (route: RouteResponse | null) => void;
   setActiveStep: (index: number) => void;
@@ -57,6 +59,8 @@ interface AppState {
   setFlyTo: (target: FlyToTarget | null) => void;
   setActiveField: (field: 'origin' | 'destination' | null) => void;
   setUserPosition: (pos: [number, number] | null) => void;
+  setMapPins: (pins: MapPin[]) => void;
+  clearMapPins: () => void;
 }
 
 function newSessionId(): string {
@@ -83,6 +87,7 @@ export const useAppStore = create<AppState>((set) => ({
   flyTo: null,
   activeField: 'origin',
   userPosition: null,
+  mapPins: [],
 
   setRoute: (route) => set({ route, activeStepIndex: -1 }),
   setActiveStep: (index) => set({ activeStepIndex: index }),
@@ -111,8 +116,11 @@ export const useAppStore = create<AppState>((set) => ({
       origin: null,
       destination: null,
       activeField: 'origin',
+      mapPins: [],
     }),
   setFlyTo: (flyTo) => set({ flyTo }),
   setActiveField: (activeField) => set({ activeField }),
   setUserPosition: (userPosition) => set({ userPosition }),
+  setMapPins: (mapPins) => set({ mapPins }),
+  clearMapPins: () => set({ mapPins: [] }),
 }));

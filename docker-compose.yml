@@ -49,7 +49,7 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-AIzaSyDKoD6Qp7SjObh4M6RjNhsbvuUeofF3cFs}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.1-flash-lite-preview}
       ROUTING_SERVER_URL: http://routing-server:8080
-      ROUTING_API_KEY: "MYPATHg5rDJhV2ThPlHsbx1PUV6omQSHHno2YehXASoKoiSIrIh7Wz38ZUKLI9nGcHIHxIZgJQ20TwpOet7dpvnandXGenGzf9E7LGu8wLozshUrQcGYcq61g8bTL5Bi"
+      ROUTING_API_KEY: "0aed6a955c59dc3c75dba711c6b74edb"
     depends_on:
       routing-server:
         condition: service_healthy

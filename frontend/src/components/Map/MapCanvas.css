@@ -123,6 +123,42 @@
   to { transform: rotate(360deg); }
 }
 
+/* Accessibility map pins (entrances, buildings) */
+.acc-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2.5px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.acc-pin--accessible { background: #16a34a; }
+.acc-pin--ramp       { background: #7c3aed; }
+
+.acc-pin__tooltip {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+  padding: 3px 7px;
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+}
+
+.acc-pin:hover .acc-pin__tooltip {
+  display: block;
+}
+
 .locate-error {
   position: absolute;
   bottom: 170px;

@@ -83,37 +83,113 @@ def _parse_entrance(tags: dict) -> dict | None:
     return info
 
 
-def _fetch_element_tags(osm_type: str, osm_id: int) -> dict:
-    """Fetch full OSM tags for a specific element via Overpass."""
+def _is_ramp_node(tags: dict) -> bool:
+    return tags.get("ramp") == "yes" or tags.get("ramp:wheelchair") == "yes"
+
+
+def _classify_nodes(elements: list[dict]) -> tuple[dict, list[dict], list[dict]]:
+    """
+    From a flat Overpass elements list, return:
+      (building_tags, entrance_nodes, ramp_nodes)
+    Building element is the first non-node or the way/relation; nodes are filtered by tags.
+    """
+    building_tags: dict = {}
+    entrances: list[dict] = []
+    ramps: list[dict] = []
+
+    for el in elements:
+        el_type = el.get("type")
+        tags = el.get("tags", {})
+
+        if el_type in ("way", "relation"):
+            building_tags = tags
+            continue
+
+        if el_type != "node" or el.get("lat") is None:
+            continue
+
+        if tags.get("entrance"):
+            parsed = _parse_entrance(tags)
+            if parsed is not None:
+                parsed["lat"] = el["lat"]
+                parsed["lon"] = el["lon"]
+                entrances.append(parsed)
+        elif _is_ramp_node(tags):
+            ramps.append({"lat": el["lat"], "lon": el["lon"], "tags": tags})
+
+    return building_tags, entrances, ramps
+
+
+def _overpass_request(query: str) -> list[dict]:
+    """Execute a single Overpass query and return elements list."""
+    with httpx.Client(timeout=25) as client:
+        resp = client.post(_OVERPASS_URL, data={"data": query}, headers=_HEADERS)
+        resp.raise_for_status()
+        return resp.json().get("elements", [])
+
+
+def _fetch_all(osm_type: str, osm_id: int, lat: float, lon: float) -> tuple[dict, list[dict], list[dict]]:
+    """
+    Fetch building tags + entrance nodes + ramp nodes in at most 2 Overpass requests.
+
+    Request 1 (member query): fetches the element itself AND all its member nodes
+    in a single round-trip. Covers entrances and ramps that are mapped as building members.
+
+    Request 2 (radius fallback, only if request 1 found no entrances/ramps):
+    queries entrances AND ramps by radius in one union query.
+    """
     t = {"node": "node", "way": "way", "relation": "relation"}.get(osm_type, "way")
-    query = f"[out:json][timeout:15];{t}({osm_id});out tags;"
-    try:
-        with httpx.Client(timeout=20) as client:
-            resp = client.post(_OVERPASS_URL, data={"data": query}, headers=_HEADERS)
-            resp.raise_for_status()
-            elements = resp.json().get("elements", [])
-            if elements:
-                return elements[0].get("tags", {})
-    except Exception as exc:
-        logger.warning("Overpass element fetch failed: %s", exc)
-    return {}
 
+    # --- Request 1: element + all member nodes in one shot ---
+    if t in ("way", "relation"):
+        member_ref = "w" if t == "way" else "r"
+        query = (
+            f"[out:json][timeout:20];"
+            f"{t}({osm_id})->.b;"
+            f"(.b; node({member_ref}.b););"
+            f"out body;"
+        )
+        try:
+            elements = _overpass_request(query)
+            building_tags, entrances, ramps = _classify_nodes(elements)
+            logger.info(
+                "Member query: osm_id=%d building_tags=%d entrances=%d ramps=%d",
+                osm_id, len(building_tags), len(entrances), len(ramps),
+            )
+            # If we got building tags and either entrances or ramps, we're done
+            if entrances or ramps:
+                return building_tags, entrances, ramps
+            # If no member entrances/ramps, fall through to radius — but keep building_tags
+            cached_building_tags = building_tags
+        except Exception as exc:
+            logger.warning("Overpass member query failed (429 or other): %s", exc)
+            cached_building_tags = {}
+    else:
+        cached_building_tags = {}
 
-def _fetch_entrances(lat: float, lon: float, radius: int = 80) -> list[dict]:
-    """Query entrance nodes near a coordinate via Overpass."""
-    query = f"[out:json][timeout:15];node[\"entrance\"](around:{radius},{lat},{lon});out tags;"
+    # --- Request 2: single radius union query for entrances + ramps ---
+    radius = 60
+    query = (
+        f"[out:json][timeout:15];"
+        f"("
+        f"  node[\"entrance\"](around:{radius},{lat},{lon});"
+        f"  node[~\"^ramp(:wheelchair)?$\"~\"yes\"](around:{radius},{lat},{lon});"
+        f");"
+        f"out body;"
+    )
     try:
-        with httpx.Client(timeout=20) as client:
-            resp = client.post(_OVERPASS_URL, data={"data": query}, headers=_HEADERS)
-            resp.raise_for_status()
-            return [
-                parsed
-                for el in resp.json().get("elements", [])
-                if (parsed := _parse_entrance(el.get("tags", {}))) is not None
-            ]
+        elements = _overpass_request(query)
+        # Radius query returns only nodes, no building element — inject a dummy so _classify_nodes works
+        _, entrances, ramps = _classify_nodes(elements)
+        logger.info(
+            "Radius fallback: osm_id=%d entrances=%d ramps=%d",
+            osm_id, len(entrances), len(ramps),
+        )
+        return cached_building_tags, entrances, ramps
     except Exception as exc:
-        logger.warning("Overpass entrance query failed: %s", exc)
-    return []
+        logger.warning("Overpass radius fallback failed: %s", exc)
+
+    return cached_building_tags, [], []
 
 
 def execute(args: dict) -> dict:
@@ -124,7 +200,6 @@ def execute(args: dict) -> dict:
     if not place_name:
         return {"error": "place_name is required"}
 
-    # Resolve place using the shared geocoding service (handles fallbacks + scoring)
     try:
         place = asyncio.run(
             search_place_with_osm_meta(place_name, bias_lat=bias_lat, bias_lon=bias_lon)
@@ -145,26 +220,26 @@ def execute(args: dict) -> dict:
     osm_id = place["osm_id"]
     extratags = place["extratags"]
 
-    # Fetch full tags from Overpass (more complete than Nominatim extratags)
-    element_tags = _fetch_element_tags(osm_type, osm_id)
+    # Single call: at most 2 Overpass requests total
+    element_tags, entrances, ramps = _fetch_all(osm_type, osm_id, lat, lon)
+
+    # Nominatim extratags are a cheap fallback for building-level tags (no extra request)
     merged_tags = {**extratags, **element_tags}
     place_info = _parse_place_tags(merged_tags)
-
-    entrances = _fetch_entrances(lat, lon)
 
     result: dict = {
         "found": True,
         "place": place["label"],
         "lat": lat,
         "lon": lon,
+        "place_tags": place_info,
+        "entrances": entrances,
+        "ramps": ramps,
     }
 
-    result["place_tags"] = place_info
     if not place_info:
         result["note"] = "This place is mapped in OSM but has no wheelchair accessibility tags recorded yet."
-
-    result["entrances"] = entrances
-    if not entrances and "note" not in result:
-        result["note"] = "No entrance nodes with accessibility tags found within 80 m."
+    elif not entrances:
+        result["note"] = "No entrance nodes with accessibility tags found within 60 m."
 
     return result

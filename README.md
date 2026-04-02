@@ -103,7 +103,7 @@ java -Xmx2g -jar build/libs/mypath-0.0.1-SNAPSHOT.jar
 The server is ready when you see `GraphHopper loaded` in the logs. Test it:
 
 ```bash
-curl -H "Authorization: Bearer MYPATHg5rDJhV2ThPlHsbx1PUV6omQSHHno2YehXASoKoiSIrIh7Wz38ZUKLI9nGcHIHxIZgJQ20TwpOet7dpvnandXGenGzf9E7LGu8wLozshUrQcGYcq61g8bTL5Bi" \
+curl -H "Authorization: Bearer 0aed6a955c59dc3c75dba711c6b74edb" \
   "http://localhost:8080/route/getSingleRoute?srcLat=40.7128&srcLon=-74.006&destLat=40.7580&destLon=-73.9855"
 ```
 

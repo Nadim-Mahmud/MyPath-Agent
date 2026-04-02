@@ -125,15 +125,15 @@ _CURRENT_LOCATION_PATTERNS = [
 
 
 def _is_negative_geocoding_message(text: str) -> bool:
-    """Check if a message is a failed geocoding attempt."""
+    """Check if a message is a failed geocoding or routing attempt."""
     lower = text.lower()
-    geocoding_keywords = ["locate", "location", "find", "address", "place", "geocod"]
-    negative_phrases = ["unable", "sorry", "cannot", "can't", "failed", "unavailable", "regret", "couldn't"]
-    
-    has_geocoding_context = any(kw in lower for kw in geocoding_keywords)
+    failure_keywords = ["locate", "location", "find", "address", "place", "geocod", "route", "direct"]
+    negative_phrases = ["unable", "sorry", "cannot", "can't", "failed", "unavailable", "regret", "couldn't", "trouble", "apologize", "having trouble"]
+
+    has_failure_context = any(kw in lower for kw in failure_keywords)
     has_negative = any(phrase in lower for phrase in negative_phrases)
-    
-    return has_geocoding_context and has_negative
+
+    return has_failure_context and has_negative
 
 
 def _strip_negative_geocoding_history(history: list[dict]) -> list[dict]:
@@ -233,74 +233,109 @@ def _extract_destination_from_message(message: str) -> str | None:
     return None
 
 
-def _try_current_location_route(req: ChatRequest) -> ChatResponse | None:
+def _try_current_location_route(req: ChatRequest) -> tuple[ChatResponse | None, str | None]:
+    """
+    Returns (ChatResponse, None)       — route found, use it directly.
+            (None, pre_resolved_context) — place resolved but routing failed; context
+                                           tells Gemini what we already know so it can
+                                           skip geocoding/accessibility tool calls.
+            (None, None)               — could not even resolve the place.
+    """
     if req.context is None or req.context.user_location is None:
-        return None
+        return None, None
 
     destination_query = _extract_destination_from_message(req.message)
     if not destination_query:
-        return None
-
-    # Detect if this looks like a full address (contains number and street keywords)
-    has_street_markers = bool(re.search(r"\d+\s+(street|st|avenue|ave|road|rd|boulevard|blvd|drive|dr|building)", destination_query, re.IGNORECASE))
-    
-    # Use more candidates for full addresses to increase likelihood of finding exact match
-    candidate_limit = 10 if has_street_markers else 5
-    
-    # Try geocoding with more candidates to handle full addresses
-    geocoded = execute_tool("geocode_place", {"query": destination_query, "limit": candidate_limit})
-    if isinstance(geocoded, dict) and geocoded.get("error"):
-        return None
-
-    results = geocoded.get("results") if isinstance(geocoded, dict) else None
-    if not isinstance(results, list) or not results:
-        return None
+        return None, None
 
     src = req.context.user_location
+    has_street_markers = bool(re.search(
+        r"\d+\s+(street|st|avenue|ave|road|rd|boulevard|blvd|drive|dr|building)",
+        destination_query, re.IGNORECASE,
+    ))
 
-    # Try the top candidates until one produces a successful route
-    for candidate in results:
-        if not isinstance(candidate, dict):
-            continue
+    # --- Resolve place + accessibility in ONE call for named buildings,
+    #     or geocode only for explicit street addresses.
+    building_lat: float | None = None
+    building_lng: float | None = None
+    destination_label: str = destination_query
+    coords_to_try: list[tuple[float, float, str]] = []
+    accessibility_summary: str = ""
 
-        try:
-            dest_lat = float(candidate["lat"])
-            dest_lng = float(candidate["lng"])
-        except (KeyError, TypeError, ValueError):
-            continue
-
-        route_result = execute_tool(
-            "get_route",
+    if not has_street_markers:
+        # get_place_accessibility geocodes internally — saves a redundant Nominatim call
+        accessibility = execute_tool(
+            "get_place_accessibility",
             {
-                "src_lat": src.lat,
-                "src_lon": src.lng,
-                "dest_lat": dest_lat,
-                "dest_lon": dest_lng,
+                "place_name": destination_query,
+                "bias_lat": src.lat,
+                "bias_lon": src.lng,
             },
         )
+        if isinstance(accessibility, dict) and accessibility.get("found"):
+            building_lat = float(accessibility["lat"])
+            building_lng = float(accessibility["lon"])
+            destination_label = str(accessibility.get("place") or destination_query)
 
-        # Check if route succeeded
+            for entrance in accessibility.get("entrances", []):
+                wheelchair = entrance.get("wheelchair", "")
+                elat, elon = entrance.get("lat"), entrance.get("lon")
+                if "fully" in wheelchair and elat is not None and elon is not None:
+                    coords_to_try.append((float(elat), float(elon), destination_label + " (accessible entrance)"))
+
+            # Build a summary to inject into Gemini if routing fails below
+            entrance_coords = [(c[0], c[1]) for c in coords_to_try]
+            accessibility_summary = (
+                f'Destination "{destination_query}" already resolved to '
+                f"lat={building_lat:.5f}, lng={building_lng:.5f}. "
+                + (
+                    f"Accessible entrances at: {entrance_coords}. "
+                    if entrance_coords else "No accessible entrances found in OSM. "
+                )
+                + "do NOT call geocode_place or get_place_accessibility again. "
+                "Call get_route directly using the coordinates above."
+            )
+    else:
+        # Street address — plain geocode is sufficient, no accessibility lookup needed
+        geocoded = execute_tool("geocode_place", {"query": destination_query, "limit": 10})
+        if not (isinstance(geocoded, dict) and not geocoded.get("error")):
+            return None, None
+        results = geocoded.get("results") or []
+        if results and isinstance(results[0], dict):
+            first = results[0]
+            building_lat = float(first.get("lat", 0))
+            building_lng = float(first.get("lng", 0))
+            destination_label = str(first.get("label") or destination_query)
+
+    if building_lat is None or building_lng is None:
+        return None, None
+
+    # Centroid is always the last resort
+    coords_to_try.append((building_lat, building_lng, destination_label))
+
+    for dest_lat, dest_lng, label in coords_to_try:
+        route_result = execute_tool(
+            "get_route",
+            {"src_lat": src.lat, "src_lon": src.lng, "dest_lat": dest_lat, "dest_lon": dest_lng},
+        )
         if not (isinstance(route_result, dict) and route_result.get("error")):
-            destination_label = str(candidate.get("label") or destination_query)
             distance = route_result.get("total_distance_miles") if isinstance(route_result, dict) else None
             eta = route_result.get("estimated_minutes") if isinstance(route_result, dict) else None
-            message = (
-                f"I found an accessible route from your current location to **{destination_label}**. "
-                f"Estimated distance: **{distance} mi**, travel time: **{eta} min**. "
-                "I've loaded it on the map for you."
-            )
-
             return ChatResponse(
                 session_id=req.session_id,
-                message=message,
+                message=(
+                    f"I found an accessible route from your current location to **{label}**. "
+                    f"Estimated distance: **{distance} mi**, travel time: **{eta} min**. "
+                    "I've loaded it on the map for you."
+                ),
                 route_action={
                     "origin": {"lat": src.lat, "lng": src.lng, "label": "My Location"},
-                    "destination": {"lat": dest_lat, "lng": dest_lng, "label": destination_label},
+                    "destination": {"lat": dest_lat, "lng": dest_lng, "label": label},
                 },
-            )
+            ), None
 
-    # All direct routing attempts failed — let Gemini try with smarter fallback strategies
-    return None
+    # Place resolved but every routing attempt failed — hand off to Gemini with context
+    return None, accessibility_summary or None
 
 
 def chat(req: ChatRequest) -> ChatResponse:
@@ -332,14 +367,25 @@ def chat(req: ChatRequest) -> ChatResponse:
         is_retry_after_geocoding_failure,
     )
 
-    fallback_response = _try_current_location_route(req)
+    fallback_response, pre_resolved_context = _try_current_location_route(req)
     if fallback_response is not None:
         logger.info("Used current-location route fallback: session_id=%s", req.session_id)
+        dest = (fallback_response.route_action or {}).get("destination", {})
+        route_note = (
+            f"[Route found] A wheelchair-accessible route was successfully generated to "
+            f"{dest.get('label', 'the destination')} "
+            f"(lat={dest.get('lat')}, lng={dest.get('lng')}). "
+            "The route is loaded on the map. No need to call any routing tools again for this request."
+        )
         session_store.add_message(req.session_id, "user", req.message)
-        session_store.add_message(req.session_id, "model", fallback_response.message)
+        session_store.add_message(req.session_id, "model", route_note + " " + fallback_response.message)
         return fallback_response
 
     enriched = _enrich_message(req.message, req.context)
+    # If the fast path resolved the place but routing failed, inject what we already know
+    # so Gemini skips geocoding/accessibility tool calls and goes straight to get_route.
+    if pre_resolved_context:
+        enriched = enriched + "\n\n[Pre-resolved] " + pre_resolved_context
     logger.info(
         "Prepared enriched user message: session_id=%s enriched_chars=%d",
         req.session_id,
@@ -402,8 +448,14 @@ def chat(req: ChatRequest) -> ChatResponse:
     session_store.add_message(req.session_id, "model", message)
     logger.info("Persisted session messages: session_id=%s", req.session_id)
 
+    map_pins = None
+    if completion.map_pins:
+        from app.models import MapPin
+        map_pins = [MapPin(**p) for p in completion.map_pins]
+
     return ChatResponse(
         session_id=req.session_id,
         message=message,
         route_action=completion.route_action,
+        map_pins=map_pins,
     )
