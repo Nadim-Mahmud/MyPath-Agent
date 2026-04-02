@@ -218,6 +218,8 @@ The Wheelway frontend delivers a Google Maps-style interactive map experience pu
 - The backend automatically tries multiple geocoding candidates to handle full addresses (e.g., "Roberts Apartments at 211 North Beech Street") and returns the first successful match
 - For route accessibility-status questions, AI receives a compact route summary only (per segment: `surface`, `distance`, `duration`, `maneuver`, `incline`) and excludes start/end coordinates and route polyline point lists to reduce token usage
 - AI inference uses a short rolling history window and prioritizes the latest user query; stale context blocks from older turns are stripped before model calls to reduce history interference
+- If no route is currently rendered on the map, chat context must explicitly state "no active route" and instruct the AI to ignore earlier turns that imply a route is still active
+- Chat pipeline must classify each prompt intent as route-planning vs accessibility-information and react accordingly: route intents update origin/destination and route polyline, while accessibility intents prioritize map accessibility pins/details and must not overwrite route state unless the user explicitly asks to navigate
 - **Retry Recovery Strategy**: When a user provides more specific location details after a previous failed geocoding attempt (e.g., retrying with full address "McVey Data Science Building at 105 Tallawanda Rd"), the system:
   - Detects the retry via history analysis (identifies prior negative geocoding message + current location request)
   - Strips the previous failed geocoding message from chat history to prevent negative anchoring
@@ -386,13 +388,13 @@ In client applications, `user_location` should be auto-populated from browser/ap
 
 **MCP Tools:**
 
-| Tool Name                  | Description                                                              | Calls                          |
-| -------------------------- | ------------------------------------------------------------------------ | ------------------------------ |
-| `get_route`                | Generate a wheelchair-accessible route between two points                | `GET /route/getSingleRoute`    |
-| `report_obstacle`          | Report an accessibility obstacle at a given location                     | `POST /api/v1/obstacles`       |
-| `get_obstacles`            | Retrieve known obstacles near a location                                 | `GET /api/v1/obstacles`        |
-| `get_map_context`          | Return current map center, active route, and user location               | Internal session state         |
-| `get_place_accessibility`  | Look up wheelchair accessibility tags (entrance, ramp, door) for a named building via OSM Nominatim + Overpass | OSM Nominatim + Overpass API |
+| Tool Name                 | Description                                                                                                    | Calls                        |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `get_route`               | Generate a wheelchair-accessible route between two points                                                      | `GET /route/getSingleRoute`  |
+| `report_obstacle`         | Report an accessibility obstacle at a given location                                                           | `POST /api/v1/obstacles`     |
+| `get_obstacles`           | Retrieve known obstacles near a location                                                                       | `GET /api/v1/obstacles`      |
+| `get_map_context`         | Return current map center, active route, and user location                                                     | Internal session state       |
+| `get_place_accessibility` | Look up wheelchair accessibility tags (entrance, ramp, door) for a named building via OSM Nominatim + Overpass | OSM Nominatim + Overpass API |
 
 #### FR-AI-05: System Prompt & Persona
 

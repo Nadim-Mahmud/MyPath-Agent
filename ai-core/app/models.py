@@ -43,6 +43,7 @@ class ChatResponse(BaseModel):
     message: str
     route_action: Optional[RouteAction] = None
     map_pins: Optional[list[MapPin]] = None
+    response_intent: Optional[str] = None
 
 
 class GeocodeResult(BaseModel):

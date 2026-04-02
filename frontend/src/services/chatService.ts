@@ -16,6 +16,7 @@ export interface MapPin {
 export interface ChatResponse {
   session_id: string;
   message: string;
+  response_intent?: 'route' | 'accessibility' | 'general' | null;
   route_action?: {
     origin: { lat: number; lng: number; label?: string | null };
     destination: { lat: number; lng: number; label?: string | null };

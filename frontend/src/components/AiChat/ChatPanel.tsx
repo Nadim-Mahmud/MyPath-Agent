@@ -7,6 +7,18 @@ import { sendChat } from '../../services/chatService';
 
 const MAX_CHARS = 500;
 const CURRENT_LOCATION_ROUTE_INTENT = /(?:my|current)\s+location|from\s+here|route\s+me\s+to|directions\s+to|navigate\s+to/i;
+const ROUTE_INTENT_RE = /\b(route|directions|navigate|navigation|from\s+.+\s+to|take me to|way to|how do i get to)\b/i;
+const ACCESSIBILITY_INTENT_RE = /\b(accessible|accessibility|wheelchair|ramp|entrance|door|elevator|lift|curb|kerb|step)\b/i;
+
+function detectUserIntent(text: string): 'route' | 'accessibility' | 'general' {
+  const hasRoute = ROUTE_INTENT_RE.test(text);
+  const hasAccessibility = ACCESSIBILITY_INTENT_RE.test(text);
+
+  if (hasRoute && !hasAccessibility) return 'route';
+  if (hasAccessibility && !hasRoute) return 'accessibility';
+  if (hasRoute && hasAccessibility) return 'route';
+  return 'general';
+}
 
 type SpeechRecognitionCtor = new () => SpeechRecognition;
 
@@ -138,9 +150,15 @@ export default function ChatPanel() {
 
   const buildContext = useCallback(async () => {
     const userLocation = await resolveUserLocation();
+    const hasRenderableRoute =
+      !!route &&
+      !!route.routes &&
+      Array.isArray(route.routes.points) &&
+      route.routes.points.length > 0;
+
     return {
       user_location: userLocation,
-      active_route: route ?? null,
+      active_route: hasRenderableRoute ? route : null,
       map_center: origin
         ? { lat: origin.lat, lng: origin.lng }
         : destination
@@ -171,8 +189,9 @@ export default function ChatPanel() {
 
       const response = await sendChat(chatSessionId, text, context);
       addChatMessage({ role: 'assistant', content: response.message });
+      const intent = response.response_intent ?? detectUserIntent(text);
 
-      if (response.route_action) {
+      if (response.route_action && intent !== 'accessibility') {
         clearMapPins();
         const nextOrigin = response.route_action.origin;
         const nextDestination = response.route_action.destination;
@@ -194,7 +213,7 @@ export default function ChatPanel() {
         setFlyTo({ lat: nextOrigin.lat, lng: nextOrigin.lng, zoom: 14 });
       }
 
-      if (response.map_pins && response.map_pins.length > 0) {
+      if (response.map_pins && response.map_pins.length > 0 && intent !== 'route') {
         clearRoute();
         setMapPins(response.map_pins);
         setFlyTo({ lat: response.map_pins[0].lat, lng: response.map_pins[0].lng, zoom: 18 });

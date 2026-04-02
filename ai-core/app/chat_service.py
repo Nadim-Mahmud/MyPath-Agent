@@ -14,6 +14,64 @@ logger.setLevel(logging.INFO)
 
 _MAX_CONTEXT_ROUTE_SEGMENTS = 40
 _MAX_FOCUSED_HISTORY_MESSAGES = 6
+_INTENT_ROUTE = "route"
+_INTENT_ACCESSIBILITY = "accessibility"
+_INTENT_GENERAL = "general"
+
+_ROUTE_INTENT_PATTERNS = [
+    re.compile(r"\b(route|directions|navigate|navigation|take me to|way to)\b", re.IGNORECASE),
+    re.compile(r"\bfrom\b.+\bto\b", re.IGNORECASE),
+    re.compile(r"\bhow\s+do\s+i\s+get\s+to\b", re.IGNORECASE),
+]
+
+_ACCESSIBILITY_INTENT_PATTERNS = [
+    re.compile(r"\b(accessible|accessibility|wheelchair)\b", re.IGNORECASE),
+    re.compile(r"\b(ramp|entrance|door|elevator|lift|curb|kerb|step)\b", re.IGNORECASE),
+    re.compile(r"\bis\b.+\baccessible\b", re.IGNORECASE),
+]
+
+
+def _detect_user_intent(message: str) -> str:
+    text = (message or "").strip()
+    if not text:
+        return _INTENT_GENERAL
+
+    has_route = any(p.search(text) for p in _ROUTE_INTENT_PATTERNS)
+    has_accessibility = any(p.search(text) for p in _ACCESSIBILITY_INTENT_PATTERNS)
+
+    if has_route and not has_accessibility:
+        return _INTENT_ROUTE
+    if has_accessibility and not has_route:
+        return _INTENT_ACCESSIBILITY
+    if has_route and has_accessibility:
+        # Explicit routing asks should prefer route behavior.
+        if re.search(r"\b(from\b.+\bto\b|route|directions|navigate)\b", text, re.IGNORECASE):
+            return _INTENT_ROUTE
+        return _INTENT_ACCESSIBILITY
+    return _INTENT_GENERAL
+
+
+def _route_destination_fields(route_action: object | None) -> tuple[float | None, float | None, str | None]:
+    """Extract destination fields from either dict-based or model-based route actions."""
+    if route_action is None:
+        return None, None, None
+
+    destination: object | None
+    if isinstance(route_action, dict):
+        destination = route_action.get("destination")
+        if isinstance(destination, dict):
+            return destination.get("lat"), destination.get("lng"), destination.get("label")
+        return None, None, None
+
+    destination = getattr(route_action, "destination", None)
+    if destination is None:
+        return None, None, None
+
+    return (
+        getattr(destination, "lat", None),
+        getattr(destination, "lng", None),
+        getattr(destination, "label", None),
+    )
 
 
 async def _reverse_geocode_label(lat: float, lng: float) -> str:
@@ -157,13 +215,25 @@ def _strip_negative_geocoding_history(history: list[dict]) -> list[dict]:
     return history
 
 
-def _enrich_message(message: str, context: ChatContext | None) -> str:
+def _enrich_message(message: str, context: ChatContext | None, user_intent: str) -> str:
     if context is None:
+        if user_intent == _INTENT_ROUTE:
+            return message + "\n\n[Intent] route request. Prioritize routing actions."
+        if user_intent == _INTENT_ACCESSIBILITY:
+            return message + "\n\n[Intent] accessibility information request. Provide accessibility details; do not create a route unless explicitly asked."
         return message
     lines = [
         message,
         "",
         "[Instruction] Prioritize this latest user request. Use earlier history only for short continuity.",
+        f"[Intent] {user_intent}",
+        (
+            "[Intent handling] User is asking for route planning. Prioritize route computation."
+            if user_intent == _INTENT_ROUTE
+            else "[Intent handling] User is asking for accessibility information. Do not create a route unless explicitly requested."
+            if user_intent == _INTENT_ACCESSIBILITY
+            else "[Intent handling] Answer directly. Only route when explicitly requested."
+        ),
         "",
         "[Context]",
     ]
@@ -175,11 +245,15 @@ def _enrich_message(message: str, context: ChatContext | None) -> str:
     if context.active_route is not None:
         compact_route = _compact_active_route(context.active_route)
         if compact_route is None:
-            lines.append("User has active route.")
+            lines.append("User has no active route currently shown on the map.")
+            lines.append("Ignore prior turns that imply a route is still active.")
         else:
             lines.append("User has active route.")
             lines.append("Active route accessibility summary (coordinates removed):")
             lines.append(json.dumps(compact_route, separators=(",", ":")))
+    else:
+        lines.append("User has no active route currently shown on the map.")
+        lines.append("Ignore prior turns that imply a route is still active.")
     return "\n".join(lines)
 
 
@@ -340,12 +414,14 @@ def _try_current_location_route(req: ChatRequest) -> tuple[ChatResponse | None, 
 
 def chat(req: ChatRequest) -> ChatResponse:
     history = session_store.get_history(req.session_id)
+    user_intent = _detect_user_intent(req.message)
     logger.info("Loaded session history: session_id=%s history_messages=%d", req.session_id, len(history))
+    logger.info("Detected user intent: session_id=%s intent=%s", req.session_id, user_intent)
     
     # Detect if this is a retry: if previous model message is negative geocoding AND
     # current message asks for a route/place, strip that negative context
     is_retry_after_geocoding_failure = False
-    if len(history) >= 2:
+    if user_intent == _INTENT_ROUTE and len(history) >= 2:
         # Find the most recent model message
         for i in range(len(history) - 1, -1, -1):
             if history[i].get("role") == "model":
@@ -367,21 +443,23 @@ def chat(req: ChatRequest) -> ChatResponse:
         is_retry_after_geocoding_failure,
     )
 
-    fallback_response, pre_resolved_context = _try_current_location_route(req)
+    fallback_response, pre_resolved_context = (
+        _try_current_location_route(req) if user_intent == _INTENT_ROUTE else (None, None)
+    )
     if fallback_response is not None:
         logger.info("Used current-location route fallback: session_id=%s", req.session_id)
-        dest = (fallback_response.route_action or {}).get("destination", {})
+        dest_lat, dest_lng, dest_label = _route_destination_fields(fallback_response.route_action)
         route_note = (
             f"[Route found] A wheelchair-accessible route was successfully generated to "
-            f"{dest.get('label', 'the destination')} "
-            f"(lat={dest.get('lat')}, lng={dest.get('lng')}). "
+            f"{dest_label or 'the destination'} "
+            f"(lat={dest_lat}, lng={dest_lng}). "
             "The route is loaded on the map. No need to call any routing tools again for this request."
         )
         session_store.add_message(req.session_id, "user", req.message)
         session_store.add_message(req.session_id, "model", route_note + " " + fallback_response.message)
         return fallback_response
 
-    enriched = _enrich_message(req.message, req.context)
+    enriched = _enrich_message(req.message, req.context, user_intent)
     # If the fast path resolved the place but routing failed, inject what we already know
     # so Gemini skips geocoding/accessibility tool calls and goes straight to get_route.
     if pre_resolved_context:
@@ -403,7 +481,12 @@ def chat(req: ChatRequest) -> ChatResponse:
     # If Gemini succeeded in computing a route (route_action present),
     # but the message is apologetic, override it with a positive message
     message = completion.message
-    if completion.route_action:
+    route_action = completion.route_action
+
+    if user_intent == _INTENT_ACCESSIBILITY:
+        route_action = None
+
+    if route_action:
         # Check if message sounds apologetic/negative
         is_negative = any(
             phrase in message.lower()
@@ -419,13 +502,11 @@ def chat(req: ChatRequest) -> ChatResponse:
         )
         if is_negative:
             # Replace with positive message
-            dest = completion.route_action.get("destination", {})
-            dest_label = (dest.get("label") or "").strip()
+            dest_lat, dest_lng, dest_label = _route_destination_fields(route_action)
+            dest_label = (dest_label or "").strip()
             # If label is missing, try reverse geocoding
             if not dest_label:
                 try:
-                    dest_lat = dest.get("lat")
-                    dest_lng = dest.get("lng")
                     if dest_lat is not None and dest_lng is not None:
                         dest_label = asyncio.run(_reverse_geocode_label(dest_lat, dest_lng))
                 except Exception as exc:
@@ -453,9 +534,13 @@ def chat(req: ChatRequest) -> ChatResponse:
         from app.models import MapPin
         map_pins = [MapPin(**p) for p in completion.map_pins]
 
+    if user_intent == _INTENT_ROUTE:
+        map_pins = None
+
     return ChatResponse(
         session_id=req.session_id,
         message=message,
-        route_action=completion.route_action,
+        route_action=route_action,
         map_pins=map_pins,
+        response_intent=user_intent,
     )
