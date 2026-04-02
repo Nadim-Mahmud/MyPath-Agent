@@ -1,6 +1,6 @@
 # AI Core
 
-The AI core is a Python 3.11 FastAPI microservice that powers the Wheelway conversational assistant. It manages conversation sessions, enriches user messages with map context, classifies intent, and runs an agentic LLM loop using Google Gemini with in-process MCP tools.
+The AI core is a Python 3.11 FastAPI microservice that powers the MyPathAgent conversational assistant. It manages conversation sessions, enriches user messages with map context, classifies intent, and runs an agentic LLM loop using Google Gemini with in-process MCP tools.
 
 ---
 
@@ -162,7 +162,7 @@ Liveness check.
 **Response:**
 
 ```json
-{ "status": "ok", "service": "wheelway-ai-core" }
+{ "status": "ok", "service": "mypathagent-ai-core" }
 ```
 
 ---

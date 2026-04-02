@@ -1,8 +1,8 @@
-# Wheelway Documentation
+# MyPathAgent Documentation
 
 > _Every path, accessible._
 
-Wheelway is a wheelchair-accessible navigation platform that enables wheelchair users to independently plan, discover, and navigate routes in the real world. Unlike general-purpose mapping solutions, Wheelway treats accessibility as a first-class concern — every route, every turn, and every recommendation is filtered through the lens of wheelchair usability.
+MyPathAgent is a wheelchair-accessible navigation platform that enables wheelchair users to independently plan, discover, and navigate routes in the real world. Unlike general-purpose mapping solutions, MyPathAgent treats accessibility as a first-class concern — every route, every turn, and every recommendation is filtered through the lens of wheelchair usability.
 
 ---
 
@@ -19,9 +19,9 @@ Wheelway is a wheelchair-accessible navigation platform that enables wheelchair 
 
 ---
 
-## What Is Wheelway?
+## What Is MyPathAgent?
 
-Wheelway is a three-service monorepo:
+MyPathAgent is a three-service monorepo:
 
 | Service | Technology | Port | Role |
 |---|---|---|---|

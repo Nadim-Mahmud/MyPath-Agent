@@ -1,8 +1,8 @@
-# Wheelway
+# MyPathAgent
 
 Wheelchair-accessible navigation platform. Every path, accessible.
 
-![Wheelway Demo](assets/demo.gif)
+![MyPathAgent Demo](assets/demo.gif)
 
 ---
 
@@ -269,14 +269,14 @@ Clear conversation history for a session.
 
 #### `GET /health`
 
-Returns `{"status": "ok", "service": "wheelway-ai-core"}`.
+Returns `{"status": "ok", "service": "mypathagent-ai-core"}`.
 
 ---
 
 ## Project Structure
 
 ```
-wheelway/
+mypathagent/
 ├── docker-compose.yml
 ├── Makefile                 # make dev / make prod / make down
 ├── .env                     # ENV=development (docker-compose target selector)

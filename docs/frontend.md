@@ -1,6 +1,6 @@
 # Frontend
 
-The Wheelway frontend is a React 19 single-page application built with TypeScript and Vite. It provides a full-screen interactive map experience for searching wheelchair-accessible routes and chatting with the AI assistant.
+The MyPathAgent frontend is a React 19 single-page application built with TypeScript and Vite. It provides a full-screen interactive map experience for searching wheelchair-accessible routes and chatting with the AI assistant.
 
 ---
 

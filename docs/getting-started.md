@@ -134,7 +134,7 @@ curl http://localhost:3000
 
 # AI Core health check
 curl http://localhost:8000/health
-# Expected: {"status":"ok","service":"wheelway-ai-core"}
+# Expected: {"status":"ok","service":"mypathagent-ai-core"}
 
 # Routing server health check
 curl http://localhost:8080/

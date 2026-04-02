@@ -1,10 +1,10 @@
-# Wheelway — Product Requirements Document
+# MyPathAgent — Product Requirements Document
 
 ### Wheelchair-Accessible Navigation Platform
 
 |                  |              |                     |               |
 | ---------------- | ------------ | ------------------- | ------------- |
-| **Product Name** | Wheelway     | **Version**         | 1.0           |
+| **Product Name** | MyPathAgent     | **Version**         | 1.0           |
 | **Status**       | In Progress  | **Date**            | April 1, 2025 |
 | **Author**       | Product Team | **Confidentiality** | Internal      |
 
@@ -34,7 +34,7 @@
 
 ## 1. Executive Summary
 
-Wheelway is a wheelchair-accessible navigation platform that empowers wheelchair users to independently plan, discover, and navigate routes in the real world. Unlike general-purpose mapping solutions, Wheelway treats accessibility as a first-class concern — every route, every turn, and every recommendation is filtered through the lens of wheelchair usability.
+MyPathAgent is a wheelchair-accessible navigation platform that empowers wheelchair users to independently plan, discover, and navigate routes in the real world. Unlike general-purpose mapping solutions, MyPathAgent treats accessibility as a first-class concern — every route, every turn, and every recommendation is filtered through the lens of wheelchair usability.
 
 The platform consists of three tightly integrated components:
 
@@ -42,7 +42,7 @@ The platform consists of three tightly integrated components:
 - An existing **Java Spring Boot routing server** that generates wheelchair-accessible routes via a proprietary routing engine
 - A **Python-based AI core service** that powers a conversational chat assistant for natural-language navigation guidance
 
-Together, these components deliver an experience where a wheelchair user can open Wheelway, type or speak a destination, and receive a fully accessible route with step-by-step guidance — all backed by an AI assistant that understands their specific accessibility needs.
+Together, these components deliver an experience where a wheelchair user can open MyPathAgent, type or speak a destination, and receive a fully accessible route with step-by-step guidance — all backed by an AI assistant that understands their specific accessibility needs.
 
 ---
 
@@ -59,11 +59,11 @@ Existing navigation solutions such as Google Maps, Apple Maps, and Waze are buil
 
 ### 2.2 Who Is Affected
 
-In the United States alone, approximately **3.3 million people** use wheelchairs. Globally, the World Health Organization estimates over **75 million people** require a wheelchair. These users face daily navigation challenges that Wheelway is designed to solve.
+In the United States alone, approximately **3.3 million people** use wheelchairs. Globally, the World Health Organization estimates over **75 million people** require a wheelchair. These users face daily navigation challenges that MyPathAgent is designed to solve.
 
 ### 2.3 Opportunity
 
-By combining a purpose-built accessible routing engine with a modern map UI and an AI conversational assistant, Wheelway creates a uniquely differentiated product in an underserved market. The opportunity exists not only as a consumer product but also as infrastructure for smart cities, healthcare providers, and venue operators.
+By combining a purpose-built accessible routing engine with a modern map UI and an AI conversational assistant, MyPathAgent creates a uniquely differentiated product in an underserved market. The opportunity exists not only as a consumer product but also as infrastructure for smart cities, healthcare providers, and venue operators.
 
 ---
 
@@ -115,7 +115,7 @@ By combining a purpose-built accessible routing engine with a modern map UI and 
 
 ### 5.1 High-Level Overview
 
-Wheelway is a three-tier system. The frontend (React) communicates exclusively with the routing server (Spring Boot). The routing server acts as the orchestration layer — it handles authentication, caching, and routes calls to both the routing engine and the AI core service. **The frontend never calls the AI core directly**, ensuring security and rate-limiting are centralized.
+MyPathAgent is a three-tier system. The frontend (React) communicates exclusively with the routing server (Spring Boot). The routing server acts as the orchestration layer — it handles authentication, caching, and routes calls to both the routing engine and the AI core service. **The frontend never calls the AI core directly**, ensuring security and rate-limiting are centralized.
 
 The AI core embeds an MCP (Model Context Protocol) server that exposes routing and obstacle tools to the LLM. When the LLM needs route data or system information, it calls these MCP tools — which in turn call the Spring Boot routing server via HTTP.
 
@@ -148,7 +148,7 @@ PostgreSQL     AI Core (FastAPI + MCP Server) :8000
 
 ### 6.1 Overview
 
-The Wheelway frontend delivers a Google Maps-style interactive map experience purpose-built for wheelchair-accessible navigation. It is a single-page application (SPA) built with React and TypeScript, communicating with the Spring Boot routing server via REST and WebSocket.
+The MyPathAgent frontend delivers a Google Maps-style interactive map experience purpose-built for wheelchair-accessible navigation. It is a single-page application (SPA) built with React and TypeScript, communicating with the Spring Boot routing server via REST and WebSocket.
 
 ---
 
@@ -171,7 +171,7 @@ The Wheelway frontend delivers a Google Maps-style interactive map experience pu
 
 #### FR-03: Route Display & Visualization
 
-- Render the route polyline in Wheelway brand blue (`#1A56DB`) with 4px stroke
+- Render the route polyline in MyPathAgent brand blue (`#1A56DB`) with 4px stroke
 - Mark key accessibility waypoints: ramp locations, curb cuts, accessible crossings
 - Highlight inaccessible segments (if a fallback route is used) in amber with a warning tooltip
 - Show start and end pins with clear A/B labels
@@ -341,7 +341,7 @@ The AI core is a standalone Python 3.11 microservice built with FastAPI. It is r
 
 > **Note (dev):** The routing server's chat proxy endpoints are not yet implemented. During development the frontend calls the AI core directly at port 8000. This will be replaced by the routing server proxy in a future sprint.
 
-The AI core also embeds an **MCP (Model Context Protocol) server** that exposes Wheelway-specific tools to the LLM. Rather than hardcoding HTTP calls inside prompt logic, the LLM autonomously decides when to invoke MCP tools (e.g. fetching a route, querying obstacles) based on the user's message. MCP is not a separate service — it runs within the same Python process as the FastAPI app.
+The AI core also embeds an **MCP (Model Context Protocol) server** that exposes MyPathAgent-specific tools to the LLM. Rather than hardcoding HTTP calls inside prompt logic, the LLM autonomously decides when to invoke MCP tools (e.g. fetching a route, querying obstacles) based on the user's message. MCP is not a separate service — it runs within the same Python process as the FastAPI app.
 
 ### 8.2 Functional Requirements
 
@@ -520,7 +520,7 @@ In client applications, `user_location` should be auto-populated from browser/ap
 All components live in a single monorepo for unified AI context and a shared `CLAUDE.md` configuration:
 
 ```
-wheelway/
+mypathagent/
 ├── README.md
 ├── CLAUDE.md
 ├── docker-compose.yml
@@ -619,4 +619,4 @@ wheelway/
 
 ---
 
-_© 2025 Wheelway. All rights reserved. — End of Document_
+_© 2025 MyPathAgent. All rights reserved. — End of Document_

@@ -1,6 +1,6 @@
 # API Reference
 
-Complete reference for all HTTP APIs exposed by the Wheelway services.
+Complete reference for all HTTP APIs exposed by the MyPathAgent services.
 
 ---
 
@@ -155,7 +155,7 @@ Liveness check.
 ```json
 {
   "status": "ok",
-  "service": "wheelway-ai-core"
+  "service": "mypathagent-ai-core"
 }
 ```
 

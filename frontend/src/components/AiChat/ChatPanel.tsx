@@ -59,7 +59,7 @@ async function reverseGeocodeLabel(lat: number, lng: number): Promise<string> {
   try {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
-      { headers: { 'User-Agent': 'Wheelway/1.0 (wheelchair-navigation)' } },
+      { headers: { 'User-Agent': 'MyPathAgent/1.0 (wheelchair-navigation)' } },
     );
     const data = await response.json();
     if (typeof data?.display_name === 'string' && data.display_name.trim()) {

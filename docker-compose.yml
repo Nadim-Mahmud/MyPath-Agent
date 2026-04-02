@@ -5,7 +5,7 @@ services:
     build:
       context: ./routing-server
       dockerfile: Dockerfile
-    container_name: wheelway-routing-server
+    container_name: mypathagent-routing-server
     ports:
       - "8080:8080"
     volumes:
@@ -28,7 +28,7 @@ services:
     build:
       context: ./ai-core
       dockerfile: Dockerfile
-    container_name: wheelway-ai-core
+    container_name: mypathagent-ai-core
     ports:
       - "8000:8000"
     command:
@@ -46,10 +46,10 @@ services:
       - ./ai-core/app:/app/app
       - ./ai-core/prompts:/app/prompts
     environment:
-      GEMINI_API_KEY: ${GEMINI_API_KEY:-AIzaSyDKoD6Qp7SjObh4M6RjNhsbvuUeofF3cFs}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.1-flash-lite-preview}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL}
       ROUTING_SERVER_URL: http://routing-server:8080
-      ROUTING_API_KEY: "0aed6a955c59dc3c75dba711c6b74edb"
+      ROUTING_API_KEY: ${ROUTING_API_KEY}
     depends_on:
       routing-server:
         condition: service_healthy
@@ -72,10 +72,10 @@ services:
       target: ${ENV:-development}
       args:
         # The static API key used by the routing server's ApiKeyFilter
-        VITE_API_KEY: "0aed6a955c59dc3c75dba711c6b74edb"
+        VITE_API_KEY: ${VITE_API_KEY}
         # AI core URL for the chat widget (direct connection; routing server proxy is planned)
-        VITE_AI_CORE_URL: "http://localhost:8000"
-    container_name: wheelway-frontend
+        VITE_AI_CORE_URL: ${VITE_AI_CORE_URL}
+    container_name: mypathagent-frontend
     ports:
       - "3000:80"
     volumes:

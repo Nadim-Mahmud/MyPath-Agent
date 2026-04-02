@@ -29,7 +29,7 @@ LLM_TIMEOUT_S: int = 60
 # HTTP headers
 # ---------------------------------------------------------------------------
 
-NOMINATIM_USER_AGENT: str = "Wheelway/1.0 (wheelchair-navigation-ai)"
+NOMINATIM_USER_AGENT: str = "MyPathAgent/1.0 (wheelchair-navigation-ai)"
 
 # ---------------------------------------------------------------------------
 # Geocoding / proximity scoring
@@ -171,8 +171,8 @@ CORS_ALLOWED_METHODS: list[str] = ["GET", "POST", "DELETE", "OPTIONS"]
 # FastAPI application metadata
 # ---------------------------------------------------------------------------
 
-APP_TITLE: str = "Wheelway AI Core"
-APP_SERVICE_NAME: str = "wheelway-ai-core"
+APP_TITLE: str = "MyPathAgent AI Core"
+APP_SERVICE_NAME: str = "mypathagent-ai-core"
 
 # ---------------------------------------------------------------------------
 # Logging

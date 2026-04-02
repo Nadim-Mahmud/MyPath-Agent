@@ -2,7 +2,7 @@
 
 ## Overview
 
-Wheelway is a three-tier system where each service has a single clear responsibility:
+MyPathAgent is a three-tier system where each service has a single clear responsibility:
 
 ```
 Browser (React App) :3000
@@ -194,4 +194,4 @@ make prod
 | Routing Server | `routing-server` | `routing-server` |
 | AI Core | `ai-core` | `ai-core` |
 
-All services communicate on the `wheelway` Docker network. The frontend is the only service exposed to the host on port 3000.
+All services communicate on the `mypathagent` Docker network. The frontend is the only service exposed to the host on port 3000.
