@@ -2,6 +2,8 @@
 
 Wheelchair-accessible navigation platform. Every path, accessible.
 
+![Wheelway Demo](assets/demo.gif)
+
 ---
 
 ## Services
@@ -10,7 +12,7 @@ Wheelchair-accessible navigation platform. Every path, accessible.
 | -------------- | ------------------------------------------------- | ---- |
 | Frontend       | React 19 + TypeScript + Vite (dev) / nginx (prod) | 3000 |
 | Routing Server | Java 17, Spring Boot, GraphHopper                 | 8080 |
-| AI Core        | Python 3.11, FastAPI, Gemini 2.0 Flash, MCP tools | 8000 |
+| AI Core        | Python 3.11, FastAPI, Gemini 3.1 Flash Lite Preview, MCP tools | 8000 |
 
 ---
 
@@ -155,7 +157,7 @@ npm run dev      # → http://localhost:5173
 
 ## AI Core — Architecture
 
-The AI core is a **Python 3.11 FastAPI** microservice powered by **Google Gemini 2.0 Flash** with embedded **MCP (Model Context Protocol) tools**. It calls the Gemini REST API directly via `httpx` and runs an agentic tool-calling loop.
+The AI core is a **Python 3.11 FastAPI** microservice powered by **Google Gemini 3.1 Flash Lite Preview** with embedded **MCP (Model Context Protocol) tools**. It calls the Gemini REST API directly via `httpx` and runs an agentic tool-calling loop.
 
 ```
 Frontend (React)
@@ -184,7 +186,7 @@ Gemini 2.0 Flash ──► mcp_server.py
 | Env Var              | Default                         | Description                   |
 | -------------------- | ------------------------------- | ----------------------------- |
 | `GEMINI_API_KEY`     | _(required)_                    | Google Gemini API key         |
-| `GEMINI_MODEL`       | `gemini-3.1-flash-lite-preview` | Gemini model ID               |
+| `GEMINI_MODEL`       | `gemini-3.1-flash-lite-preview` _(current)_ | Gemini model ID               |
 | `ROUTING_SERVER_URL` | `http://routing-server:8080`    | Internal routing server URL   |
 | `ROUTING_API_KEY`    | _(set in compose)_              | Bearer key for routing server |
 

@@ -1,6 +1,10 @@
 # macOS
 .DS_Store
 
+# agent
+.claude
+.vscode
+
 # IDE/editor
 .vscode/
 .idea/
