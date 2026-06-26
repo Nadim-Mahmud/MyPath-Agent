@@ -24,3 +24,11 @@ class RoutingError(AiCoreError):
 
 class GeocodingError(AiCoreError):
     """Raised when a geocoding request fails in an unrecoverable way."""
+
+
+class SafetyError(AiCoreError):
+    """Raised when a message violates safety or scope constraints."""
+
+
+class RateLimitError(AiCoreError):
+    """Raised when a session exceeds the allowed request rate."""

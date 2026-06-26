@@ -1,0 +1,1263 @@
+{
+  "buildings": {
+    "Benton Hall": {
+      "lat": 39.5092,
+      "lon": -84.7337,
+      "alt_names": [
+        "Benton"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "NE corner High St & Tallawanda Ave; houses College of Engineering & Computing"
+    },
+    "Richard M. McVey Data Science Building": {
+      "lat": 39.5107,
+      "lon": -84.7318,
+      "alt_names": [
+        "McVey Data Science Building",
+        "McVey Building",
+        "Data Science Building"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "On Tallawanda Rd north of Benton Hall; newer building"
+    },
+    "Laws Hall": {
+      "lat": 39.5081,
+      "lon": -84.7338,
+      "alt_names": [
+        "Laws"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "~420 ft south of Benton Hall; former business school"
+    },
+    "Upham Hall": {
+      "lat": 39.5096,
+      "lon": -84.7358,
+      "alt_names": [
+        "Upham"
+      ],
+      "wheelchair_osm": "limited",
+      "entrance_data": true,
+      "notes": "Central academic quad; historic building with known accessibility limitations"
+    },
+    "King Library": {
+      "lat": 39.5088,
+      "lon": -84.7371,
+      "alt_names": [
+        "King",
+        "Miami University Library",
+        "the library"
+      ],
+      "wheelchair_osm": "yes",
+      "entrance_data": true,
+      "notes": "Main library; fully accessible; automatic doors confirmed"
+    },
+    "Armstrong Student Center": {
+      "lat": 39.5074,
+      "lon": -84.7362,
+      "alt_names": [
+        "Armstrong",
+        "student center",
+        "ASC"
+      ],
+      "wheelchair_osm": "yes",
+      "entrance_data": true,
+      "notes": "Spring St; major hub; multiple accessible entrances confirmed"
+    },
+    "Shriver Center": {
+      "lat": 39.5068,
+      "lon": -84.7374,
+      "alt_names": [
+        "Shriver"
+      ],
+      "wheelchair_osm": "yes",
+      "entrance_data": true,
+      "notes": "Adjacent to Armstrong; accessible entrance on east side"
+    },
+    "Roudebush Hall": {
+      "lat": 39.5085,
+      "lon": -84.7353,
+      "alt_names": [
+        "Roudebush"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "Admin building; ~530 ft SW of Benton Hall per Mapcarta"
+    },
+    "Garland Hall": {
+      "lat": 39.5093,
+      "lon": -84.7378,
+      "alt_names": [
+        "Garland"
+      ],
+      "wheelchair_osm": "limited",
+      "entrance_data": true,
+      "notes": "Referenced directly in chapter scenarios; limited OSM wheelchair tag"
+    },
+    "MacMillan Hall": {
+      "lat": 39.5077,
+      "lon": -84.7349,
+      "alt_names": [
+        "MacMillan"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "Near Armstrong; SDS office located here (217-222 MacMillan Hall)"
+    },
+    "Hughes Hall": {
+      "lat": 39.5101,
+      "lon": -84.7388,
+      "alt_names": [
+        "Hughes"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "North of King Library area"
+    },
+    "Bachelor Hall": {
+      "lat": 39.5065,
+      "lon": -84.7325,
+      "alt_names": [
+        "Bachelor"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "Near Spring & Patterson intersection"
+    },
+    "Boyd Hall": {
+      "lat": 39.5058,
+      "lon": -84.7318,
+      "alt_names": [
+        "Boyd"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "South campus; Western Drive area"
+    },
+    "Peabody Hall": {
+      "lat": 39.5052,
+      "lon": -84.7322,
+      "alt_names": [
+        "Peabody"
+      ],
+      "wheelchair_osm": "yes",
+      "entrance_data": true,
+      "notes": "Handicap parking on north side confirmed; ground-level north door accessible"
+    },
+    "Alumni Hall": {
+      "lat": 39.5071,
+      "lon": -84.7395,
+      "alt_names": [
+        "Alumni"
+      ],
+      "wheelchair_osm": "limited",
+      "entrance_data": true,
+      "notes": "Spring & Oak St; lower door on east side for accessibility"
+    },
+    "Hiestand Hall": {
+      "lat": 39.5083,
+      "lon": -84.7395,
+      "alt_names": [
+        "Hiestand"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "Arts building west side of campus"
+    },
+    "Kreger Hall": {
+      "lat": 39.5099,
+      "lon": -84.7348,
+      "alt_names": [
+        "Kreger"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "Science building central campus"
+    },
+    "Pearson Hall": {
+      "lat": 39.5105,
+      "lon": -84.7362,
+      "alt_names": [
+        "Pearson"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "North academic area"
+    },
+    "Harrison Hall": {
+      "lat": 39.5091,
+      "lon": -84.7344,
+      "alt_names": [
+        "Harrison"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "Business/social sciences area"
+    },
+    "Elliot Hall": {
+      "lat": 39.5078,
+      "lon": -84.7368,
+      "alt_names": [
+        "Elliott Hall",
+        "Elliot"
+      ],
+      "wheelchair_osm": "unmapped",
+      "entrance_data": false,
+      "notes": "Central campus"
+    }
+  },
+  "od_pairs": [
+    {
+      "id": "C1_01",
+      "category": "common",
+      "origin": "Benton Hall",
+      "destination": "Richard M. McVey Data Science Building",
+      "natural_language_query": "Navigate from Benton Hall to McVey Data Science Building",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5107,
+        "lon": -84.7318
+      },
+      "straight_line_dist_m": 210,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Both buildings unmapped for wheelchair; centroid fallback expected"
+    },
+    {
+      "id": "C1_02",
+      "category": "common",
+      "origin": "Benton Hall",
+      "destination": "Armstrong Student Center",
+      "natural_language_query": "Directions from Benton Hall to Armstrong Student Center",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "straight_line_dist_m": 320,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Low; Armstrong is well-mapped"
+    },
+    {
+      "id": "C1_03",
+      "category": "common",
+      "origin": "King Library",
+      "destination": "Armstrong Student Center",
+      "natural_language_query": "How do I get from King Library to Armstrong Student Center",
+      "origin_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "dest_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "straight_line_dist_m": 175,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Low; both well-mapped"
+    },
+    {
+      "id": "C1_04",
+      "category": "common",
+      "origin": "Upham Hall",
+      "destination": "Laws Hall",
+      "natural_language_query": "Route from Upham Hall to Laws Hall",
+      "origin_coords": {
+        "lat": 39.5096,
+        "lon": -84.7358
+      },
+      "dest_coords": {
+        "lat": 39.5081,
+        "lon": -84.7338
+      },
+      "straight_line_dist_m": 245,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Laws Hall unmapped; centroid fallback"
+    },
+    {
+      "id": "C1_05",
+      "category": "common",
+      "origin": "Armstrong Student Center",
+      "destination": "King Library",
+      "natural_language_query": "Take me from Armstrong Student Center to King Library",
+      "origin_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "dest_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "straight_line_dist_m": 175,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Low; reverse of C1_03"
+    },
+    {
+      "id": "C1_06",
+      "category": "common",
+      "origin": "Garland Hall",
+      "destination": "Armstrong Student Center",
+      "natural_language_query": "Navigate from Garland Hall to Armstrong Student Center",
+      "origin_coords": {
+        "lat": 39.5093,
+        "lon": -84.7378
+      },
+      "dest_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "straight_line_dist_m": 265,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Low; both have entrance data"
+    },
+    {
+      "id": "C1_07",
+      "category": "common",
+      "origin": "MacMillan Hall",
+      "destination": "King Library",
+      "natural_language_query": "Directions from MacMillan Hall to King Library",
+      "origin_coords": {
+        "lat": 39.5077,
+        "lon": -84.7349
+      },
+      "dest_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "straight_line_dist_m": 210,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "MacMillan unmapped; centroid fallback"
+    },
+    {
+      "id": "C1_08",
+      "category": "common",
+      "origin": "Roudebush Hall",
+      "destination": "Upham Hall",
+      "natural_language_query": "How do I get to Upham Hall from Roudebush Hall",
+      "origin_coords": {
+        "lat": 39.5085,
+        "lon": -84.7353
+      },
+      "dest_coords": {
+        "lat": 39.5096,
+        "lon": -84.7358
+      },
+      "straight_line_dist_m": 130,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Short distance; routing engine may return minimal path"
+    },
+    {
+      "id": "C1_09",
+      "category": "common",
+      "origin": "Hughes Hall",
+      "destination": "King Library",
+      "natural_language_query": "Route from Hughes Hall to King Library wheelchair accessible",
+      "origin_coords": {
+        "lat": 39.5101,
+        "lon": -84.7388
+      },
+      "dest_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "straight_line_dist_m": 215,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Hughes unmapped; moderate risk"
+    },
+    {
+      "id": "C1_10",
+      "category": "common",
+      "origin": "Laws Hall",
+      "destination": "Shriver Center",
+      "natural_language_query": "Navigate from Laws Hall to Shriver Center",
+      "origin_coords": {
+        "lat": 39.5081,
+        "lon": -84.7338
+      },
+      "dest_coords": {
+        "lat": 39.5068,
+        "lon": -84.7374
+      },
+      "straight_line_dist_m": 360,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Laws unmapped; Shriver well-mapped"
+    },
+    {
+      "id": "C1_11",
+      "category": "common",
+      "origin": "Kreger Hall",
+      "destination": "Benton Hall",
+      "natural_language_query": "Directions from Kreger Hall to Benton Hall",
+      "origin_coords": {
+        "lat": 39.5099,
+        "lon": -84.7348
+      },
+      "dest_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "straight_line_dist_m": 115,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Both unmapped; very short route"
+    },
+    {
+      "id": "C1_12",
+      "category": "common",
+      "origin": "Harrison Hall",
+      "destination": "Roudebush Hall",
+      "natural_language_query": "Route from Harrison Hall to Roudebush Hall",
+      "origin_coords": {
+        "lat": 39.5091,
+        "lon": -84.7344
+      },
+      "dest_coords": {
+        "lat": 39.5085,
+        "lon": -84.7353
+      },
+      "straight_line_dist_m": 105,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Both unmapped; very short; routing may return trivial path"
+    },
+    {
+      "id": "C1_13",
+      "category": "common",
+      "origin": "Pearson Hall",
+      "destination": "Garland Hall",
+      "natural_language_query": "Take me from Pearson Hall to Garland Hall",
+      "origin_coords": {
+        "lat": 39.5105,
+        "lon": -84.7362
+      },
+      "dest_coords": {
+        "lat": 39.5093,
+        "lon": -84.7378
+      },
+      "straight_line_dist_m": 200,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Pearson unmapped; Garland has entrance data"
+    },
+    {
+      "id": "C1_14",
+      "category": "common",
+      "origin": "Alumni Hall",
+      "destination": "Shriver Center",
+      "natural_language_query": "Accessible route from Alumni Hall to Shriver Center",
+      "origin_coords": {
+        "lat": 39.5071,
+        "lon": -84.7395
+      },
+      "dest_coords": {
+        "lat": 39.5068,
+        "lon": -84.7374
+      },
+      "straight_line_dist_m": 185,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Low; both have entrance data"
+    },
+    {
+      "id": "C1_15",
+      "category": "common",
+      "origin": "Hiestand Hall",
+      "destination": "King Library",
+      "natural_language_query": "Navigate from Hiestand Hall to King Library",
+      "origin_coords": {
+        "lat": 39.5083,
+        "lon": -84.7395
+      },
+      "dest_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "straight_line_dist_m": 210,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Hiestand unmapped"
+    },
+    {
+      "id": "C1_16",
+      "category": "common",
+      "origin": "Bachelor Hall",
+      "destination": "MacMillan Hall",
+      "natural_language_query": "How do I get from Bachelor Hall to MacMillan Hall",
+      "origin_coords": {
+        "lat": 39.5065,
+        "lon": -84.7325
+      },
+      "dest_coords": {
+        "lat": 39.5077,
+        "lon": -84.7349
+      },
+      "straight_line_dist_m": 255,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Both unmapped"
+    },
+    {
+      "id": "C1_17",
+      "category": "common",
+      "origin": "Upham Hall",
+      "destination": "Armstrong Student Center",
+      "natural_language_query": "Route from Upham Hall to Armstrong Student Center",
+      "origin_coords": {
+        "lat": 39.5096,
+        "lon": -84.7358
+      },
+      "dest_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "straight_line_dist_m": 250,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Low; both have entrance/accessibility data"
+    },
+    {
+      "id": "C1_18",
+      "category": "common",
+      "origin": "Garland Hall",
+      "destination": "Laws Hall",
+      "natural_language_query": "Directions from Garland Hall to Laws Hall",
+      "origin_coords": {
+        "lat": 39.5093,
+        "lon": -84.7378
+      },
+      "dest_coords": {
+        "lat": 39.5081,
+        "lon": -84.7338
+      },
+      "straight_line_dist_m": 360,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Laws unmapped; moderate"
+    },
+    {
+      "id": "C1_19",
+      "category": "common",
+      "origin": "Shriver Center",
+      "destination": "Roudebush Hall",
+      "natural_language_query": "Take me from Shriver Center to Roudebush Hall",
+      "origin_coords": {
+        "lat": 39.5068,
+        "lon": -84.7374
+      },
+      "dest_coords": {
+        "lat": 39.5085,
+        "lon": -84.7353
+      },
+      "straight_line_dist_m": 280,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Roudebush unmapped"
+    },
+    {
+      "id": "C1_20",
+      "category": "common",
+      "origin": "MacMillan Hall",
+      "destination": "Benton Hall",
+      "natural_language_query": "Navigate from MacMillan Hall to Benton Hall",
+      "origin_coords": {
+        "lat": 39.5077,
+        "lon": -84.7349
+      },
+      "dest_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "straight_line_dist_m": 210,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Both unmapped"
+    },
+    {
+      "id": "C2_01",
+      "category": "cross_campus",
+      "origin": "Pearson Hall",
+      "destination": "Boyd Hall",
+      "natural_language_query": "Accessible route from Pearson Hall to Boyd Hall",
+      "origin_coords": {
+        "lat": 39.5105,
+        "lon": -84.7362
+      },
+      "dest_coords": {
+        "lat": 39.5058,
+        "lon": -84.7318
+      },
+      "straight_line_dist_m": 620,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Long route; may cross High St with incline variations"
+    },
+    {
+      "id": "C2_02",
+      "category": "cross_campus",
+      "origin": "Hughes Hall",
+      "destination": "Peabody Hall",
+      "natural_language_query": "Navigate from Hughes Hall to Peabody Hall wheelchair",
+      "origin_coords": {
+        "lat": 39.5101,
+        "lon": -84.7388
+      },
+      "dest_coords": {
+        "lat": 39.5052,
+        "lon": -84.7322
+      },
+      "straight_line_dist_m": 680,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Long cross-campus; Peabody accessible entrance known"
+    },
+    {
+      "id": "C2_03",
+      "category": "cross_campus",
+      "origin": "Hiestand Hall",
+      "destination": "Bachelor Hall",
+      "natural_language_query": "Route from Hiestand Hall to Bachelor Hall",
+      "origin_coords": {
+        "lat": 39.5083,
+        "lon": -84.7395
+      },
+      "dest_coords": {
+        "lat": 39.5065,
+        "lon": -84.7325
+      },
+      "straight_line_dist_m": 650,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "West to east crossing; potential incline on Spring St"
+    },
+    {
+      "id": "C2_04",
+      "category": "cross_campus",
+      "origin": "Pearson Hall",
+      "destination": "Alumni Hall",
+      "natural_language_query": "Directions from Pearson Hall to Alumni Hall",
+      "origin_coords": {
+        "lat": 39.5105,
+        "lon": -84.7362
+      },
+      "dest_coords": {
+        "lat": 39.5071,
+        "lon": -84.7395
+      },
+      "straight_line_dist_m": 540,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "North to southwest; Alumni accessible entrance known"
+    },
+    {
+      "id": "C2_05",
+      "category": "cross_campus",
+      "origin": "Benton Hall",
+      "destination": "Peabody Hall",
+      "natural_language_query": "Take me from Benton Hall to Peabody Hall accessible route",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5052,
+        "lon": -84.7322
+      },
+      "straight_line_dist_m": 460,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "South end of campus; confirmed accessible entrance at Peabody"
+    },
+    {
+      "id": "C2_06",
+      "category": "cross_campus",
+      "origin": "McVey Data Science Building",
+      "destination": "Alumni Hall",
+      "natural_language_query": "How do I get from McVey Data Science Building to Alumni Hall",
+      "origin_coords": {
+        "lat": 39.5107,
+        "lon": -84.7318
+      },
+      "dest_coords": {
+        "lat": 39.5071,
+        "lon": -84.7395
+      },
+      "straight_line_dist_m": 730,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "NE to SW; longest likely route in dataset"
+    },
+    {
+      "id": "C2_07",
+      "category": "cross_campus",
+      "origin": "King Library",
+      "destination": "Boyd Hall",
+      "natural_language_query": "Navigate from King Library to Boyd Hall",
+      "origin_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "dest_coords": {
+        "lat": 39.5058,
+        "lon": -84.7318
+      },
+      "straight_line_dist_m": 580,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Library well mapped; Boyd not"
+    },
+    {
+      "id": "C2_08",
+      "category": "cross_campus",
+      "origin": "Hughes Hall",
+      "destination": "Bachelor Hall",
+      "natural_language_query": "Route from Hughes Hall to Bachelor Hall wheelchair accessible",
+      "origin_coords": {
+        "lat": 39.5101,
+        "lon": -84.7388
+      },
+      "dest_coords": {
+        "lat": 39.5065,
+        "lon": -84.7325
+      },
+      "straight_line_dist_m": 700,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Long diagonal; both unmapped"
+    },
+    {
+      "id": "C2_09",
+      "category": "cross_campus",
+      "origin": "Garland Hall",
+      "destination": "Peabody Hall",
+      "natural_language_query": "Directions from Garland Hall to Peabody Hall",
+      "origin_coords": {
+        "lat": 39.5093,
+        "lon": -84.7378
+      },
+      "dest_coords": {
+        "lat": 39.5052,
+        "lon": -84.7322
+      },
+      "straight_line_dist_m": 640,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Low; both have entrance data"
+    },
+    {
+      "id": "C2_10",
+      "category": "cross_campus",
+      "origin": "Armstrong Student Center",
+      "destination": "Richard M. McVey Data Science Building",
+      "natural_language_query": "Take me from Armstrong Student Center to McVey Data Science Building",
+      "origin_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "dest_coords": {
+        "lat": 39.5107,
+        "lon": -84.7318
+      },
+      "straight_line_dist_m": 510,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Armstrong mapped; McVey not"
+    },
+    {
+      "id": "C3_01",
+      "category": "problematic",
+      "origin": "Benton Hall",
+      "destination": "Elliot Hall",
+      "natural_language_query": "Navigate from Benton Hall to Elliot Hall",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5078,
+        "lon": -84.7368
+      },
+      "straight_line_dist_m": 310,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Elliot Hall has spelling variant 'Elliott'; may fail Nominatim lookup"
+    },
+    {
+      "id": "C3_02",
+      "category": "problematic",
+      "origin": "King Library",
+      "destination": "Hiestand Hall",
+      "natural_language_query": "Route from King Library to Hiestand Hall",
+      "origin_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "dest_coords": {
+        "lat": 39.5083,
+        "lon": -84.7395
+      },
+      "straight_line_dist_m": 205,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Hiestand unmapped for wheelchair; path runs through arts quad with possible cobblestone"
+    },
+    {
+      "id": "C3_03",
+      "category": "problematic",
+      "origin": "Harrison Hall",
+      "destination": "Laws Hall",
+      "natural_language_query": "Directions from Harrison Hall to Laws Hall",
+      "origin_coords": {
+        "lat": 39.5091,
+        "lon": -84.7344
+      },
+      "dest_coords": {
+        "lat": 39.5081,
+        "lon": -84.7338
+      },
+      "straight_line_dist_m": 120,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Very close buildings; routing engine may return trivially short path or struggle with footpath network"
+    },
+    {
+      "id": "C3_04",
+      "category": "problematic",
+      "origin": "Upham Hall",
+      "destination": "Hiestand Hall",
+      "natural_language_query": "Accessible route from Upham Hall to Hiestand Hall",
+      "origin_coords": {
+        "lat": 39.5096,
+        "lon": -84.7358
+      },
+      "dest_coords": {
+        "lat": 39.5083,
+        "lon": -84.7395
+      },
+      "straight_line_dist_m": 335,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Route likely crosses arts quad; surface data may be incomplete in OSM"
+    },
+    {
+      "id": "C3_05",
+      "category": "problematic",
+      "origin": "Boyd Hall",
+      "destination": "Kreger Hall",
+      "natural_language_query": "How do I get from Boyd Hall to Kreger Hall wheelchair",
+      "origin_coords": {
+        "lat": 39.5058,
+        "lon": -84.7318
+      },
+      "dest_coords": {
+        "lat": 39.5099,
+        "lon": -84.7348
+      },
+      "straight_line_dist_m": 490,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "South to north; both unmapped; may involve crossing High St with limited curb cut data"
+    },
+    {
+      "id": "C3_06",
+      "category": "problematic",
+      "origin": "Peabody Hall",
+      "destination": "Elliot Hall",
+      "natural_language_query": "Navigate from Peabody Hall to Elliott Hall",
+      "origin_coords": {
+        "lat": 39.5052,
+        "lon": -84.7322
+      },
+      "dest_coords": {
+        "lat": 39.5078,
+        "lon": -84.7368
+      },
+      "straight_line_dist_m": 460,
+      "expected_geocoding_success": false,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Query uses 'Elliott' (double-t); OSM may use 'Elliot'; geocoding failure likely"
+    },
+    {
+      "id": "C3_07",
+      "category": "problematic",
+      "origin": "Benton Hall",
+      "destination": "Peabody Hall",
+      "natural_language_query": "Directions from Benton Hall to Peabody Hall",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5052,
+        "lon": -84.7322
+      },
+      "straight_line_dist_m": 460,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Route may pass through Western Drive one-way section; wheelchair path may detour significantly"
+    },
+    {
+      "id": "C3_08",
+      "category": "problematic",
+      "origin": "Kreger Hall",
+      "destination": "Alumni Hall",
+      "natural_language_query": "Route from Kreger Hall to Alumni Hall accessible",
+      "origin_coords": {
+        "lat": 39.5099,
+        "lon": -84.7348
+      },
+      "dest_coords": {
+        "lat": 39.5071,
+        "lon": -84.7395
+      },
+      "straight_line_dist_m": 530,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Long diagonal; Kreger unmapped; path crosses central quad area"
+    },
+    {
+      "id": "C3_09",
+      "category": "problematic",
+      "origin": "MacMillan Hall",
+      "destination": "Boyd Hall",
+      "natural_language_query": "Take me from MacMillan Hall to Boyd Hall",
+      "origin_coords": {
+        "lat": 39.5077,
+        "lon": -84.7349
+      },
+      "dest_coords": {
+        "lat": 39.5058,
+        "lon": -84.7318
+      },
+      "straight_line_dist_m": 345,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Both unmapped; route near Western Drive one-way section"
+    },
+    {
+      "id": "C3_10",
+      "category": "problematic",
+      "origin": "Roudebush Hall",
+      "destination": "Hiestand Hall",
+      "natural_language_query": "Navigate from Roudebush Hall to Hiestand Hall wheelchair accessible",
+      "origin_coords": {
+        "lat": 39.5085,
+        "lon": -84.7353
+      },
+      "dest_coords": {
+        "lat": 39.5083,
+        "lon": -84.7395
+      },
+      "straight_line_dist_m": 370,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Both unmapped; path likely runs past arts buildings with unknown surface types"
+    },
+    {
+      "id": "C4_01",
+      "category": "ambiguous",
+      "origin": "Benton Hall",
+      "destination": "the library",
+      "natural_language_query": "Navigate from Benton Hall to the library",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "straight_line_dist_m": 300,
+      "expected_geocoding_success": false,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Ambiguous destination name; Nominatim may return multiple results or fail"
+    },
+    {
+      "id": "C4_02",
+      "category": "ambiguous",
+      "origin": "Armstrong",
+      "destination": "King Library",
+      "natural_language_query": "How do I get from Armstrong to King Library",
+      "origin_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "dest_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "straight_line_dist_m": 175,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Shortened name; Nominatim should still resolve Armstrong Student Center"
+    },
+    {
+      "id": "C4_03",
+      "category": "ambiguous",
+      "origin": "Benton Hall",
+      "destination": "student center",
+      "natural_language_query": "Route from Benton Hall to the student center",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "straight_line_dist_m": 320,
+      "expected_geocoding_success": false,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Generic destination; geocoder may return wrong result or nothing"
+    },
+    {
+      "id": "C4_04",
+      "category": "ambiguous",
+      "origin": "the engineering building",
+      "destination": "King Library",
+      "natural_language_query": "Directions from the engineering building to King Library",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "straight_line_dist_m": 300,
+      "expected_geocoding_success": false,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Informal reference; could resolve to Benton or to separate Engineering Building nearby"
+    },
+    {
+      "id": "C4_05",
+      "category": "ambiguous",
+      "origin": "McVey building",
+      "destination": "Armstrong Student Center",
+      "natural_language_query": "Navigate from McVey building to Armstrong Student Center",
+      "origin_coords": {
+        "lat": 39.5107,
+        "lon": -84.7318
+      },
+      "dest_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "straight_line_dist_m": 420,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Partial name; depends on Nominatim fuzzy matching quality"
+    },
+    {
+      "id": "C4_06",
+      "category": "ambiguous",
+      "origin": "Laws",
+      "destination": "Shriver",
+      "natural_language_query": "Route from Laws to Shriver",
+      "origin_coords": {
+        "lat": 39.5081,
+        "lon": -84.7338
+      },
+      "dest_coords": {
+        "lat": 39.5068,
+        "lon": -84.7374
+      },
+      "straight_line_dist_m": 360,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Single-word names; Nominatim may resolve to non-campus results"
+    },
+    {
+      "id": "C4_07",
+      "category": "ambiguous",
+      "origin": "Benton Hall",
+      "destination": "Data Science Building",
+      "natural_language_query": "How do I get from Benton Hall to the Data Science Building",
+      "origin_coords": {
+        "lat": 39.5092,
+        "lon": -84.7337
+      },
+      "dest_coords": {
+        "lat": 39.5107,
+        "lon": -84.7318
+      },
+      "straight_line_dist_m": 210,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Partial name without 'McVey'; may match or fail depending on OSM tagging"
+    },
+    {
+      "id": "C4_08",
+      "category": "ambiguous",
+      "origin": "Garland",
+      "destination": "Armstrong",
+      "natural_language_query": "Directions from Garland to Armstrong",
+      "origin_coords": {
+        "lat": 39.5093,
+        "lon": -84.7378
+      },
+      "dest_coords": {
+        "lat": 39.5074,
+        "lon": -84.7362
+      },
+      "straight_line_dist_m": 265,
+      "expected_geocoding_success": true,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": true,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Single-word names; both should resolve as they are well-known"
+    },
+    {
+      "id": "C4_09",
+      "category": "ambiguous",
+      "origin": "the admin building",
+      "destination": "King Library",
+      "natural_language_query": "Route from the admin building to King Library",
+      "origin_coords": {
+        "lat": 39.5085,
+        "lon": -84.7353
+      },
+      "dest_coords": {
+        "lat": 39.5088,
+        "lon": -84.7371
+      },
+      "straight_line_dist_m": 165,
+      "expected_geocoding_success": false,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": true,
+      "failure_risk": "Informal reference to Roudebush; geocoder almost certainly fails"
+    },
+    {
+      "id": "C4_10",
+      "category": "ambiguous",
+      "origin": "Hughes Hall",
+      "destination": "the gym",
+      "natural_language_query": "Navigate from Hughes Hall to the gym",
+      "origin_coords": {
+        "lat": 39.5101,
+        "lon": -84.7388
+      },
+      "dest_coords": {
+        "lat": 39.511,
+        "lon": -84.741
+      },
+      "straight_line_dist_m": 230,
+      "expected_geocoding_success": false,
+      "expected_route_feasible": true,
+      "osm_entrance_data_origin": false,
+      "osm_entrance_data_dest": false,
+      "failure_risk": "Highly ambiguous destination; likely fails geocoding entirely"
+    }
+  ]
+}

@@ -17,7 +17,7 @@ router = APIRouter()
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest) -> ChatResponse:
-    from app.dependencies import chat_service
+    from app.dependencies import chat_service, rate_limiter, safety_guard
 
     logger.info(
         "Chat request received: session_id=%s message_chars=%d has_context=%s",
@@ -26,6 +26,8 @@ def chat(req: ChatRequest) -> ChatResponse:
         req.context is not None,
     )
     try:
+        rate_limiter.check(req.session_id)
+        safety_guard.check(req.message)
         response = chat_service.chat(req)
         logger.info(
             "Chat request succeeded: session_id=%s reply_chars=%d",
@@ -43,8 +45,9 @@ def chat(req: ChatRequest) -> ChatResponse:
 
 @router.delete("/session/{session_id}")
 def delete_session(session_id: str) -> JSONResponse:
-    from app.dependencies import session_store
+    from app.dependencies import rate_limiter, session_store
 
     logger.info("Clearing session: session_id=%s", session_id)
     session_store.clear_session(session_id)
+    rate_limiter.clear(session_id)
     return JSONResponse(content={"status": "cleared", "session_id": session_id})

@@ -5,7 +5,23 @@ import './AiChat.css';
 import { useAppStore } from '../../store/useAppStore';
 import { sendChat } from '../../services/chatService';
 
-const MAX_CHARS = 500;
+const MAX_WORDS = 100;
+
+function countWords(text: string): number {
+  return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+}
+
+function enforceWordLimit(text: string): string {
+  const words = text.trim().split(/\s+/);
+  if (words.length <= MAX_WORDS) return text;
+  // Preserve trailing space if user is mid-word so the cursor feels natural
+  return words.slice(0, MAX_WORDS).join(' ');
+}
+
+/** Strip HTML/XML tags and null bytes to prevent injection via the input field. */
+function sanitizeInput(text: string): string {
+  return text.replace(/<[^>]*>/g, '').replace(/\x00/g, '').trim();
+}
 const CURRENT_LOCATION_ROUTE_INTENT = /(?:my|current)\s+location|from\s+here|route\s+me\s+to|directions\s+to|navigate\s+to/i;
 const ROUTE_INTENT_RE = /\b(route|directions|navigate|navigation|from\s+.+\s+to|take me to|way to|how do i get to)\b/i;
 const ACCESSIBILITY_INTENT_RE = /\b(accessible|accessibility|wheelchair|ramp|entrance|door|elevator|lift|curb|kerb|step)\b/i;
@@ -168,7 +184,7 @@ export default function ChatPanel() {
   }, [resolveUserLocation, route, origin, destination]);
 
   const sendMessage = useCallback(async (rawText: string) => {
-    const text = rawText.trim();
+    const text = sanitizeInput(enforceWordLimit(rawText));
     if (!text || isChatLoading) return;
 
     setInput('');
@@ -280,12 +296,12 @@ export default function ChatPanel() {
 
       const nextText = (finalText || interimText).trim();
       if (nextText) {
-        setInput(nextText.slice(0, MAX_CHARS));
+        setInput(enforceWordLimit(nextText));
       }
 
       if (finalText.trim()) {
         stopListening();
-        void sendMessage(finalText.slice(0, MAX_CHARS));
+        void sendMessage(enforceWordLimit(finalText));
       }
     };
 
@@ -330,7 +346,7 @@ export default function ChatPanel() {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
-          <span>MyPath AI</span>
+          <span>MyPath Assistant</span>
         </div>
         <div className="chat-header-actions">
           {chatMessages.length > 0 && (
@@ -370,7 +386,7 @@ export default function ChatPanel() {
                 <circle cx="15" cy="19" r="2"/>
               </svg>
             </div>
-            <p className="chat-empty-title">Ask MyPath AI</p>
+            <p className="chat-empty-title">Ask MyPath Assistant</p>
             <p className="chat-empty-hint">
               Try: <em>"Find me an accessible route to Central Park"</em> or{' '}
               <em>"Are there ramps near my location?"</em>
@@ -382,7 +398,7 @@ export default function ChatPanel() {
               <div
                 key={i}
                 className={`chat-message chat-message--${msg.role}`}
-                aria-label={`${msg.role === 'user' ? 'You' : 'MyPath AI'}: ${msg.content}`}
+                aria-label={`${msg.role === 'user' ? 'You' : 'MyPath Assistant'}: ${msg.content}`}
               >
                 <div className="chat-bubble">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
@@ -390,7 +406,7 @@ export default function ChatPanel() {
               </div>
             ))}
             {isChatLoading && (
-              <div className="chat-message chat-message--assistant" aria-label="MyPath AI is typing">
+              <div className="chat-message chat-message--assistant" aria-label="MyPath Assistant is typing">
                 <div className="chat-bubble chat-bubble--typing" aria-hidden="true">
                   <span /><span /><span />
                 </div>
@@ -409,16 +425,15 @@ export default function ChatPanel() {
             className="chat-input"
             placeholder="Ask about accessible routes, ramps, elevators…"
             value={input}
-            onChange={(e) => setInput(e.target.value.slice(0, MAX_CHARS))}
+            onChange={(e) => setInput(enforceWordLimit(e.target.value))}
             onKeyDown={handleKeyDown}
             disabled={isChatLoading}
             aria-label="Chat input"
             aria-disabled={isChatLoading}
-            maxLength={MAX_CHARS}
           />
-          {input.length > MAX_CHARS - 60 && (
+          {countWords(input) >= MAX_WORDS - 10 && (
             <span className="chat-char-count" aria-live="polite">
-              {input.length}/{MAX_CHARS}
+              {countWords(input)}/{MAX_WORDS} words
             </span>
           )}
         </div>

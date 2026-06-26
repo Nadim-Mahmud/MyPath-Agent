@@ -1,0 +1,187 @@
+model,run,pair_id,category,origin,destination,query,geocode_success,route_success,wc_valid,failure_mode,failure_detail,latency_ms,session_id
+gemini-1.5-flash,1,C1_01,common,Benton Hall,Richard M. McVey Data Science Building,Navigate from Benton Hall to McVey Data Science Building,True,True,True,,,15597,eval_C1_01_r1_865c5ecc
+gemini-1.5-flash,1,C1_02,common,Benton Hall,Armstrong Student Center,Directions from Benton Hall to Armstrong Student Center,True,True,True,,,15535,eval_C1_02_r1_286b116b
+gemini-1.5-flash,1,C1_03,common,King Library,Armstrong Student Center,How do I get from King Library to Armstrong Student Center,True,True,True,,,12124,eval_C1_03_r1_123c1978
+gemini-1.5-flash,1,C1_04,common,Upham Hall,Laws Hall,Route from Upham Hall to Laws Hall,True,True,True,,,4855,eval_C1_04_r1_718c3b48
+gemini-1.5-flash,1,C1_05,common,Armstrong Student Center,King Library,Take me from Armstrong Student Center to King Library,True,True,True,,,5263,eval_C1_05_r1_3ba6ad43
+gemini-1.5-flash,1,C1_06,common,Garland Hall,Armstrong Student Center,Navigate from Garland Hall to Armstrong Student Center,True,True,True,,,5733,eval_C1_06_r1_a906aa26
+gemini-1.5-flash,1,C1_07,common,MacMillan Hall,King Library,Directions from MacMillan Hall to King Library,True,True,True,,,4752,eval_C1_07_r1_aabb28d3
+gemini-1.5-flash,1,C1_08,common,Roudebush Hall,Upham Hall,How do I get to Upham Hall from Roudebush Hall,True,True,True,,,4630,eval_C1_08_r1_f678ba75
+gemini-1.5-flash,1,C1_09,common,Hughes Hall,King Library,Route from Hughes Hall to King Library wheelchair accessible,False,False,False,A,"I couldn't locate Hughes Hall in the mapping system. Could you please provide the street address for Hughes Hall or a nearby street intersection? Once I have a precise location, I can help you plan an",9021,eval_C1_09_r1_d1e20d94
+gemini-1.5-flash,1,C1_10,common,Laws Hall,Shriver Center,Navigate from Laws Hall to Shriver Center,True,True,True,,,12070,eval_C1_10_r1_73f1a35e
+gemini-1.5-flash,1,C1_11,common,Kreger Hall,Benton Hall,Directions from Kreger Hall to Benton Hall,True,True,True,,,29317,eval_C1_11_r1_030bbe94
+gemini-1.5-flash,1,C1_12,common,Harrison Hall,Roudebush Hall,Route from Harrison Hall to Roudebush Hall,True,True,True,,,4524,eval_C1_12_r1_2462003e
+gemini-1.5-flash,1,C1_13,common,Pearson Hall,Garland Hall,Take me from Pearson Hall to Garland Hall,True,True,True,,,28555,eval_C1_13_r1_fddb17d7
+gemini-1.5-flash,1,C1_14,common,Alumni Hall,Shriver Center,Accessible route from Alumni Hall to Shriver Center,True,True,True,,,12891,eval_C1_14_r1_d720783e
+gemini-1.5-flash,1,C1_15,common,Hiestand Hall,King Library,Navigate from Hiestand Hall to King Library,True,True,True,,,13297,eval_C1_15_r1_940eac29
+gemini-1.5-flash,1,C1_16,common,Bachelor Hall,MacMillan Hall,How do I get from Bachelor Hall to MacMillan Hall,True,True,True,,,9682,eval_C1_16_r1_fca978f5
+gemini-1.5-flash,1,C1_17,common,Upham Hall,Armstrong Student Center,Route from Upham Hall to Armstrong Student Center,True,True,True,,,7854,eval_C1_17_r1_72621c89
+gemini-1.5-flash,1,C1_18,common,Garland Hall,Laws Hall,Directions from Garland Hall to Laws Hall,False,False,False,A,"It appears that Garland Hall and Laws Hall are located on different university campuses (one in Baltimore, MD and one in Oxford, OH). Therefore, I am unable to generate a wheelchair-accessible route b",4026,eval_C1_18_r1_5f21b920
+gemini-1.5-flash,1,C1_19,common,Shriver Center,Roudebush Hall,Take me from Shriver Center to Roudebush Hall,True,True,True,,,4695,eval_C1_19_r1_8f2eb840
+gemini-1.5-flash,1,C1_20,common,MacMillan Hall,Benton Hall,Navigate from MacMillan Hall to Benton Hall,True,True,True,,,4915,eval_C1_20_r1_8aefb603
+gemini-1.5-flash,1,C2_01,cross_campus,Pearson Hall,Boyd Hall,Accessible route from Pearson Hall to Boyd Hall,False,False,False,A,"It appears that ""Pearson Hall"" and ""Boyd Hall"" are located on different university campuses (one in Chapel Hill, NC and the other in Lexington, KY). Please verify the locations or provide the specific",16122,eval_C2_01_r1_f6e9b98e
+gemini-1.5-flash,1,C2_02,cross_campus,Hughes Hall,Peabody Hall,Navigate from Hughes Hall to Peabody Hall wheelchair,False,False,False,A,"It appears you are requesting a route between Hughes Hall in Cambridge, UK, and Peabody Hall in Oxford, Ohio. These locations are in different countries and are too far apart for a local wheelchair-ac",7767,eval_C2_02_r1_0c997d49
+gemini-1.5-flash,1,C2_03,cross_campus,Hiestand Hall,Bachelor Hall,Route from Hiestand Hall to Bachelor Hall,True,True,True,,,20737,eval_C2_03_r1_ffbd02cd
+gemini-1.5-flash,1,C2_04,cross_campus,Pearson Hall,Alumni Hall,Directions from Pearson Hall to Alumni Hall,False,False,False,A,"I have located **Pearson Hall** and **Alumni Hall**. However, the accessibility data for Alumni Hall is currently unavailable in the database.
+
+Could you please confirm the city and campus for both bu",17804,eval_C2_04_r1_820b901c
+gemini-1.5-flash,1,C2_05,cross_campus,Benton Hall,Peabody Hall,Take me from Benton Hall to Peabody Hall accessible route,False,False,False,A,"I've retrieved the location information for both buildings. Unfortunately, I found a discrepancy in the locations: Benton Hall appears to be in Berkeley, California, while Peabody Hall is in Oxford, O",9082,eval_C2_05_r1_38e29191
+gemini-1.5-flash,1,C2_06,cross_campus,McVey Data Science Building,Alumni Hall,How do I get from McVey Data Science Building to Alumni Hall,True,True,True,,,4549,eval_C2_06_r1_d3bfc68f
+gemini-1.5-flash,1,C2_07,cross_campus,King Library,Boyd Hall,Navigate from King Library to Boyd Hall,True,False,False,B,"Destination 39.5036,-84.7253 is 609m from expected 39.5058,-84.7318",5776,eval_C2_07_r1_cee9b063
+gemini-1.5-flash,1,C2_08,cross_campus,Hughes Hall,Bachelor Hall,Route from Hughes Hall to Bachelor Hall wheelchair accessible,False,False,False,A,"I couldn't find accessibility data or a location for Hughes Hall in my map database. Could you please provide the street address for Hughes Hall, or a nearby building or intersection so I can accurate",39511,eval_C2_08_r1_4c6809b0
+gemini-1.5-flash,1,C2_09,cross_campus,Garland Hall,Peabody Hall,Directions from Garland Hall to Peabody Hall,False,False,False,A,"It appears that Garland Hall and Peabody Hall are located on different university campuses (Johns Hopkins University in Baltimore, MD and Miami University in Oxford, OH, respectively). 
+
+Because these",3367,eval_C2_09_r1_a5f98edb
+gemini-1.5-flash,1,C2_10,cross_campus,Armstrong Student Center,Richard M. McVey Data Science Building,Take me from Armstrong Student Center to McVey Data Science Building,True,True,True,,,12079,eval_C2_10_r1_5f5b0806
+gemini-1.5-flash,1,C3_01,problematic,Benton Hall,Elliot Hall,Navigate from Benton Hall to Elliot Hall,False,False,False,A,"I found locations for both Benton Hall and Elliot Hall; however, they appear to be in different countries (USA and New Zealand). Could you please confirm the **city or campus** for both buildings so I",19404,eval_C3_01_r1_09344259
+gemini-1.5-flash,1,C3_02,problematic,King Library,Hiestand Hall,Route from King Library to Hiestand Hall,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",29794,eval_C3_02_r1_87223fa1
+gemini-1.5-flash,1,C3_03,problematic,Harrison Hall,Laws Hall,Directions from Harrison Hall to Laws Hall,True,True,True,,,4667,eval_C3_03_r1_973b9d9d
+gemini-1.5-flash,1,C3_04,problematic,Upham Hall,Hiestand Hall,Accessible route from Upham Hall to Hiestand Hall,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",4878,eval_C3_04_r1_2a131664
+gemini-1.5-flash,1,C3_05,problematic,Boyd Hall,Kreger Hall,How do I get from Boyd Hall to Kreger Hall wheelchair,True,True,True,,,25574,eval_C3_05_r1_bac9ccec
+gemini-1.5-flash,1,C3_06,problematic,Peabody Hall,Elliot Hall,Navigate from Peabody Hall to Elliott Hall,True,False,False,B,"Destination 51.6085,-0.3637 is 6330714m from expected 39.5078,-84.7368",6556,eval_C3_06_r1_4f22ede4
+gemini-1.5-flash,1,C3_07,problematic,Benton Hall,Peabody Hall,Directions from Benton Hall to Peabody Hall,False,False,False,A,"It appears you are requesting a route between Benton Hall and Peabody Hall. However, these locations are in different cities (one in California and one in Ohio), so I cannot provide a walking route be",18682,eval_C3_07_r1_b51c24f1
+gemini-1.5-flash,1,C3_08,problematic,Kreger Hall,Alumni Hall,Route from Kreger Hall to Alumni Hall accessible,True,True,True,,,9390,eval_C3_08_r1_a9d97ee6
+gemini-1.5-flash,1,C3_09,problematic,MacMillan Hall,Boyd Hall,Take me from MacMillan Hall to Boyd Hall,True,False,False,B,"Destination 38.0418,-84.5017 is 164002m from expected 39.5058,-84.7318",12209,eval_C3_09_r1_7f03b73c
+gemini-1.5-flash,1,C3_10,problematic,Roudebush Hall,Hiestand Hall,Navigate from Roudebush Hall to Hiestand Hall wheelchair accessible,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",11155,eval_C3_10_r1_d1e2f0cd
+gemini-1.5-flash,1,C4_01,ambiguous,Benton Hall,the library,Navigate from Benton Hall to the library,False,False,False,A,"It appears you are trying to route between two locations in different cities—Benton Hall (in Berkeley, CA) and the Harold Washington Library (in Chicago, IL). 
+
+Could you please confirm the **name and",10873,eval_C4_01_r1_5f76bb18
+gemini-1.5-flash,1,C4_02,ambiguous,Armstrong,King Library,How do I get from Armstrong to King Library,True,True,True,,,10040,eval_C4_02_r1_ca4905e2
+gemini-1.5-flash,1,C4_03,ambiguous,Benton Hall,student center,Route from Benton Hall to the student center,False,False,False,A,"I've located both Benton Hall and the Student Center. However, they appear to be in two different states (California and Michigan), so I cannot provide a walking route between them. 
+
+Could you please",4420,eval_C4_03_r1_9ad825ac
+gemini-1.5-flash,1,C4_04,ambiguous,the engineering building,King Library,Directions from the engineering building to King Library,False,False,False,A,"It appears that the Engineering Building and King Library are located in different countries (London, UK, and Oxford, Ohio, respectively). 
+
+Could you please verify the names or locations of these bui",12665,eval_C4_04_r1_f770d7c5
+gemini-1.5-flash,1,C4_05,ambiguous,McVey building,Armstrong Student Center,Navigate from McVey building to Armstrong Student Center,False,False,False,A,"I'm sorry, I couldn't find a map location for **McVey Hall**. Could you please provide a street address for that building? Once I have that, I can plan an accessible route to the **Armstrong Student C",5376,eval_C4_05_r1_262ff6cc
+gemini-1.5-flash,1,C4_06,ambiguous,Laws,Shriver,Route from Laws to Shriver,True,True,True,,,6791,eval_C4_06_r1_3695000d
+gemini-1.5-flash,1,C4_07,ambiguous,Benton Hall,Data Science Building,How do I get from Benton Hall to the Data Science Building,True,True,True,,,11256,eval_C4_07_r1_1bee1a6a
+gemini-1.5-flash,1,C4_08,ambiguous,Garland,Armstrong,Directions from Garland to Armstrong,False,False,False,A,"I was unable to find specific accessibility information or locations for both buildings. Garland Hall was located, but Armstrong Hall does not appear in the mapping data.
+
+Could you please provide the",13687,eval_C4_08_r1_ec13266d
+gemini-1.5-flash,1,C4_09,ambiguous,the admin building,King Library,Route from the admin building to King Library,False,False,False,A,It appears that the Admin Building and King Library you are referring to are in different countries (Singapore and the United States). Could you please clarify the city or campus where you are current,13817,eval_C4_09_r1_f900e54f
+gemini-1.5-flash,1,C4_10,ambiguous,Hughes Hall,the gym,Navigate from Hughes Hall to the gym,False,False,False,A,"I've located Hughes Hall in Cambridge, but the ""gym"" search returned a result in Los Angeles. To provide you with an accurate, accessible route, could you please provide the specific name or address o",5107,eval_C4_10_r1_5c99b70b
+gemini-1.5-flash,2,C1_01,common,Benton Hall,Richard M. McVey Data Science Building,Navigate from Benton Hall to McVey Data Science Building,True,True,True,,,5049,eval_C1_01_r2_4be59d76
+gemini-1.5-flash,2,C1_02,common,Benton Hall,Armstrong Student Center,Directions from Benton Hall to Armstrong Student Center,True,True,True,,,4278,eval_C1_02_r2_c08fe2be
+gemini-1.5-flash,2,C1_03,common,King Library,Armstrong Student Center,How do I get from King Library to Armstrong Student Center,True,True,True,,,24353,eval_C1_03_r2_06b009b8
+gemini-1.5-flash,2,C1_04,common,Upham Hall,Laws Hall,Route from Upham Hall to Laws Hall,True,True,True,,,7378,eval_C1_04_r2_78bb1cc3
+gemini-1.5-flash,2,C1_05,common,Armstrong Student Center,King Library,Take me from Armstrong Student Center to King Library,True,True,True,,,7379,eval_C1_05_r2_9e866e83
+gemini-1.5-flash,2,C1_06,common,Garland Hall,Armstrong Student Center,Navigate from Garland Hall to Armstrong Student Center,True,True,True,,,12044,eval_C1_06_r2_21f5cbcf
+gemini-1.5-flash,2,C1_07,common,MacMillan Hall,King Library,Directions from MacMillan Hall to King Library,True,True,True,,,4712,eval_C1_07_r2_06979adf
+gemini-1.5-flash,2,C1_08,common,Roudebush Hall,Upham Hall,How do I get to Upham Hall from Roudebush Hall,True,True,True,,,12410,eval_C1_08_r2_0f50af88
+gemini-1.5-flash,2,C1_09,common,Hughes Hall,King Library,Route from Hughes Hall to King Library wheelchair accessible,False,False,False,A,"I'm sorry, I couldn't find precise location data for Hughes Hall to plan a route to the King Library. Could you please provide the street address for Hughes Hall or confirm if it's located near a spec",7804,eval_C1_09_r2_a8812dc9
+gemini-1.5-flash,2,C1_10,common,Laws Hall,Shriver Center,Navigate from Laws Hall to Shriver Center,True,True,True,,,6083,eval_C1_10_r2_a9448dac
+gemini-1.5-flash,2,C1_11,common,Kreger Hall,Benton Hall,Directions from Kreger Hall to Benton Hall,True,True,True,,,23568,eval_C1_11_r2_ca05116a
+gemini-1.5-flash,2,C1_12,common,Harrison Hall,Roudebush Hall,Route from Harrison Hall to Roudebush Hall,True,True,True,,,9666,eval_C1_12_r2_8c1ba8a3
+gemini-1.5-flash,2,C1_13,common,Pearson Hall,Garland Hall,Take me from Pearson Hall to Garland Hall,False,False,False,A,"It appears that the Pearson Hall and Garland Hall you are referring to are located in different cities (Chapel Hill, NC, and Baltimore, MD, respectively).
+
+Could you please confirm the **name of the u",7443,eval_C1_13_r2_85e8e7f9
+gemini-1.5-flash,2,C1_14,common,Alumni Hall,Shriver Center,Accessible route from Alumni Hall to Shriver Center,True,True,True,,,8808,eval_C1_14_r2_82669d71
+gemini-1.5-flash,2,C1_15,common,Hiestand Hall,King Library,Navigate from Hiestand Hall to King Library,True,True,True,,,4584,eval_C1_15_r2_5c9ec978
+gemini-1.5-flash,2,C1_16,common,Bachelor Hall,MacMillan Hall,How do I get from Bachelor Hall to MacMillan Hall,True,True,True,,,11425,eval_C1_16_r2_8a3b93aa
+gemini-1.5-flash,2,C1_17,common,Upham Hall,Armstrong Student Center,Route from Upham Hall to Armstrong Student Center,True,True,True,,,9779,eval_C1_17_r2_178fec65
+gemini-1.5-flash,2,C1_18,common,Garland Hall,Laws Hall,Directions from Garland Hall to Laws Hall,True,True,True,,,11670,eval_C1_18_r2_5ee1a8e7
+gemini-1.5-flash,2,C1_19,common,Shriver Center,Roudebush Hall,Take me from Shriver Center to Roudebush Hall,True,True,True,,,18483,eval_C1_19_r2_1fd85d50
+gemini-1.5-flash,2,C1_20,common,MacMillan Hall,Benton Hall,Navigate from MacMillan Hall to Benton Hall,True,True,True,,,16521,eval_C1_20_r2_6e29d6d0
+gemini-1.5-flash,2,C2_01,cross_campus,Pearson Hall,Boyd Hall,Accessible route from Pearson Hall to Boyd Hall,False,False,False,A,"It appears that **Pearson Hall** and **Boyd Hall** are located in different states (North Carolina and Kentucky, respectively). Could you please verify the names of the buildings or the city you are i",7824,eval_C2_01_r2_7d48c07a
+gemini-1.5-flash,2,C2_02,cross_campus,Hughes Hall,Peabody Hall,Navigate from Hughes Hall to Peabody Hall wheelchair,False,False,False,A,"It appears you are asking for a route between Hughes Hall and Peabody Hall. However, these buildings are located in different countries—Hughes Hall is in Cambridge, UK, and Peabody Hall is in Oxford, ",3493,eval_C2_02_r2_fe48d2a5
+gemini-1.5-flash,2,C2_03,cross_campus,Hiestand Hall,Bachelor Hall,Route from Hiestand Hall to Bachelor Hall,True,True,True,,,8682,eval_C2_03_r2_e7e1e832
+gemini-1.5-flash,2,C2_04,cross_campus,Pearson Hall,Alumni Hall,Directions from Pearson Hall to Alumni Hall,True,True,True,,,17210,eval_C2_04_r2_95d41cff
+gemini-1.5-flash,2,C2_05,cross_campus,Benton Hall,Peabody Hall,Take me from Benton Hall to Peabody Hall accessible route,True,False,False,B,"Destination 39.5016,-84.7258 is 680m from expected 39.5052,-84.7322",21675,eval_C2_05_r2_65a74093
+gemini-1.5-flash,2,C2_06,cross_campus,McVey Data Science Building,Alumni Hall,How do I get from McVey Data Science Building to Alumni Hall,False,False,False,A,"I have found the **McVey Data Science Building** in Oxford, Ohio, which has confirmed wheelchair-accessible main entrances. However, the **Alumni Hall** result I retrieved is located in Providence, Rh",4626,eval_C2_06_r2_b8cd6760
+gemini-1.5-flash,2,C2_07,cross_campus,King Library,Boyd Hall,Navigate from King Library to Boyd Hall,False,False,False,A,"The locations you've requested—**King Library** and **Boyd Hall**—appear to be at different universities (Oxford, Ohio and Lexington, Kentucky respectively). As they are not on the same campus, I cann",4877,eval_C2_07_r2_b3e51b7b
+gemini-1.5-flash,2,C2_08,cross_campus,Hughes Hall,Bachelor Hall,Route from Hughes Hall to Bachelor Hall wheelchair accessible,False,False,False,A,"I'm sorry, I couldn't find location information for Hughes Hall to plan an accessible route. Could you provide the street address or a nearby intersection for Hughes Hall?
+
+I have confirmed that **Bac",14154,eval_C2_08_r2_3418ee34
+gemini-1.5-flash,2,C2_09,cross_campus,Garland Hall,Peabody Hall,Directions from Garland Hall to Peabody Hall,False,False,False,A,"It appears that Garland Hall and Peabody Hall are located on different university campuses (Johns Hopkins University in Baltimore and Miami University in Ohio, respectively). As a result, I cannot gen",3239,eval_C2_09_r2_e7c1680d
+gemini-1.5-flash,2,C2_10,cross_campus,Armstrong Student Center,Richard M. McVey Data Science Building,Take me from Armstrong Student Center to McVey Data Science Building,True,True,True,,,17280,eval_C2_10_r2_9b75ed04
+gemini-1.5-flash,2,C3_01,problematic,Benton Hall,Elliot Hall,Navigate from Benton Hall to Elliot Hall,False,False,False,A,"I've found information for both locations, but it appears they are very far apart (one in Berkeley, California, and one in Auckland, New Zealand). 
+
+Could you please confirm the **university or city**",22625,eval_C3_01_r2_f3860650
+gemini-1.5-flash,2,C3_02,problematic,King Library,Hiestand Hall,Route from King Library to Hiestand Hall,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",6340,eval_C3_02_r2_8db51400
+gemini-1.5-flash,2,C3_03,problematic,Harrison Hall,Laws Hall,Directions from Harrison Hall to Laws Hall,True,True,True,,,19189,eval_C3_03_r2_ab0ec085
+gemini-1.5-flash,2,C3_04,problematic,Upham Hall,Hiestand Hall,Accessible route from Upham Hall to Hiestand Hall,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",25754,eval_C3_04_r2_5a93f8e7
+gemini-1.5-flash,2,C3_05,problematic,Boyd Hall,Kreger Hall,How do I get from Boyd Hall to Kreger Hall wheelchair,True,True,True,,,8104,eval_C3_05_r2_34838c62
+gemini-1.5-flash,2,C3_06,problematic,Peabody Hall,Elliot Hall,Navigate from Peabody Hall to Elliott Hall,True,True,True,,,6244,eval_C3_06_r2_fd696319
+gemini-1.5-flash,2,C3_07,problematic,Benton Hall,Peabody Hall,Directions from Benton Hall to Peabody Hall,True,False,False,B,"Destination 39.5016,-84.7258 is 680m from expected 39.5052,-84.7322",4303,eval_C3_07_r2_a318baf5
+gemini-1.5-flash,2,C3_08,problematic,Kreger Hall,Alumni Hall,Route from Kreger Hall to Alumni Hall accessible,True,True,True,,,5770,eval_C3_08_r2_642f4917
+gemini-1.5-flash,2,C3_09,problematic,MacMillan Hall,Boyd Hall,Take me from MacMillan Hall to Boyd Hall,True,False,False,B,"Destination 38.0418,-84.5017 is 164002m from expected 39.5058,-84.7318",9560,eval_C3_09_r2_c7f00117
+gemini-1.5-flash,2,C3_10,problematic,Roudebush Hall,Hiestand Hall,Navigate from Roudebush Hall to Hiestand Hall wheelchair accessible,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",5531,eval_C3_10_r2_edc86977
+gemini-1.5-flash,2,C4_01,ambiguous,Benton Hall,the library,Navigate from Benton Hall to the library,False,False,False,A,"I'm sorry, I cannot plan a route between those locations because Benton Hall is in Berkeley, California, and the library identified is in Chicago, Illinois. They are thousands of miles apart.
+
+Could y",6637,eval_C4_01_r2_a922e86c
+gemini-1.5-flash,2,C4_02,ambiguous,Armstrong,King Library,How do I get from Armstrong to King Library,True,True,True,,,17284,eval_C4_02_r2_042c70ee
+gemini-1.5-flash,2,C4_03,ambiguous,Benton Hall,student center,Route from Benton Hall to the student center,False,False,False,A,"I have found the locations, but they are in different cities (Berkeley, California, and Detroit, Michigan). Could you please clarify if you meant a different Benton Hall or Student Center, or provide ",9854,eval_C4_03_r2_6607f01d
+gemini-1.5-flash,2,C4_04,ambiguous,the engineering building,King Library,Directions from the engineering building to King Library,False,False,False,A,"I've looked up both locations, but it appears they are in different countries (London, UK, and Oxford, Ohio, USA). Could you please double-check the names of the buildings or provide the city/campus w",7305,eval_C4_04_r2_def84f46
+gemini-1.5-flash,2,C4_05,ambiguous,McVey building,Armstrong Student Center,Navigate from McVey building to Armstrong Student Center,True,True,True,,,5631,eval_C4_05_r2_055527a0
+gemini-1.5-flash,2,C4_06,ambiguous,Laws,Shriver,Route from Laws to Shriver,True,True,True,,,9742,eval_C4_06_r2_b8f338fd
+gemini-1.5-flash,2,C4_07,ambiguous,Benton Hall,Data Science Building,How do I get from Benton Hall to the Data Science Building,True,True,True,,,9755,eval_C4_07_r2_1eca4e69
+gemini-1.5-flash,2,C4_08,ambiguous,Garland,Armstrong,Directions from Garland to Armstrong,False,False,False,A,"Could you please clarify which specific locations you are referring to? 
+
+I found a ""Garland Avenue"" in East Austin, but there are several locations associated with ""Armstrong,"" such as the Lance Arms",3772,eval_C4_08_r2_8c95b22b
+gemini-1.5-flash,2,C4_09,ambiguous,the admin building,King Library,Route from the admin building to King Library,False,False,False,A,"I have found accessibility information for these locations, but they are in different regions (one in Singapore and one in Ohio, USA). Therefore, I cannot generate a continuous wheelchair-accessible r",9509,eval_C4_09_r2_dfe01f89
+gemini-1.5-flash,2,C4_10,ambiguous,Hughes Hall,the gym,Navigate from Hughes Hall to the gym,True,False,False,B,"Destination 52.2085,0.0858 is 6332306m from expected 39.5110,-84.7410",8568,eval_C4_10_r2_95cf3cd7
+gemini-1.5-flash,3,C1_01,common,Benton Hall,Richard M. McVey Data Science Building,Navigate from Benton Hall to McVey Data Science Building,True,True,True,,,4985,eval_C1_01_r3_328759ec
+gemini-1.5-flash,3,C1_02,common,Benton Hall,Armstrong Student Center,Directions from Benton Hall to Armstrong Student Center,True,True,True,,,13829,eval_C1_02_r3_076a7cce
+gemini-1.5-flash,3,C1_03,common,King Library,Armstrong Student Center,How do I get from King Library to Armstrong Student Center,True,True,True,,,338723,eval_C1_03_r3_479ebd3c
+gemini-1.5-flash,3,C1_04,common,Upham Hall,Laws Hall,Route from Upham Hall to Laws Hall,True,True,True,,,4751,eval_C1_04_r3_c87cf2c2
+gemini-1.5-flash,3,C1_05,common,Armstrong Student Center,King Library,Take me from Armstrong Student Center to King Library,True,True,True,,,950962,eval_C1_05_r3_6fe41818
+gemini-1.5-flash,3,C1_06,common,Garland Hall,Armstrong Student Center,Navigate from Garland Hall to Armstrong Student Center,True,True,True,,,959667,eval_C1_06_r3_f8c44817
+gemini-1.5-flash,3,C1_07,common,MacMillan Hall,King Library,Directions from MacMillan Hall to King Library,True,True,True,,,979350,eval_C1_07_r3_b181dd7c
+gemini-1.5-flash,3,C1_08,common,Roudebush Hall,Upham Hall,How do I get to Upham Hall from Roudebush Hall,True,True,True,,,21365,eval_C1_08_r3_06f90f27
+gemini-1.5-flash,3,C1_09,common,Hughes Hall,King Library,Route from Hughes Hall to King Library wheelchair accessible,False,False,False,A,"I'm sorry, I couldn't find ""Hughes Hall"" at Miami University in the maps database. Could you please provide the street address for Hughes Hall or a nearby intersection? 
+
+I have confirmed that the Kin",5627,eval_C1_09_r3_fd3085f0
+gemini-1.5-flash,3,C1_10,common,Laws Hall,Shriver Center,Navigate from Laws Hall to Shriver Center,True,True,True,,,8494,eval_C1_10_r3_99a3e7c6
+gemini-1.5-flash,3,C1_11,common,Kreger Hall,Benton Hall,Directions from Kreger Hall to Benton Hall,True,True,True,,,10128,eval_C1_11_r3_5803a542
+gemini-1.5-flash,3,C1_12,common,Harrison Hall,Roudebush Hall,Route from Harrison Hall to Roudebush Hall,True,True,True,,,4827,eval_C1_12_r3_68cdfec7
+gemini-1.5-flash,3,C1_13,common,Pearson Hall,Garland Hall,Take me from Pearson Hall to Garland Hall,True,True,True,,,1075457,eval_C1_13_r3_d3e37fa5
+gemini-1.5-flash,3,C1_14,common,Alumni Hall,Shriver Center,Accessible route from Alumni Hall to Shriver Center,True,True,True,,,5988,eval_C1_14_r3_69629cfa
+gemini-1.5-flash,3,C1_15,common,Hiestand Hall,King Library,Navigate from Hiestand Hall to King Library,True,True,True,,,12485,eval_C1_15_r3_c44bc7ea
+gemini-1.5-flash,3,C1_16,common,Bachelor Hall,MacMillan Hall,How do I get from Bachelor Hall to MacMillan Hall,True,True,True,,,18358,eval_C1_16_r3_86d97172
+gemini-1.5-flash,3,C1_17,common,Upham Hall,Armstrong Student Center,Route from Upham Hall to Armstrong Student Center,True,True,True,,,536042,eval_C1_17_r3_dde59dc3
+gemini-1.5-flash,3,C1_18,common,Garland Hall,Laws Hall,Directions from Garland Hall to Laws Hall,True,True,True,,,5922,eval_C1_18_r3_110fe268
+gemini-1.5-flash,3,C1_19,common,Shriver Center,Roudebush Hall,Take me from Shriver Center to Roudebush Hall,True,True,True,,,6401,eval_C1_19_r3_d574c6fe
+gemini-1.5-flash,3,C1_20,common,MacMillan Hall,Benton Hall,Navigate from MacMillan Hall to Benton Hall,True,True,True,,,7638,eval_C1_20_r3_6f0eaa05
+gemini-1.5-flash,3,C2_01,cross_campus,Pearson Hall,Boyd Hall,Accessible route from Pearson Hall to Boyd Hall,True,False,False,B,"Destination 39.5036,-84.7253 is 609m from expected 39.5058,-84.7318",953845,eval_C2_01_r3_1336681d
+gemini-1.5-flash,3,C2_02,cross_campus,Hughes Hall,Peabody Hall,Navigate from Hughes Hall to Peabody Hall wheelchair,False,False,False,A,"It appears you are requesting a route between Hughes Hall in Cambridge, UK, and Peabody Hall in Oxford, Ohio, USA.
+
+These locations are on different continents and cannot be connected via a wheelchair",12424,eval_C2_02_r3_4aebc388
+gemini-1.5-flash,3,C2_03,cross_campus,Hiestand Hall,Bachelor Hall,Route from Hiestand Hall to Bachelor Hall,True,True,True,,,1013717,eval_C2_03_r3_03c33f94
+gemini-1.5-flash,3,C2_04,cross_campus,Pearson Hall,Alumni Hall,Directions from Pearson Hall to Alumni Hall,False,False,False,A,"I'm sorry, I couldn't locate ""Pearson Hall"" in my mapping data. Could you please provide the street address for Pearson Hall, or a nearby intersection? Once I have that, I'll be happy to plan an acces",971994,eval_C2_04_r3_ba2a26a0
+gemini-1.5-flash,3,C2_05,cross_campus,Benton Hall,Peabody Hall,Take me from Benton Hall to Peabody Hall accessible route,False,False,False,A,"I've looked up Benton Hall and Peabody Hall. Unfortunately, OpenStreetMap does not have specific wheelchair accessibility data for the entrances of either building. 
+
+Because these locations are in di",1063611,eval_C2_05_r3_2060d2f7
+gemini-1.5-flash,3,C2_06,cross_campus,McVey Data Science Building,Alumni Hall,How do I get from McVey Data Science Building to Alumni Hall,True,True,True,,,7582,eval_C2_06_r3_3d4b8d7d
+gemini-1.5-flash,3,C2_07,cross_campus,King Library,Boyd Hall,Navigate from King Library to Boyd Hall,True,False,False,B,"Destination 39.5036,-84.7253 is 609m from expected 39.5058,-84.7318",23693,eval_C2_07_r3_cacc2efd
+gemini-1.5-flash,3,C2_08,cross_campus,Hughes Hall,Bachelor Hall,Route from Hughes Hall to Bachelor Hall wheelchair accessible,False,False,False,A,"I'm sorry, I couldn't find coordinates for Hughes Hall in my current map data. Could you please provide a street address for Hughes Hall or a nearby intersection so I can plan an accessible route to B",8543,eval_C2_08_r3_609dc118
+gemini-1.5-flash,3,C2_09,cross_campus,Garland Hall,Peabody Hall,Directions from Garland Hall to Peabody Hall,False,False,False,A,"I found Garland Hall in Baltimore and Peabody Hall in Ohio. It appears these buildings are at different universities. Please verify the locations or provide the specific campus or address you are at, ",5120,eval_C2_09_r3_52c9d983
+gemini-1.5-flash,3,C2_10,cross_campus,Armstrong Student Center,Richard M. McVey Data Science Building,Take me from Armstrong Student Center to McVey Data Science Building,True,True,True,,,7596,eval_C2_10_r3_4f55b93a
+gemini-1.5-flash,3,C3_01,problematic,Benton Hall,Elliot Hall,Navigate from Benton Hall to Elliot Hall,False,False,False,A,"I've found information for **Benton Hall**, which is listed as fully wheelchair accessible with multiple accessible entrances.
+
+Unfortunately, I could not find a location or accessibility data for **E",8444,eval_C3_01_r3_92e153f9
+gemini-1.5-flash,3,C3_02,problematic,King Library,Hiestand Hall,Route from King Library to Hiestand Hall,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",8992,eval_C3_02_r3_0c420315
+gemini-1.5-flash,3,C3_03,problematic,Harrison Hall,Laws Hall,Directions from Harrison Hall to Laws Hall,True,True,True,,,29642,eval_C3_03_r3_45879a7b
+gemini-1.5-flash,3,C3_04,problematic,Upham Hall,Hiestand Hall,Accessible route from Upham Hall to Hiestand Hall,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",1034908,eval_C3_04_r3_68cf1506
+gemini-1.5-flash,3,C3_05,problematic,Boyd Hall,Kreger Hall,How do I get from Boyd Hall to Kreger Hall wheelchair,True,True,True,,,190630,eval_C3_05_r3_2aac156f
+gemini-1.5-flash,3,C3_06,problematic,Peabody Hall,Elliot Hall,Navigate from Peabody Hall to Elliott Hall,True,False,False,B,"Destination 51.6085,-0.3637 is 6330714m from expected 39.5078,-84.7368",943932,eval_C3_06_r3_437efc32
+gemini-1.5-flash,3,C3_07,problematic,Benton Hall,Peabody Hall,Directions from Benton Hall to Peabody Hall,True,False,False,B,"Destination 39.5016,-84.7258 is 680m from expected 39.5052,-84.7322",18111,eval_C3_07_r3_40362957
+gemini-1.5-flash,3,C3_08,problematic,Kreger Hall,Alumni Hall,Route from Kreger Hall to Alumni Hall accessible,True,True,True,,,26059,eval_C3_08_r3_493c39ee
+gemini-1.5-flash,3,C3_09,problematic,MacMillan Hall,Boyd Hall,Take me from MacMillan Hall to Boyd Hall,True,False,False,B,"Destination 39.5036,-84.7253 is 609m from expected 39.5058,-84.7318",977303,eval_C3_09_r3_cc15a0e7
+gemini-1.5-flash,3,C3_10,problematic,Roudebush Hall,Hiestand Hall,Navigate from Roudebush Hall to Hiestand Hall wheelchair accessible,True,False,False,B,"Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395",20210,eval_C3_10_r3_3582ef65
+gemini-1.5-flash,3,C4_01,ambiguous,Benton Hall,the library,Navigate from Benton Hall to the library,False,False,False,A,"It appears you are trying to navigate between locations in different cities (Benton Hall is in Berkeley, CA, and the library identified is in Chicago, IL). Please clarify which library you intend to v",976632,eval_C4_01_r3_91ac3501
+gemini-1.5-flash,3,C4_02,ambiguous,Armstrong,King Library,How do I get from Armstrong to King Library,False,False,False,A,"I'm sorry, I couldn't find specific accessibility information or locations for Armstrong Hall in the database. 
+
+Could you please provide the street address for Armstrong Hall, or would you like me to",15796,eval_C4_02_r3_807e2013
+gemini-1.5-flash,3,C4_03,ambiguous,Benton Hall,student center,Route from Benton Hall to the student center,True,False,False,B,"Destination 37.8697,-122.2602 is 3238344m from expected 39.5074,-84.7362",911945,eval_C4_03_r3_2faf2d15
+gemini-1.5-flash,3,C4_04,ambiguous,the engineering building,King Library,Directions from the engineering building to King Library,False,False,False,A,"The Engineering Building and King Library appear to be at different campuses (London, UK, and Oxford, Ohio, respectively). Could you please clarify the city or university where you are located? This w",11903,eval_C4_04_r3_f9f80bec
+gemini-1.5-flash,3,C4_05,ambiguous,McVey building,Armstrong Student Center,Navigate from McVey building to Armstrong Student Center,True,True,True,,,26390,eval_C4_05_r3_29cdf5d9
+gemini-1.5-flash,3,C4_06,ambiguous,Laws,Shriver,Route from Laws to Shriver,True,True,True,,,997303,eval_C4_06_r3_3ddfe18e
+gemini-1.5-flash,3,C4_07,ambiguous,Benton Hall,Data Science Building,How do I get from Benton Hall to the Data Science Building,False,False,False,A,"It appears that Benton Hall and the Data Science Building are in different cities (Berkeley, California and Oxford, Ohio, respectively). 
+
+Since these locations are far apart, I cannot provide a wheel",23321,eval_C4_07_r3_7fa0b93d
+gemini-1.5-flash,3,C4_08,ambiguous,Garland,Armstrong,Directions from Garland to Armstrong,False,False,False,A,"To provide accurate wheelchair-accessible directions, could you please clarify the city or specific locations (such as building names or addresses) for ""Garland"" and ""Armstrong""? There are multiple pl",7146,eval_C4_08_r3_5e06b067
+gemini-1.5-flash,3,C4_09,ambiguous,the admin building,King Library,Route from the admin building to King Library,True,True,True,,,777221,eval_C4_09_r3_cc42540e
+gemini-1.5-flash,3,C4_10,ambiguous,Hughes Hall,the gym,Navigate from Hughes Hall to the gym,False,False,False,A,"I found Hughes Hall in Cambridge, but I cannot locate a gym near it. There was a gym found in Los Angeles, which is too far for a walking route.
+
+Could you please provide the specific name or address ",20894,eval_C4_10_r3_489a81f2

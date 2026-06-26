@@ -17,6 +17,7 @@ class Settings:
 
     gemini_api_key: str
     gemini_model: str
+    gemini_fallback_model: str
     gemini_base_url: str
     routing_server_url: str
     routing_api_key: str | None
@@ -25,8 +26,12 @@ class Settings:
 
     @property
     def gemini_generate_url(self) -> str:
-        """Fully-qualified Gemini generateContent endpoint (without the API key)."""
-        return f"{self.gemini_base_url}/models/{self.gemini_model}:generateContent"
+        """Fully-qualified Gemini generateContent endpoint for the primary model."""
+        return self.gemini_generate_url_for(self.gemini_model)
+
+    def gemini_generate_url_for(self, model: str) -> str:
+        """Return the generateContent endpoint for any given model name."""
+        return f"{self.gemini_base_url}/models/{model}:generateContent"
 
 
 def load_settings() -> Settings:
@@ -34,6 +39,7 @@ def load_settings() -> Settings:
     return Settings(
         gemini_api_key=os.environ.get("GEMINI_API_KEY", ""),
         gemini_model=os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite-preview"),
+        gemini_fallback_model=os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash"),
         gemini_base_url=os.environ.get(
             "GEMINI_BASE_URL",
             "https://generativelanguage.googleapis.com/v1beta",

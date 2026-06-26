@@ -10,11 +10,14 @@ from __future__ import annotations
 import json
 import logging
 import pathlib
+import time
 from typing import TYPE_CHECKING, Any
 
 import httpx
 
 from app.constants import (
+    LLM_RETRY_BASE_DELAY_S,
+    LLM_RETRY_MAX_ATTEMPTS,
     LLM_TIMEOUT_S,
     TOOL_GET_ROUTE,
     TOOL_GEOCODE_PLACE,
@@ -150,41 +153,90 @@ class GeminiProvider(LLMProvider):
         if not self._settings.gemini_api_key:
             raise GeminiError("AI service is not configured. Please contact support.")
 
-        url = f"{self._settings.gemini_generate_url}?key={self._settings.gemini_api_key}"
         body = {
             "system_instruction": {"parts": [{"text": self._load_system_prompt()}]},
             "contents": contents,
             "tools": [{"function_declarations": self.tool_declarations}],
         }
-        logger.info(
-            "Calling Gemini API: model=%s content_messages=%d",
-            self._settings.gemini_model,
-            len(contents),
-        )
-        try:
-            with httpx.Client(timeout=LLM_TIMEOUT_S) as client:
-                resp = client.post(url, json=body)
-                resp.raise_for_status()
-                try:
-                    return resp.json()
-                except ValueError as exc:
-                    logger.error("Gemini API returned non-JSON response: %s", exc)
-                    raise GeminiError(
-                        "The AI service returned an unreadable response. Please try again."
-                    )
-        except httpx.TimeoutException:
-            logger.error("Gemini API request timed out")
-            raise GeminiError("The AI service took too long to respond. Please try again.")
-        except httpx.HTTPStatusError as exc:
-            logger.error(
-                "Gemini API HTTP error: status=%d body=%s",
-                exc.response.status_code,
-                exc.response.text,
+
+        # Try the primary model first; on 503 retry with exponential backoff then
+        # fall back to the fallback model for one final attempt.
+        models_to_try = [self._settings.gemini_model, self._settings.gemini_fallback_model]
+
+        for model_index, model in enumerate(models_to_try):
+            url = (
+                f"{self._settings.gemini_generate_url_for(model)}"
+                f"?key={self._settings.gemini_api_key}"
             )
-            raise GeminiError("The AI service is temporarily unavailable. Please try again.")
-        except httpx.RequestError as exc:
-            logger.error("Gemini API connection error: %s", exc)
-            raise GeminiError("Could not reach the AI service. Please check your connection.")
+            is_fallback = model_index > 0
+            last_exc: Exception | None = None
+            delay = LLM_RETRY_BASE_DELAY_S
+
+            max_attempts = 1 if is_fallback else LLM_RETRY_MAX_ATTEMPTS
+            logger.info(
+                "Calling Gemini API: model=%s content_messages=%d%s",
+                model,
+                len(contents),
+                " (fallback)" if is_fallback else "",
+            )
+
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    with httpx.Client(timeout=LLM_TIMEOUT_S) as client:
+                        resp = client.post(url, json=body)
+                        resp.raise_for_status()
+                        try:
+                            return resp.json()
+                        except ValueError as exc:
+                            logger.error("Gemini API returned non-JSON response: %s", exc)
+                            raise GeminiError(
+                                "The AI service returned an unreadable response. Please try again."
+                            )
+                except httpx.TimeoutException as exc:
+                    logger.error(
+                        "Gemini API request timed out: model=%s attempt=%d/%d",
+                        model, attempt, max_attempts,
+                    )
+                    last_exc = exc
+                except httpx.HTTPStatusError as exc:
+                    status = exc.response.status_code
+                    logger.error(
+                        "Gemini API HTTP error: model=%s status=%d attempt=%d/%d body=%s",
+                        model, status, attempt, max_attempts, exc.response.text[:200],
+                    )
+                    last_exc = exc
+                    if status not in (429, 503):
+                        # Non-retriable error — don't try fallback either
+                        raise GeminiError("The AI service is temporarily unavailable. Please try again.")
+                except httpx.RequestError as exc:
+                    logger.error(
+                        "Gemini API connection error: model=%s attempt=%d/%d error=%s",
+                        model, attempt, max_attempts, exc,
+                    )
+                    last_exc = exc
+
+                if attempt < max_attempts:
+                    logger.info(
+                        "Retrying in %.1fs: model=%s attempt=%d/%d",
+                        delay, model, attempt, max_attempts,
+                    )
+                    time.sleep(delay)
+                    delay *= 2
+
+            # Primary model exhausted — switch to fallback
+            if not is_fallback:
+                logger.warning(
+                    "Primary model unavailable after %d attempts, switching to fallback: %s",
+                    max_attempts,
+                    self._settings.gemini_fallback_model,
+                )
+
+        # Both models failed
+        if isinstance(last_exc, httpx.TimeoutException):
+            raise GeminiError("The AI service took too long to respond. Please try again.")
+        if isinstance(last_exc, httpx.HTTPStatusError):
+            raise GeminiError("The AI service is temporarily unavailable. Please try again later.")
+        raise GeminiError("Could not reach the AI service. Please check your connection.")
 
     @staticmethod
     def _extract_text(response: dict) -> str:

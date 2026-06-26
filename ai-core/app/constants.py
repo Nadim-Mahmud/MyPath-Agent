@@ -25,6 +25,10 @@ ROUTING_TIMEOUT_S: int = 30
 REVERSE_GEOCODE_TIMEOUT_S: int = 10
 LLM_TIMEOUT_S: int = 60
 
+# Retry behaviour for transient LLM errors (429 rate-limit / 503 overload)
+LLM_RETRY_MAX_ATTEMPTS: int = 3        # total attempts (1 original + 2 retries)
+LLM_RETRY_BASE_DELAY_S: float = 10.0  # seconds before first retry; doubles each time
+
 # ---------------------------------------------------------------------------
 # HTTP headers
 # ---------------------------------------------------------------------------
@@ -155,6 +159,13 @@ ROUTE_NOTE_TEMPLATE: str = (
 
 ROUTE_DESTINATION_FALLBACK_LABEL: str = "your destination"
 MY_LOCATION_LABEL: str = "My Location"
+
+# ---------------------------------------------------------------------------
+# Safety & rate limiting
+# ---------------------------------------------------------------------------
+
+RATE_LIMIT_MAX_REQUESTS: int = 20        # max chat requests per session per window
+RATE_LIMIT_WINDOW_SECONDS: int = 60      # sliding window size in seconds
 
 # ---------------------------------------------------------------------------
 # CORS

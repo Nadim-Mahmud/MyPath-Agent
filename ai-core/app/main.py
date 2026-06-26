@@ -21,7 +21,7 @@ from app.constants import (
     CORS_ALLOWED_ORIGINS,
     LOG_FORMAT,
 )
-from app.exceptions import AiCoreError
+from app.exceptions import AiCoreError, RateLimitError, SafetyError
 from app.routes.chat import router as chat_router
 from app.routes.geocode import router as geocode_router
 
@@ -43,14 +43,30 @@ app.add_middleware(
 # ── Global exception handlers ─────────────────────────────────────────────────
 
 
+@app.exception_handler(SafetyError)
+async def safety_error_handler(request: Request, exc: SafetyError) -> JSONResponse:
+    return JSONResponse(status_code=400, content={"error": str(exc)})
+
+
+@app.exception_handler(RateLimitError)
+async def rate_limit_error_handler(request: Request, exc: RateLimitError) -> JSONResponse:
+    return JSONResponse(status_code=429, content={"error": str(exc)})
+
+
 @app.exception_handler(AiCoreError)
 async def ai_core_error_handler(request: Request, exc: AiCoreError) -> JSONResponse:
     return JSONResponse(status_code=503, content={"error": str(exc)})
 
 
 @app.exception_handler(ValidationError)
-async def validation_error_handler(request: Request, exc: ValidationError) -> JSONResponse:  # noqa: ARG001
-    return JSONResponse(status_code=422, content={"error": "Invalid request format."})
+async def validation_error_handler(request: Request, exc: ValidationError) -> JSONResponse:
+    try:
+        first_msg = exc.errors()[0].get("msg", "Invalid request format.")
+        # Pydantic v2 prefixes messages with "Value error, " — strip it
+        user_msg = first_msg.removeprefix("Value error, ")
+    except (IndexError, AttributeError):
+        user_msg = "Invalid request format."
+    return JSONResponse(status_code=422, content={"error": user_msg})
 
 
 @app.exception_handler(Exception)

@@ -1,0 +1,70 @@
+Experiment 1 Results — gemini-1.5-flash (→ gemini-3.1-flash-lite-preview)
+════════════════════════════════════════════════════════════════════
+Model note: gemini-1.5-flash deprecated on this API key;
+            aliased to gemini-3.1-flash-lite-preview.
+
+Total pairs:                    50
+Runs per pair:                  3
+────────────────────────────────────────────────────────────────────
+Geocoding success rate:         42/50 (84.0%)   [≥1 run resolved both endpoints]
+Route generation success rate:  32/50 (64.0%)   [≥1 run returned route_action]
+Wheelchair validity rate:       32/50 (64.0%)   [routing engine is wc-only]
+Consistency rate (all 3 runs):  41/50 (82.0%)   [23 all-pass + 18 all-fail]
+  Strongly consistent (3/3):    23/50 (46.0%)
+  Inconsistent (1-2/3):          9/50 (18.0%)
+  Consistently failed (0/3):    18/50 (36.0%)
+Post-processing correction:     0 pairs
+Mean latency (ms):              11004  [runs 1+2; run 3 inflated by rate-limit retries ~114442ms]
+Median latency (ms):            9236
+
+By category:
+  common         (20 pairs): geocode 95%  route 95%
+  cross_campus   (10 pairs): geocode 70%  route 40%
+  problematic    (10 pairs): geocode 90%  route 40%
+  ambiguous      (10 pairs): geocode 70%  route 50%
+
+Failure mode breakdown:
+  A - Geocoding failed:          44
+  B - Wrong location resolved:   22
+  C - Routing engine no path:    0
+  D - Apologetic despite route:  0
+  E - Timeout / HTTP error:      0
+────────────────────────────────────────────────────────
+
+Failed pairs:
+  [A] C1_09   Hughes Hall → King Library
+         I couldn't locate Hughes Hall in the mapping system. Could you please provide the street address for
+  [A] C2_01   Pearson Hall → Boyd Hall
+         It appears that "Pearson Hall" and "Boyd Hall" are located on different university campuses (one in 
+  [A] C2_02   Hughes Hall → Peabody Hall
+         It appears you are requesting a route between Hughes Hall in Cambridge, UK, and Peabody Hall in Oxfo
+  [A] C2_05   Benton Hall → Peabody Hall
+         I've retrieved the location information for both buildings. Unfortunately, I found a discrepancy in 
+  [B] C2_07   King Library → Boyd Hall
+         Destination 39.5036,-84.7253 is 609m from expected 39.5058,-84.7318
+  [A] C2_08   Hughes Hall → Bachelor Hall
+         I couldn't find accessibility data or a location for Hughes Hall in my map database. Could you pleas
+  [A] C2_09   Garland Hall → Peabody Hall
+         It appears that Garland Hall and Peabody Hall are located on different university campuses (Johns Ho
+  [A] C3_01   Benton Hall → Elliot Hall
+         I found locations for both Benton Hall and Elliot Hall; however, they appear to be in different coun
+  [B] C3_02   King Library → Hiestand Hall
+         Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395
+  [B] C3_04   Upham Hall → Hiestand Hall
+         Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395
+  [A] C3_07   Benton Hall → Peabody Hall
+         It appears you are requesting a route between Benton Hall and Peabody Hall. However, these locations
+  [B] C3_09   MacMillan Hall → Boyd Hall
+         Destination 38.0418,-84.5017 is 164002m from expected 39.5058,-84.7318
+  [B] C3_10   Roudebush Hall → Hiestand Hall
+         Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395
+  [A] C4_01   Benton Hall → the library
+         It appears you are trying to route between two locations in different cities—Benton Hall (in Berkele
+  [A] C4_03   Benton Hall → student center
+         I've located both Benton Hall and the Student Center. However, they appear to be in two different st
+  [A] C4_04   the engineering buildi → King Library
+         It appears that the Engineering Building and King Library are located in different countries (London
+  [A] C4_08   Garland → Armstrong
+         I was unable to find specific accessibility information or locations for both buildings. Garland Hal
+  [A] C4_10   Hughes Hall → the gym
+         I've located Hughes Hall in Cambridge, but the "gym" search returned a result in Los Angeles. To pro

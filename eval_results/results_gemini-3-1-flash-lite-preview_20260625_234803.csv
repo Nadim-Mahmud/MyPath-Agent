@@ -1,0 +1,55 @@
+model,run,pair_id,category,origin,destination,query,geocode_success,route_success,wc_valid,failure_mode,failure_detail,latency_ms,session_id
+gemini-3.1-flash-lite-preview,1,C1_01,common,Benton Hall,Richard M. McVey Data Science Building,Navigate from Benton Hall to McVey Data Science Building,False,False,False,E,http_503,215,eval_C1_01_r1_7af086cb
+gemini-3.1-flash-lite-preview,1,C1_02,common,Benton Hall,Armstrong Student Center,Directions from Benton Hall to Armstrong Student Center,False,False,False,E,http_503,248,eval_C1_02_r1_f93fbce8
+gemini-3.1-flash-lite-preview,1,C1_03,common,King Library,Armstrong Student Center,How do I get from King Library to Armstrong Student Center,False,False,False,E,http_503,227,eval_C1_03_r1_ecb0338d
+gemini-3.1-flash-lite-preview,1,C1_04,common,Upham Hall,Laws Hall,Route from Upham Hall to Laws Hall,False,False,False,E,http_503,215,eval_C1_04_r1_1d98602f
+gemini-3.1-flash-lite-preview,1,C1_05,common,Armstrong Student Center,King Library,Take me from Armstrong Student Center to King Library,False,False,False,E,http_503,207,eval_C1_05_r1_7ab7bf61
+gemini-3.1-flash-lite-preview,1,C1_06,common,Garland Hall,Armstrong Student Center,Navigate from Garland Hall to Armstrong Student Center,False,False,False,E,http_503,216,eval_C1_06_r1_16f88f37
+gemini-3.1-flash-lite-preview,1,C1_07,common,MacMillan Hall,King Library,Directions from MacMillan Hall to King Library,False,False,False,E,http_503,206,eval_C1_07_r1_33fbb6dd
+gemini-3.1-flash-lite-preview,1,C1_08,common,Roudebush Hall,Upham Hall,How do I get to Upham Hall from Roudebush Hall,False,False,False,E,http_503,218,eval_C1_08_r1_704c620c
+gemini-3.1-flash-lite-preview,1,C1_09,common,Hughes Hall,King Library,Route from Hughes Hall to King Library wheelchair accessible,False,False,False,E,http_503,228,eval_C1_09_r1_85bdd513
+gemini-3.1-flash-lite-preview,1,C1_10,common,Laws Hall,Shriver Center,Navigate from Laws Hall to Shriver Center,False,False,False,E,http_503,228,eval_C1_10_r1_9d45002d
+gemini-3.1-flash-lite-preview,1,C1_11,common,Kreger Hall,Benton Hall,Directions from Kreger Hall to Benton Hall,False,False,False,E,http_503,227,eval_C1_11_r1_35094b5f
+gemini-3.1-flash-lite-preview,1,C1_12,common,Harrison Hall,Roudebush Hall,Route from Harrison Hall to Roudebush Hall,False,False,False,E,http_503,211,eval_C1_12_r1_fa28a8da
+gemini-3.1-flash-lite-preview,1,C1_13,common,Pearson Hall,Garland Hall,Take me from Pearson Hall to Garland Hall,False,False,False,E,http_503,198,eval_C1_13_r1_6f637f27
+gemini-3.1-flash-lite-preview,1,C1_14,common,Alumni Hall,Shriver Center,Accessible route from Alumni Hall to Shriver Center,True,True,True,,,4300,eval_C1_14_r1_316561cb
+gemini-3.1-flash-lite-preview,1,C1_15,common,Hiestand Hall,King Library,Navigate from Hiestand Hall to King Library,False,False,False,E,http_503,12323,eval_C1_15_r1_58a4552a
+gemini-3.1-flash-lite-preview,1,C1_16,common,Bachelor Hall,MacMillan Hall,How do I get from Bachelor Hall to MacMillan Hall,False,False,False,E,http_503,208,eval_C1_16_r1_271a0edb
+gemini-3.1-flash-lite-preview,1,C1_17,common,Upham Hall,Armstrong Student Center,Route from Upham Hall to Armstrong Student Center,False,False,False,E,http_503,223,eval_C1_17_r1_2dd4ec92
+gemini-3.1-flash-lite-preview,1,C1_18,common,Garland Hall,Laws Hall,Directions from Garland Hall to Laws Hall,False,False,False,E,http_503,197,eval_C1_18_r1_26277bbb
+gemini-3.1-flash-lite-preview,1,C1_19,common,Shriver Center,Roudebush Hall,Take me from Shriver Center to Roudebush Hall,False,False,False,E,http_503,225,eval_C1_19_r1_a9177069
+gemini-3.1-flash-lite-preview,1,C1_20,common,MacMillan Hall,Benton Hall,Navigate from MacMillan Hall to Benton Hall,False,False,False,E,http_503,218,eval_C1_20_r1_3e19285f
+gemini-3.1-flash-lite-preview,1,C2_01,cross_campus,Pearson Hall,Boyd Hall,Accessible route from Pearson Hall to Boyd Hall,False,False,False,E,http_503,199,eval_C2_01_r1_fc90cea5
+gemini-3.1-flash-lite-preview,1,C2_02,cross_campus,Hughes Hall,Peabody Hall,Navigate from Hughes Hall to Peabody Hall wheelchair,False,False,False,E,http_503,4854,eval_C2_02_r1_9ee759d9
+gemini-3.1-flash-lite-preview,1,C2_03,cross_campus,Hiestand Hall,Bachelor Hall,Route from Hiestand Hall to Bachelor Hall,False,False,False,E,http_503,333,eval_C2_03_r1_b63d5a44
+gemini-3.1-flash-lite-preview,1,C2_04,cross_campus,Pearson Hall,Alumni Hall,Directions from Pearson Hall to Alumni Hall,False,False,False,E,http_503,203,eval_C2_04_r1_e92fb249
+gemini-3.1-flash-lite-preview,1,C2_05,cross_campus,Benton Hall,Peabody Hall,Take me from Benton Hall to Peabody Hall accessible route,False,False,False,E,http_503,209,eval_C2_05_r1_43e6dd1f
+gemini-3.1-flash-lite-preview,1,C2_06,cross_campus,McVey Data Science Building,Alumni Hall,How do I get from McVey Data Science Building to Alumni Hall,False,False,False,E,http_503,228,eval_C2_06_r1_3b2ae1e5
+gemini-3.1-flash-lite-preview,1,C2_07,cross_campus,King Library,Boyd Hall,Navigate from King Library to Boyd Hall,False,False,False,E,http_503,194,eval_C2_07_r1_124285a9
+gemini-3.1-flash-lite-preview,1,C2_08,cross_campus,Hughes Hall,Bachelor Hall,Route from Hughes Hall to Bachelor Hall wheelchair accessible,False,False,False,E,http_503,198,eval_C2_08_r1_8e59335b
+gemini-3.1-flash-lite-preview,1,C2_09,cross_campus,Garland Hall,Peabody Hall,Directions from Garland Hall to Peabody Hall,False,False,False,E,http_503,222,eval_C2_09_r1_0a7de8c8
+gemini-3.1-flash-lite-preview,1,C2_10,cross_campus,Armstrong Student Center,Richard M. McVey Data Science Building,Take me from Armstrong Student Center to McVey Data Science Building,False,False,False,E,http_503,216,eval_C2_10_r1_0196c940
+gemini-3.1-flash-lite-preview,1,C3_01,problematic,Benton Hall,Elliot Hall,Navigate from Benton Hall to Elliot Hall,False,False,False,E,http_503,198,eval_C3_01_r1_0e080dc2
+gemini-3.1-flash-lite-preview,1,C3_02,problematic,King Library,Hiestand Hall,Route from King Library to Hiestand Hall,False,False,False,E,http_503,210,eval_C3_02_r1_ec254c80
+gemini-3.1-flash-lite-preview,1,C3_03,problematic,Harrison Hall,Laws Hall,Directions from Harrison Hall to Laws Hall,False,False,False,E,http_503,226,eval_C3_03_r1_53b26d75
+gemini-3.1-flash-lite-preview,1,C3_04,problematic,Upham Hall,Hiestand Hall,Accessible route from Upham Hall to Hiestand Hall,False,False,False,E,http_503,230,eval_C3_04_r1_0b7efeb9
+gemini-3.1-flash-lite-preview,1,C3_05,problematic,Boyd Hall,Kreger Hall,How do I get from Boyd Hall to Kreger Hall wheelchair,False,False,False,E,http_503,192,eval_C3_05_r1_3fae651a
+gemini-3.1-flash-lite-preview,1,C3_06,problematic,Peabody Hall,Elliot Hall,Navigate from Peabody Hall to Elliott Hall,False,False,False,E,http_503,216,eval_C3_06_r1_8767e93d
+gemini-3.1-flash-lite-preview,1,C3_07,problematic,Benton Hall,Peabody Hall,Directions from Benton Hall to Peabody Hall,False,False,False,A,"I am sorry, but I couldn't find the location for Benton Hall or Peabody Hall in my records. Could you please provide the street addresses for these buildings? Once I have the addresses, I can help you",17237,eval_C3_07_r1_16d1b9ca
+gemini-3.1-flash-lite-preview,1,C3_08,problematic,Kreger Hall,Alumni Hall,Route from Kreger Hall to Alumni Hall accessible,False,False,False,A,"I apologize, but I couldn't locate Kreger Hall or Alumni Hall in the map data. Could you please provide the street addresses for these buildings? Alternatively, if you can provide the names of nearby ",10680,eval_C3_08_r1_4e036557
+gemini-3.1-flash-lite-preview,1,C3_09,problematic,MacMillan Hall,Boyd Hall,Take me from MacMillan Hall to Boyd Hall,False,False,False,A,"I'm sorry, but I couldn't find the coordinates for MacMillan Hall or Boyd Hall in the location database. Could you please provide the street addresses for these buildings? Alternatively, if you know a",10859,eval_C3_09_r1_59964394
+gemini-3.1-flash-lite-preview,1,C3_10,problematic,Roudebush Hall,Hiestand Hall,Navigate from Roudebush Hall to Hiestand Hall wheelchair accessible,False,False,False,E,http_503,8105,eval_C3_10_r1_eb1b0acf
+gemini-3.1-flash-lite-preview,1,C4_01,ambiguous,Benton Hall,the library,Navigate from Benton Hall to the library,False,False,False,E,http_503,216,eval_C4_01_r1_0aeea439
+gemini-3.1-flash-lite-preview,1,C4_02,ambiguous,Armstrong,King Library,How do I get from Armstrong to King Library,False,False,False,E,http_503,216,eval_C4_02_r1_d2b7ad55
+gemini-3.1-flash-lite-preview,1,C4_03,ambiguous,Benton Hall,student center,Route from Benton Hall to the student center,False,False,False,E,http_503,235,eval_C4_03_r1_a40e80a1
+gemini-3.1-flash-lite-preview,1,C4_04,ambiguous,the engineering building,King Library,Directions from the engineering building to King Library,False,False,False,E,http_503,216,eval_C4_04_r1_484c58c7
+gemini-3.1-flash-lite-preview,1,C4_05,ambiguous,McVey building,Armstrong Student Center,Navigate from McVey building to Armstrong Student Center,False,False,False,A,"I am sorry, but I couldn't find the coordinates for either the McVey building or the Armstrong Student Center in my map data. 
+
+Could you please provide a street address or a more specific location fo",12177,eval_C4_05_r1_2d0d9149
+gemini-3.1-flash-lite-preview,1,C4_06,ambiguous,Laws,Shriver,Route from Laws to Shriver,False,False,False,A,"I'm sorry, but I couldn't find location information for Laws Hall or the Shriver Center using the provided names. Could you please provide the street addresses for these buildings? Alternatively, if y",26691,eval_C4_06_r1_585f22e4
+gemini-3.1-flash-lite-preview,1,C4_07,ambiguous,Benton Hall,Data Science Building,How do I get from Benton Hall to the Data Science Building,False,False,False,A,"I'm sorry, but I couldn't find ""Benton Hall"" or the ""Data Science Building"" in my accessibility database. Could you please provide the **street addresses** for both locations? I'd be happy to check fo",9275,eval_C4_07_r1_19bc34c9
+gemini-3.1-flash-lite-preview,1,C4_08,ambiguous,Garland,Armstrong,Directions from Garland to Armstrong,False,False,False,A,"I'm sorry, but I couldn't find locations for ""Garland"" and ""Armstrong."" Could you please provide more specific addresses, such as a street name or building name for both the origin and destination?",8007,eval_C4_08_r1_804ae995
+gemini-3.1-flash-lite-preview,1,C4_09,ambiguous,the admin building,King Library,Route from the admin building to King Library,False,False,False,A,"I'm sorry, but I couldn't find accessibility records for ""admin building"" or ""King Library"" in our mapping system. 
+
+To help me find the best route for you, could you please provide the **specific str",17458,eval_C4_09_r1_38998275
+gemini-3.1-flash-lite-preview,1,C4_10,ambiguous,Hughes Hall,the gym,Navigate from Hughes Hall to the gym,False,False,False,A,"I'm sorry, I couldn't find the specific buildings ""Hughes Hall"" or ""gym"" in the accessibility database. Could you please provide the full street address for both locations? That will help me search fo",4846,eval_C4_10_r1_14e14d92

@@ -8,3 +8,6 @@ prod:
 
 down:
 	docker compose down
+
+# mobile:
+# 	cd mobile_assistant && flutter run

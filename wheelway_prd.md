@@ -22,13 +22,14 @@
 6. [Frontend Requirements](#6-frontend-requirements-react-web-app)
 7. [routing server Requirements](#7-routing server-requirements-spring-boot)
 8. [AI Core Requirements](#8-ai-core-requirements-python-fastapi)
-9. [User Stories](#9-user-stories)
-10. [Non-Functional Requirements](#10-non-functional-requirements)
-11. [Repository Structure](#11-repository-structure)
-12. [Milestones & Delivery Phases](#12-milestones--delivery-phases)
-13. [Risks & Mitigations](#13-risks--mitigations)
-14. [Open Questions](#14-open-questions)
-15. [Glossary](#15-glossary)
+9. [Mobile Assistant Requirements](#9-mobile-assistant-requirements-flutter)
+10. [User Stories](#10-user-stories)
+11. [Non-Functional Requirements](#11-non-functional-requirements)
+12. [Repository Structure](#12-repository-structure)
+13. [Milestones & Delivery Phases](#13-milestones--delivery-phases)
+14. [Risks & Mitigations](#14-risks--mitigations)
+15. [Open Questions](#15-open-questions)
+16. [Glossary](#16-glossary)
 
 ---
 
@@ -515,7 +516,98 @@ In client applications, `user_location` should be auto-populated from browser/ap
 
 ---
 
-## 11. Repository Structure
+## 9. Mobile Assistant Requirements (Flutter)
+
+### 9.1 Overview
+
+> **Status: In Progress (Phase 3 mobile)**
+
+The mobile assistant is a Flutter application for Android and iOS that delivers a **voice-first** wheelchair navigation experience. Unlike the React web app (keyboard + mouse), the mobile app is designed for hands-free use — the primary input is voice and the primary output is text-to-speech, mirroring the needs of a wheelchair user who cannot easily type while moving.
+
+The mobile app calls the same AI core (`ai-core`, port 8000) and routing server (port 8080) as the web frontend. No new backend services are required.
+
+### 9.2 Architecture
+
+| Layer | Technology |
+|---|---|
+| Framework | Flutter 3.x (Dart) |
+| Map | `flutter_map` + OpenStreetMap tiles (matches web) |
+| Voice input (STT) | `speech_to_text` (on-device, no cloud required) |
+| Voice output (TTS) | `flutter_tts` (on-device) |
+| State management | `provider` (ChangeNotifier) |
+| HTTP | `http` package |
+| Location | `geolocator` |
+
+### 9.3 UI Layout — Overlap Strategy
+
+The map is always full-screen. UI elements float above it in layers to avoid covering the map unnecessarily:
+
+| Layer | Widget | Visibility |
+|---|---|---|
+| 1 (bottom) | `MapView` — OSM tiles + route polyline + pins | Always |
+| 2 | `SearchBarWidget` — floating top bar | Always |
+| 3 | Error toast | When error present |
+| 4 | `RouteBottomSheet` — draggable sheet with segments | When route active |
+| 5 | `VoiceOverlay` — semi-transparent full-screen | Voice active only |
+| 6 | `VoiceFab` — large FAB bottom-right | Always |
+
+The `VoiceOverlay` (layer 5) replaces the web chat panel approach entirely. Instead of a persistent side panel competing with the map, the overlay is:
+- **Semi-transparent** — the map is still visible behind it
+- **Auto-dismissing** — disappears once TTS finishes speaking
+- **Non-blocking** — tap anywhere to cancel voice
+
+### 9.4 Voice-First Interaction Flow
+
+```
+User taps VoiceFab
+  → STT starts  (FAB pulses red, overlay shows "Listening…" + waveform)
+  → User speaks  (interim transcript shown in overlay)
+  → STT commits final transcript
+  → AI core called  (overlay shows "Thinking…" spinner)
+  → AI responds
+    → If route_action: routing server called → polyline drawn on map
+    → If map_pins: accessibility pins drawn on map
+  → TTS speaks AI response  (overlay shows "MyPath is speaking" + response text)
+  → TTS finishes → overlay dismisses automatically
+```
+
+### 9.5 Functional Requirements
+
+| ID | Requirement |
+|---|---|
+| FR-M-01 | Full-screen OpenStreetMap canvas with route polyline and accessibility pins, matching web colour coding (blue = asphalt, amber = paving, red = unpaved) |
+| FR-M-02 | Large voice FAB: idle (blue mic) → listening (red pulsing mic) → thinking (amber spinner) → speaking (green speaker) |
+| FR-M-03 | STT captures voice input and sends to AI core on final commit; interim transcript shown in overlay |
+| FR-M-04 | TTS reads every AI response aloud; markdown stripped before speaking |
+| FR-M-05 | Text search bar at top as fallback for when voice is unavailable or not preferred |
+| FR-M-06 | Draggable route bottom sheet shows segment-by-segment directions (surface, distance, maneuver, incline) |
+| FR-M-07 | Live GPS dot on map; position used as `user_location` context in AI requests |
+| FR-M-08 | App initialises GPS and STT on startup; graceful degradation if permissions denied |
+| FR-M-09 | Error toast auto-dismisses; STT-not-available banner shown when device lacks speech recognition |
+| FR-M-10 | Session ID matches web app pattern (random alphanumeric); `/session/{id}` DELETE called on dispose |
+
+### 9.6 Platform Permissions
+
+**Android (`AndroidManifest.xml`):**
+- `INTERNET`, `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`, `RECORD_AUDIO`
+- `android:usesCleartextTraffic="true"` for local HTTP in development
+
+**iOS (`Info.plist`):**
+- `NSLocationWhenInUseUsageDescription`
+- `NSMicrophoneUsageDescription`
+- `NSSpeechRecognitionUsageDescription`
+
+### 9.7 Configuration (`lib/config.dart`)
+
+| Key | Android emulator | iOS simulator | Physical device |
+|---|---|---|---|
+| `aiCoreUrl` | `http://10.0.2.2:8000` | `http://localhost:8000` | LAN IP:8000 |
+| `routingUrl` | `http://10.0.2.2:8080` | `http://localhost:8080` | LAN IP:8080 |
+| `routingApiKey` | Must match `ROUTING_API_KEY` env var | — | — |
+
+---
+
+## 12. Repository Structure
 
 All components live in a single monorepo for unified AI context and a shared `CLAUDE.md` configuration:
 
@@ -547,6 +639,19 @@ mypathagent/
 │       ├── services/                # routingService.ts, chatService.ts
 │       └── store/                   # useAppStore.ts (Zustand)
 │
+├── mobile_assistant/                # Flutter — voice-first mobile app (Android + iOS)
+│   ├── pubspec.yaml
+│   ├── android/
+│   ├── ios/
+│   └── lib/
+│       ├── main.dart                # Entry point — Provider + MaterialApp
+│       ├── config.dart              # API URLs, API key, map defaults
+│       ├── models/                  # ChatMessage, RouteResponse, MapPin
+│       ├── services/                # AiService, RoutingService, SpeechService, LocationService
+│       ├── store/                   # AppStore (ChangeNotifier) — single state source
+│       ├── screens/                 # HomeScreen (Stack: map + overlays)
+│       └── widgets/                 # MapView, VoiceFab, VoiceOverlay, RouteBottomSheet, SearchBarWidget
+│
 └── ai-core/                         # Python 3.11 FastAPI — AI chat + MCP Server
     ├── requirements.txt
     ├── Dockerfile
@@ -563,7 +668,7 @@ mypathagent/
 
 ---
 
-## 12. Milestones & Delivery Phases
+## 13. Milestones & Delivery Phases
 
 | Phase                       | Scope                                                                                              | Timeline   |
 | --------------------------- | -------------------------------------------------------------------------------------------------- | ---------- |
@@ -574,6 +679,7 @@ mypathagent/
 | **Phase 4: Data & Reports** | Obstacle reporting, user feedback, saved places, analytics dashboard                               | Week 8     |
 | **Phase 5: Hardening**      | WCAG audit, performance testing, security pen-test, load testing, documentation                    | Weeks 9–10 |
 | **Phase 6: Launch**         | Production deployment, monitoring setup, user onboarding, public release                           | Week 11    |
+| **Phase 7: Mobile**         | Flutter mobile assistant — voice-first UI, STT/TTS, map + route rendering, AI core integration    | Weeks 12–13 |
 
 ---
 
