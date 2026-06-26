@@ -50,6 +50,9 @@ services:
       GEMINI_MODEL: ${GEMINI_MODEL}
       ROUTING_SERVER_URL: http://routing-server:8080
       ROUTING_API_KEY: ${ROUTING_API_KEY}
+      LLM_PROVIDER: ${LLM_PROVIDER:-gemini}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
     depends_on:
       routing-server:
         condition: service_healthy

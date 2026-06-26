@@ -48,6 +48,7 @@ _OD_PAIRS_FILE = _HERE / "mypath_od_pairs_1.json"
 
 GEMINI_MODEL_PREFIX = ("gemini-",)
 OPENAI_MODEL_PREFIX = ("gpt-", "o1", "o3", "o4")
+OLLAMA_MODEL_PREFIX = ("llama", "qwen", "mistral", "gemma", "phi", "tinyllama", "codellama", "vicuna", "deepseek", "falcon")
 
 # Mapping of user-friendly thesis model names to actual Gemini API model IDs.
 # gemini-1.5-x / gemini-2.5-x models are deprecated or quota-limited on this key;
@@ -56,6 +57,9 @@ MODEL_ALIASES: dict[str, str] = {
     "gemini-1.5-flash": "gemini-3.1-flash-lite-preview",
     "gemini-1.5-pro":   "gemini-3.1-flash-lite",
 }
+
+# Delay between requests for Ollama (local — no rate limits, but respect inference time)
+OLLAMA_REQUEST_DELAY_S = 1.0
 
 # Phrases copied from app/constants.py
 APOLOGETIC_PHRASES: tuple[str, ...] = (
@@ -308,6 +312,10 @@ def is_gemini_model(model: str) -> bool:
     return model.startswith(GEMINI_MODEL_PREFIX)
 
 
+def is_ollama_model(model: str) -> bool:
+    return ":" in model or model.startswith(OLLAMA_MODEL_PREFIX)
+
+
 def wait_for_health(base_url: str) -> bool:
     """Poll /health until 200 or timeout."""
     deadline = time.time() + HEALTH_POLL_TIMEOUT_S
@@ -326,15 +334,22 @@ def wait_for_health(base_url: str) -> bool:
     return False
 
 
-def switch_model(model: str, base_url: str) -> bool:
-    """Restart the ai-core Docker container with GEMINI_MODEL=model.
+def switch_model(model: str, base_url: str, ollama: bool = False) -> bool:
+    """Restart the ai-core Docker container with the given model.
 
+    For Gemini: sets GEMINI_MODEL.
+    For Ollama:  sets LLM_PROVIDER=ollama and OLLAMA_MODEL.
     Shell env vars override docker-compose .env file values.
     Returns True if the container became healthy.
     """
-    print(f"\n  Switching model → {model}")
+    print(f"\n  Switching model → {model} ({'ollama' if ollama else 'gemini'})")
     env = os.environ.copy()
-    env["GEMINI_MODEL"] = model
+    if ollama:
+        env["LLM_PROVIDER"] = "ollama"
+        env["OLLAMA_MODEL"] = model
+    else:
+        env["LLM_PROVIDER"] = "gemini"
+        env["GEMINI_MODEL"] = model
 
     # Recreate only ai-core; routing-server stays up (already healthy).
     result = subprocess.run(
@@ -376,17 +391,22 @@ def run_model(
         )
         return None
 
-    # Resolve alias (e.g. gemini-1.5-flash → gemini-2.5-flash on newer API keys)
-    api_model = MODEL_ALIASES.get(model, model)
-    if api_model != model:
-        print(f"\n  [ALIAS] {model} → {api_model} (gemini-1.5-x deprecated on this API key)")
+    ollama = is_ollama_model(model)
 
-    if not is_gemini_model(api_model):
-        print(f"\n[SKIP] {api_model} — unrecognised provider prefix. Expected 'gemini-'.")
-        return None
+    if ollama:
+        api_model = model
+        print(f"\n  [OLLAMA] {model} — using local Ollama provider")
+    else:
+        # Resolve alias (e.g. gemini-1.5-flash → gemini-3.1-flash-lite-preview)
+        api_model = MODEL_ALIASES.get(model, model)
+        if api_model != model:
+            print(f"\n  [ALIAS] {model} → {api_model} (gemini-1.5-x deprecated on this API key)")
+        if not is_gemini_model(api_model):
+            print(f"\n[SKIP] {api_model} — unrecognised provider prefix. Expected 'gemini-'.")
+            return None
 
     # ── Switch model ────────────────────────────────────────────────────────
-    if not switch_model(api_model, base_url):
+    if not switch_model(api_model, base_url, ollama=ollama):
         print(f"[ERROR] Could not start ai-core with model={model}. Skipping.")
         return None
 
@@ -397,6 +417,7 @@ def run_model(
     csv_path = output_dir / f"results_{safe_name}_{ts}.csv"
 
     rows: list[dict] = []
+    delay = OLLAMA_REQUEST_DELAY_S if ollama else REQUEST_DELAY_S
 
     print(f"\nRunning {num_runs} run(s) × {len(pairs)} pairs for model={model}")
     print("-" * 60)
@@ -435,7 +456,7 @@ def run_model(
             if classification["failure_mode"] and classification["failure_detail"]:
                 print(f"           {classification['failure_detail'][:100]}")
 
-            time.sleep(REQUEST_DELAY_S)
+            time.sleep(delay)
 
     # ── Write CSV ───────────────────────────────────────────────────────────
     output_dir.mkdir(parents=True, exist_ok=True)

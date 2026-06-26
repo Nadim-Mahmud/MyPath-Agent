@@ -23,6 +23,9 @@ class Settings:
     routing_api_key: str | None
     max_history_messages: int
     max_tool_rounds: int
+    llm_provider: str       # "gemini" or "ollama"
+    ollama_model: str
+    ollama_base_url: str
 
     @property
     def gemini_generate_url(self) -> str:
@@ -48,6 +51,9 @@ def load_settings() -> Settings:
         routing_api_key=os.environ.get("ROUTING_API_KEY"),
         max_history_messages=int(os.environ.get("MAX_HISTORY_MESSAGES", "20")),
         max_tool_rounds=int(os.environ.get("MAX_TOOL_ROUNDS", "5")),
+        llm_provider=os.environ.get("LLM_PROVIDER", "gemini"),
+        ollama_model=os.environ.get("OLLAMA_MODEL", "qwen2.5:7b"),
+        ollama_base_url=os.environ.get("OLLAMA_BASE_URL", "http://host.docker.internal:11434"),
     )
 
 

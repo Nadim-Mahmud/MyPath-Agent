@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from app.config import settings
 from app.constants import RATE_LIMIT_MAX_REQUESTS, RATE_LIMIT_WINDOW_SECONDS
+from app.llm.base import LLMProvider
 from app.llm.gemini import GeminiProvider
 from app.mcp.server import MCPServer
 from app.services.chat_service import ChatService
@@ -39,10 +40,11 @@ mcp_server: MCPServer = MCPServer(
 )
 
 # LLM provider depends on settings and the MCP server
-llm_provider: GeminiProvider = GeminiProvider(
-    settings=settings,
-    mcp_server=mcp_server,
-)
+if settings.llm_provider == "ollama":
+    from app.llm.ollama import OllamaProvider
+    llm_provider: LLMProvider = OllamaProvider(settings=settings, mcp_server=mcp_server)
+else:
+    llm_provider: LLMProvider = GeminiProvider(settings=settings, mcp_server=mcp_server)
 
 # Top-level chat orchestrator
 chat_service: ChatService = ChatService(

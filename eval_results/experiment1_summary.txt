@@ -14,7 +14,7 @@ Consistency rate (all 3 runs):  41/50 (82.0%)   [23 all-pass + 18 all-fail]
   Inconsistent (1-2/3):          9/50 (18.0%)
   Consistently failed (0/3):    18/50 (36.0%)
 Post-processing correction:     0 pairs
-Mean latency (ms):              11004  [runs 1+2; run 3 inflated by rate-limit retries ~114442ms]
+Mean latency (ms):              11004  [runs 1+2 only; run 3 inflated by rate-limit retries]
 Median latency (ms):            9236
 
 By category:
@@ -23,48 +23,53 @@ By category:
   problematic    (10 pairs): geocode 90%  route 40%
   ambiguous      (10 pairs): geocode 70%  route 50%
 
-Failure mode breakdown:
-  A - Geocoding failed:          44
-  B - Wrong location resolved:   22
-  C - Routing engine no path:    0
-  D - Apologetic despite route:  0
-  E - Timeout / HTTP error:      0
-────────────────────────────────────────────────────────
+Failure mode breakdown (counts across all 150 individual run records):
+  A - Geocoding / scope failure:   44  (geocoder resolved to wrong institution/city)
+  B - Wrong location resolved:     22  (route generated but dest >500m from ground truth)
+  C - Routing engine no path:       0
+  D - Apologetic despite route:     0
+  E - Timeout / HTTP error:         0
+────────────────────────────────────────────────────────────────────
 
-Failed pairs:
-  [A] C1_09   Hughes Hall → King Library
-         I couldn't locate Hughes Hall in the mapping system. Could you please provide the street address for
-  [A] C2_01   Pearson Hall → Boyd Hall
-         It appears that "Pearson Hall" and "Boyd Hall" are located on different university campuses (one in 
-  [A] C2_02   Hughes Hall → Peabody Hall
-         It appears you are requesting a route between Hughes Hall in Cambridge, UK, and Peabody Hall in Oxfo
-  [A] C2_05   Benton Hall → Peabody Hall
-         I've retrieved the location information for both buildings. Unfortunately, I found a discrepancy in 
-  [B] C2_07   King Library → Boyd Hall
-         Destination 39.5036,-84.7253 is 609m from expected 39.5058,-84.7318
-  [A] C2_08   Hughes Hall → Bachelor Hall
-         I couldn't find accessibility data or a location for Hughes Hall in my map database. Could you pleas
-  [A] C2_09   Garland Hall → Peabody Hall
-         It appears that Garland Hall and Peabody Hall are located on different university campuses (Johns Ho
-  [A] C3_01   Benton Hall → Elliot Hall
-         I found locations for both Benton Hall and Elliot Hall; however, they appear to be in different coun
-  [B] C3_02   King Library → Hiestand Hall
-         Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395
-  [B] C3_04   Upham Hall → Hiestand Hall
-         Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395
-  [A] C3_07   Benton Hall → Peabody Hall
-         It appears you are requesting a route between Benton Hall and Peabody Hall. However, these locations
-  [B] C3_09   MacMillan Hall → Boyd Hall
-         Destination 38.0418,-84.5017 is 164002m from expected 39.5058,-84.7318
-  [B] C3_10   Roudebush Hall → Hiestand Hall
-         Destination 39.5057,-84.7326 is 662m from expected 39.5083,-84.7395
-  [A] C4_01   Benton Hall → the library
-         It appears you are trying to route between two locations in different cities—Benton Hall (in Berkele
-  [A] C4_03   Benton Hall → student center
-         I've located both Benton Hall and the Student Center. However, they appear to be in two different st
-  [A] C4_04   the engineering buildi → King Library
-         It appears that the Engineering Building and King Library are located in different countries (London
-  [A] C4_08   Garland → Armstrong
-         I was unable to find specific accessibility information or locations for both buildings. Garland Hal
-  [A] C4_10   Hughes Hall → the gym
-         I've located Hughes Hall in Cambridge, but the "gym" search returned a result in Los Angeles. To pro
+Failed pairs (0/3 runs succeeded) — 18 pairs:
+
+  [A] C1_09  (common      )  Hughes Hall → King Library
+  [A] C2_01  (cross_campus)  Pearson Hall → Boyd Hall
+  [A] C2_02  (cross_campus)  Hughes Hall → Peabody Hall
+  [A] C2_05  (cross_campus)  Benton Hall → Peabody Hall
+  [B] C2_07  (cross_campus)  King Library → Boyd Hall
+             Boyd Hall resolved 609m off (39.5036,-84.7253 vs expected 39.5058,-84.7318)
+  [A] C2_08  (cross_campus)  Hughes Hall → Bachelor Hall
+  [A] C2_09  (cross_campus)  Garland Hall → Peabody Hall
+  [A] C3_01  (problematic )  Benton Hall → Elliot Hall
+  [B] C3_02  (problematic )  King Library → Hiestand Hall
+             Hiestand Hall resolved 662m off (39.5057,-84.7326 vs expected 39.5083,-84.7395)
+  [B] C3_04  (problematic )  Upham Hall → Hiestand Hall
+  [B] C3_07  (problematic )  Benton Hall → Peabody Hall
+  [B] C3_09  (problematic )  MacMillan Hall → Boyd Hall
+             Boyd Hall resolved 164km off in Kentucky (38.0418,-84.5017)
+  [B] C3_10  (problematic )  Roudebush Hall → Hiestand Hall
+  [A] C4_01  (ambiguous   )  Benton Hall → the library
+  [A] C4_03  (ambiguous   )  Benton Hall → student center
+  [A] C4_04  (ambiguous   )  the engineering building → King Library
+  [A] C4_08  (ambiguous   )  Garland → Armstrong
+  [A] C4_10  (ambiguous   )  Hughes Hall → the gym
+
+Inconsistent pairs (success in 1-2 of 3 runs) — 9 pairs:
+  C1_13  (common      )  2/3  Pearson Hall → Garland Hall
+  C1_18  (common      )  2/3  Garland Hall → Laws Hall
+  C2_04  (cross_campus)  1/3  Pearson Hall → Alumni Hall
+  C2_06  (cross_campus)  2/3  McVey Data Science Building → Alumni Hall
+  C3_06  (problematic )  1/3  Peabody Hall → Elliot Hall
+  C4_02  (ambiguous   )  2/3  Armstrong → King Library
+  C4_05  (ambiguous   )  2/3  McVey building → Armstrong Student Center
+  C4_07  (ambiguous   )  2/3  Benton Hall → Data Science Building
+  C4_09  (ambiguous   )  1/3  the admin building → King Library
+
+Root cause analysis:
+  1. No campus scope in Nominatim → same-named buildings at other universities
+     (Hughes Hall Cambridge UK, Garland Hall Johns Hopkins, Benton Hall Berkeley)
+  2. OSM coordinate errors: Boyd Hall, Hiestand Hall, Peabody Hall all resolve
+     to incorrect coordinates within/near Oxford OH
+  3. Informal/ambiguous names reliably fail in category 4
+════════════════════════════════════════════════════════════════════

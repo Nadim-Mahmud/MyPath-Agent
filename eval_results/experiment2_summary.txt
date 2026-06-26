@@ -1,0 +1,52 @@
+Experiment 2 Results — Multi-Model Comparison
+════════════════════════════════════════════════════════════════════
+Models: gemini-1.5-flash (cloud), qwen2.5:3b / llama3.2:3b / phi4-mini (local Ollama)
+Pairs:  50 OD pairs × 3 runs each  |  Dataset: mypath_od_pairs_1.json
+Not tested (Ollama API rejects tools): gemma3:4b
+────────────────────────────────────────────────────────────────────
+
+┌──────────────────────┬──────────┬──────────┬───────────┬─────────────┬──────────────┐
+│ Model                │ Route    │ Geocode  │ WC Valid  │ Consistent  │ Mean Lat(ms) │
+│                      │ Success% │ Success% │ %         │ %           │              │
+├──────────────────────┼──────────┼──────────┼───────────┼─────────────┼──────────────┤
+│ gemini-1.5-flash *   │    64.0% │    84.0% │     64.0% │       82.0% │        11004 │
+│ qwen2.5:3b           │    10.0% │    86.0% │     10.0% │       90.0% │        45477 │
+│ llama3.2:3b          │     0.0% │    74.0% │      0.0% │      100.0% │        12030 │
+│ phi4-mini            │     0.0% │     0.0% │      0.0% │      100.0% │        11738 │
+└──────────────────────┴──────────┴──────────┴───────────┴─────────────┴──────────────┘
+* gemini-1.5-flash aliased to gemini-3.1-flash-lite-preview (1.5-x deprecated on this key)
+* Gemini mean latency excludes run 3 (rate-limit retries inflated to ~114s)
+* consistency=100% for local models means consistently failed ALL pairs (0/3 for all 50)
+
+Failure modes per model  (counts across 150 individual run records per model):
+┌──────────────────────┬─────┬────┬────┬───┬───┐
+│ Model                │   A │  B │  C │ D │ E │
+│                      │ Geo │Loc │Rte │Apo│Err│
+├──────────────────────┼─────┼────┼────┼───┼───┤
+│ gemini-1.5-flash     │  44 │ 22 │  0 │ 0 │ 0 │
+│ qwen2.5:3b           │  64 │ 72 │  9 │ 0 │ 0 │
+│ llama3.2:3b          │  56 │ 56 │ 38 │ 0 │ 0 │
+│ phi4-mini            │ 133 │  0 │ 17 │ 0 │ 0 │
+└──────────────────────┴─────┴────┴────┴───┴───┘
+
+Route success by category:
+┌──────────────────────┬─────────────┬──────────────┬─────────────┬──────────────┐
+│ Model                │ common (20) │ cross_c (10) │ problem (10)│ ambig (10)   │
+├──────────────────────┼─────────────┼──────────────┼─────────────┼──────────────┤
+│ gemini-1.5-flash     │      95%    │      40%     │      40%    │      50%     │
+│ qwen2.5:3b           │      10%    │      10%     │      10%    │      10%     │
+│ llama3.2:3b          │       0%    │       0%     │       0%    │       0%     │
+│ phi4-mini            │       0%    │       0%     │       0%    │       0%     │
+└──────────────────────┴─────────────┴──────────────┴─────────────┴──────────────┘
+
+Key findings:
+  1. Cloud model (Gemini) outperforms all local models by 6.4× on route success (64% vs best 10%)
+  2. phi4-mini and llama3.2:3b both 0% — neither used function calling tools at all
+  3. phi4-mini failure mode: hallucinated routes (fake street names) or refused requests outright
+  4. llama3.2:3b failure mode: leaked raw system context (JSON/GPS) into user-visible responses
+  5. qwen2.5:3b best local performer (10%) — called tools but accepted wrong-city geocoding results
+  6. Geocoding success diverges: Gemini/qwen2.5 ~84-86%, llama3.2 74%, phi4-mini 0% (no tool calls)
+  7. phi4-mini A=133 (all 150 minus 17 C): never geocoded — responded in prose without any tool use
+  8. Root cause shared by all models: no campus scope constraint in Nominatim geocoder
+  9. gemma3:4b excluded: Ollama API returned HTTP 400 "does not support tools"
+════════════════════════════════════════════════════════════════════

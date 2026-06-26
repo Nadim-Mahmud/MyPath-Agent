@@ -1,0 +1,316 @@
+model,run,pair_id,category,origin,destination,query,geocode_success,route_success,wc_valid,failure_mode,failure_detail,latency_ms,session_id
+qwen2.5:3b,1,C1_01,common,Benton Hall,Richard M. McVey Data Science Building,Navigate from Benton Hall to McVey Data Science Building,False,False,False,A,"The route from **Benton Hall** to the **Richard M. McVey Data Science Building** is wheelchair accessible:
+
+### Route Plan:
+- Start from one of the main entrances of **Benton Hall**, which are fully w",16188,eval_C1_01_r1_effa41ad
+qwen2.5:3b,1,C1_02,common,Benton Hall,Armstrong Student Center,Directions from Benton Hall to Armstrong Student Center,False,False,False,A,"Both Benton Hall and Armstrong Student Center are fully wheelchair accessible with multiple entrances that support wheelchairs. You can choose the most convenient one for your journey.
+
+I will generat",9842,eval_C1_02_r1_3b1312c4
+qwen2.5:3b,1,C1_03,common,King Library,Armstrong Student Center,How do I get from King Library to Armstrong Student Center,True,False,False,B,"Destination 39.7421,-86.1641 is 125049m from expected 39.5074,-84.7362",4001,eval_C1_03_r1_d62baf95
+qwen2.5:3b,1,C1_04,common,Upham Hall,Laws Hall,Route from Upham Hall to Laws Hall,False,False,False,A,"Both Upham Hall and Laws Hall have entrances that are fully or not wheelchair accessible. Here's the route from Upham Hall to Laws Hall:
+
+1. **Start at:**
+   - **Address**: [Upham Hall, Miami Universi",15434,eval_C1_04_r1_835d4654
+qwen2.5:3b,1,C1_05,common,Armstrong Student Center,King Library,Take me from Armstrong Student Center to King Library,True,False,False,B,"Destination 39.1013,-86.5698 is 164064m from expected 39.5088,-84.7371",7784,eval_C1_05_r1_4862a033
+qwen2.5:3b,1,C1_06,common,Garland Hall,Armstrong Student Center,Navigate from Garland Hall to Armstrong Student Center,False,False,False,A,"It seems there is no accessible information available about the locations. Please provide more details or check the accessibility status on site.
+
+Alternatively, we can try to find a nearby street add",3962,eval_C1_06_r1_575b8cb3
+qwen2.5:3b,1,C1_07,common,MacMillan Hall,King Library,Directions from MacMillan Hall to King Library,True,False,False,B,"Destination -37.8570,144.9674 is 15752326m from expected 39.5088,-84.7371",15052,eval_C1_07_r1_fb2194d1
+qwen2.5:3b,1,C1_08,common,Roudebush Hall,Upham Hall,How do I get to Upham Hall from Roudebush Hall,True,False,False,B,"Destination 41.2874,-86.8193 is 264947m from expected 39.5096,-84.7358",3967,eval_C1_08_r1_6cf35290
+qwen2.5:3b,1,C1_09,common,Hughes Hall,King Library,Route from Hughes Hall to King Library wheelchair accessible,False,False,False,A,"The accessibility information for Hughes Hall indicates that there are multiple accessible entrances:
+
+- **Entrance A** (HUGHES-A) with the label ""HUGHES-A"" located at [52.2010527, 0.1316921]. This en",8260,eval_C1_09_r1_d4e31991
+qwen2.5:3b,1,C1_10,common,Laws Hall,Shriver Center,Navigate from Laws Hall to Shriver Center,True,False,False,B,"Destination 41.8513,-88.5917 is 416584m from expected 39.5068,-84.7374",19386,eval_C1_10_r1_e024e323
+qwen2.5:3b,1,C1_11,common,Kreger Hall,Benton Hall,Directions from Kreger Hall to Benton Hall,False,False,False,C,"Both Kreger Hall and Benton Hall have fully accessible entrances:
+
+- **Kreger Hall**:
+  - Accessible Entrances: Latitude and Longitude provided for several accessible entrances.
+  - Directions to acce",30004,eval_C1_11_r1_5e5bceb7
+qwen2.5:3b,1,C1_12,common,Harrison Hall,Roudebush Hall,Route from Harrison Hall to Roudebush Hall,True,False,False,B,"Destination 41.0833,-86.6163 is 236871m from expected 39.5085,-84.7353",3712,eval_C1_12_r1_2ed4a9a3
+qwen2.5:3b,1,C1_13,common,Pearson Hall,Garland Hall,Take me from Pearson Hall to Garland Hall,False,False,False,A,"To plan your route from Pearson Hall to Garland Hall, I need some more details about the exact locations within these buildings. Can you provide me with:
+
+- [Pre-resolved] Coordinates (latitude and lo",24338,eval_C1_13_r1_584d750b
+qwen2.5:3b,1,C1_14,common,Alumni Hall,Shriver Center,Accessible route from Alumni Hall to Shriver Center,False,False,False,C,I couldn't find an exact match in OpenStreetMap data for the place you're looking for. It's possible that this location is not fully recorded or might have a different name on their maps. I recommend ,4858,eval_C1_14_r1_8768a282
+qwen2.5:3b,1,C1_15,common,Hiestand Hall,King Library,Navigate from Hiestand Hall to King Library,False,False,False,A,"I found several accessible entrances for both Hiestand Hall and King Library. Here is the recommended route from Hiestand Hall to King Library:
+
+- **Starting at Hiestand Hall**: The primary entrance i",28293,eval_C1_15_r1_68a8d02c
+qwen2.5:3b,1,C1_16,common,Bachelor Hall,MacMillan Hall,How do I get from Bachelor Hall to MacMillan Hall,False,False,False,A,"I found the entrances for both Bachelor Hall and MacMillan Hall. Here are the details:
+
+**Bachelor Hall**: 
+- No entrance nodes with accessibility tags found within 60 m.
+
+**MacMillan Hall**: 
+- Entra",18755,eval_C1_16_r1_549ddfb7
+qwen2.5:3b,1,C1_17,common,Upham Hall,Armstrong Student Center,Route from Upham Hall to Armstrong Student Center,False,False,False,C,"Both Upham Hall and Armstrong Student Center have wheelchair accessible entrances. The route will be planned using the coordinates of their accessible entry points.
+
+I'll use the following coordinates",13492,eval_C1_17_r1_ff458c58
+qwen2.5:3b,1,C1_18,common,Garland Hall,Laws Hall,Directions from Garland Hall to Laws Hall,True,False,False,B,"Destination 41.3100,-87.6732 is 319469m from expected 39.5081,-84.7338",4234,eval_C1_18_r1_dfe0304f
+qwen2.5:3b,1,C1_19,common,Shriver Center,Roudebush Hall,Take me from Shriver Center to Roudebush Hall,True,False,False,B,"Destination 42.3059,-83.0701 is 341066m from expected 39.5085,-84.7353",11809,eval_C1_19_r1_880e8d1e
+qwen2.5:3b,1,C1_20,common,MacMillan Hall,Benton Hall,Navigate from MacMillan Hall to Benton Hall,True,False,False,B,"Destination 41.2775,-89.9925 is 486719m from expected 39.5092,-84.7337",4469,eval_C1_20_r1_e802cbfb
+qwen2.5:3b,1,C2_01,cross_campus,Pearson Hall,Boyd Hall,Accessible route from Pearson Hall to Boyd Hall,False,False,False,A,Both Pearson Hall and Boyd Hall appear to have no OSM records in the database. This could mean that either or both buildings are currently unrecorded by OpenStreetMap contributors. Please verify the a,9223,eval_C2_01_r1_a0e978f1
+qwen2.5:3b,1,C2_02,cross_campus,Hughes Hall,Peabody Hall,Navigate from Hughes Hall to Peabody Hall wheelchair,True,False,False,B,"Destination 52.2005,0.1332 is 6335509m from expected 39.5052,-84.7322",8986,eval_C2_02_r1_698976fa
+qwen2.5:3b,1,C2_03,cross_campus,Hiestand Hall,Bachelor Hall,Route from Hiestand Hall to Bachelor Hall,True,True,True,,,32461,eval_C2_03_r1_812b7a9b
+qwen2.5:3b,1,C2_04,cross_campus,Pearson Hall,Alumni Hall,Directions from Pearson Hall to Alumni Hall,True,False,False,B,"Destination 39.7679,-75.8255 is 763544m from expected 39.5071,-84.7395",16950,eval_C2_04_r1_ff2d54ad
+qwen2.5:3b,1,C2_05,cross_campus,Benton Hall,Peabody Hall,Take me from Benton Hall to Peabody Hall accessible route,True,False,False,B,"Destination 39.5012,-84.7258 is 707m from expected 39.5052,-84.7322",23041,eval_C2_05_r1_b5345fa3
+qwen2.5:3b,1,C2_06,cross_campus,McVey Data Science Building,Alumni Hall,How do I get from McVey Data Science Building to Alumni Hall,True,False,False,B,"Destination 41.0989,-87.8216 is 315627m from expected 39.5071,-84.7395",4670,eval_C2_06_r1_569a2c72
+qwen2.5:3b,1,C2_07,cross_campus,King Library,Boyd Hall,Navigate from King Library to Boyd Hall,True,False,False,B,"Destination -122.4204,37.7770 is 12047108m from expected 39.5058,-84.7318",8834,eval_C2_07_r1_6d5e0c21
+qwen2.5:3b,1,C2_08,cross_campus,Hughes Hall,Bachelor Hall,Route from Hughes Hall to Bachelor Hall wheelchair accessible,True,False,False,B,"Destination 52.2010,0.1332 is 6335407m from expected 39.5065,-84.7325",8599,eval_C2_08_r1_9744ce71
+qwen2.5:3b,1,C2_09,cross_campus,Garland Hall,Peabody Hall,Directions from Garland Hall to Peabody Hall,True,False,False,B,"Destination 39.1374,-86.5093 is 158241m from expected 39.5052,-84.7322",12598,eval_C2_09_r1_058bd4ff
+qwen2.5:3b,1,C2_10,cross_campus,Armstrong Student Center,Richard M. McVey Data Science Building,Take me from Armstrong Student Center to McVey Data Science Building,True,False,False,B,"Destination 39.1248,-84.4966 is 47445m from expected 39.5107,-84.7318",8538,eval_C2_10_r1_9ee085a8
+qwen2.5:3b,1,C3_01,problematic,Benton Hall,Elliot Hall,Navigate from Benton Hall to Elliot Hall,True,True,True,,,18364,eval_C3_01_r1_09a163c3
+qwen2.5:3b,1,C3_02,problematic,King Library,Hiestand Hall,Route from King Library to Hiestand Hall,True,False,False,B,"Destination 41.8936,-87.9026 is 376042m from expected 39.5083,-84.7395",5958,eval_C3_02_r1_f703f323
+qwen2.5:3b,1,C3_03,problematic,Harrison Hall,Laws Hall,Directions from Harrison Hall to Laws Hall,True,False,False,B,"Destination 39.1583,-86.0064 is 116154m from expected 39.5081,-84.7338",6093,eval_C3_03_r1_0931ba7f
+qwen2.5:3b,1,C3_04,problematic,Upham Hall,Hiestand Hall,Accessible route from Upham Hall to Hiestand Hall,False,False,False,A,"Both Upham Hall and Hiestand Hall have entrances that are fully accessible to wheelchairs, so you don't need any special assistance for this route. Here’s the plan from Upham Hall to Hiestand Hall:
+
+1",27073,eval_C3_04_r1_fd9e67dc
+qwen2.5:3b,1,C3_05,problematic,Boyd Hall,Kreger Hall,How do I get from Boyd Hall to Kreger Hall wheelchair,False,False,False,C,"The Academic Core area contains two locations. Please confirm which one you need to get from:
+
+1. University of Kentucky, 101, Lexington Avenue
+2. Academic Core, University of Kentucky
+
+Could you plea",18162,eval_C3_05_r1_fb575f27
+qwen2.5:3b,1,C3_06,problematic,Peabody Hall,Elliot Hall,Navigate from Peabody Hall to Elliott Hall,False,False,False,A,"I have found that Peabody Hall and Elliott Hall are both accessible for wheelchairs. 
+
+**Peabody Hall (starting point):**
+- Located at 701 Western College Drive, Oxford, Ohio.
+- Wheelchair-accessible ",35615,eval_C3_06_r1_4b5bfafa
+qwen2.5:3b,1,C3_07,problematic,Benton Hall,Peabody Hall,Directions from Benton Hall to Peabody Hall,True,False,False,B,"Destination -39.2833,178.7205 is 13131145m from expected 39.5052,-84.7322",44604,eval_C3_07_r1_9de0be88
+qwen2.5:3b,1,C3_08,problematic,Kreger Hall,Alumni Hall,Route from Kreger Hall to Alumni Hall accessible,False,False,False,C,"Both Kreger Hall and Alumni Hall have fully wheelchair accessible entrances:
+
+- **Kreger Hall**:
+  - Located at: Irvin Drive, Oxford, Ohio (Latitude: 39.5079287, Longitude: -84.7345208)
+  - Accessible",28922,eval_C3_08_r1_ebc417fb
+qwen2.5:3b,1,C3_09,problematic,MacMillan Hall,Boyd Hall,Take me from MacMillan Hall to Boyd Hall,True,False,False,B,"Destination 42.0894,-83.6508 is 301344m from expected 39.5058,-84.7318",4315,eval_C3_09_r1_c06eb6e8
+qwen2.5:3b,1,C3_10,problematic,Roudebush Hall,Hiestand Hall,Navigate from Roudebush Hall to Hiestand Hall wheelchair accessible,False,False,False,A,"I have identified the following accessible routes for you from Roudebush Hall to Hiestand Hall:
+
+### Starting Point: Roudebush Hall
+- Entrance 1: Fully wheelchair accessible (39.5094721, -84.7340895)
+",21576,eval_C3_10_r1_47755de3
+qwen2.5:3b,1,C4_01,ambiguous,Benton Hall,the library,Navigate from Benton Hall to the library,True,False,False,B,"Destination -39.0433,-76.8237 is 8771662m from expected 39.5088,-84.7371",15889,eval_C4_01_r1_070e8110
+qwen2.5:3b,1,C4_02,ambiguous,Armstrong,King Library,How do I get from Armstrong to King Library,True,False,False,B,"Destination 41.2885,-87.6903 is 318873m from expected 39.5088,-84.7371",3926,eval_C4_02_r1_91947082
+qwen2.5:3b,1,C4_03,ambiguous,Benton Hall,student center,Route from Benton Hall to the student center,True,True,True,,,25079,eval_C4_03_r1_51ab4edf
+qwen2.5:3b,1,C4_04,ambiguous,the engineering building,King Library,Directions from the engineering building to King Library,True,False,False,B,"Destination 51.4960,-0.0979 is 6352521m from expected 39.5088,-84.7371",12773,eval_C4_04_r1_938f70cc
+qwen2.5:3b,1,C4_05,ambiguous,McVey building,Armstrong Student Center,Navigate from McVey building to Armstrong Student Center,False,False,False,A,"I have found two accessible routes for you from the **McVey building** to the **Armstrong Student Center**.
+
+### Route 1:
+- Start at the entrance of the **McVey building**, marked as **fully wheelchai",17940,eval_C4_05_r1_300ea35b
+qwen2.5:3b,1,C4_06,ambiguous,Laws,Shriver,Route from Laws to Shriver,True,False,False,B,"Destination 41.0977,-88.2955 is 349727m from expected 39.5068,-84.7374",8288,eval_C4_06_r1_eb9efd08
+qwen2.5:3b,1,C4_07,ambiguous,Benton Hall,Data Science Building,How do I get from Benton Hall to the Data Science Building,False,False,False,C,I encountered a problem with the routing service while planning the route from Benton Hall to the Data Science Building. Let's try resolving this by providing more specific details about your starting,7925,eval_C4_07_r1_9a030455
+qwen2.5:3b,1,C4_08,ambiguous,Garland,Armstrong,Directions from Garland to Armstrong,False,False,False,C,It seems that there are multiple places named Garland and Armstrong. Could you please provide more specific details such as the state or province where these locations are situated? This will help me ,5292,eval_C4_08_r1_f5c9a7f7
+qwen2.5:3b,1,C4_09,ambiguous,the admin building,King Library,Route from the admin building to King Library,True,False,False,B,"Destination -122.5684,44.0242 is 11789954m from expected 39.5088,-84.7371",6792,eval_C4_09_r1_dda3ec42
+qwen2.5:3b,1,C4_10,ambiguous,Hughes Hall,the gym,Navigate from Hughes Hall to the gym,False,False,False,A,"I found Hughes Hall at Mortimer Road, Petersfield, Cambridge, Cambridgeshire and Peterborough, England. The nearest gym to this location seems to be the one near the main entrance. 
+
+The main entrance",37558,eval_C4_10_r1_582d3896
+qwen2.5:3b,2,C1_01,common,Benton Hall,Richard M. McVey Data Science Building,Navigate from Benton Hall to McVey Data Science Building,True,True,True,,,55572,eval_C1_01_r2_e872d0ff
+qwen2.5:3b,2,C1_02,common,Benton Hall,Armstrong Student Center,Directions from Benton Hall to Armstrong Student Center,True,False,False,B,"Destination 39.1422,-83.2244 is 136230m from expected 39.5074,-84.7362",14939,eval_C1_02_r2_219c58ba
+qwen2.5:3b,2,C1_03,common,King Library,Armstrong Student Center,How do I get from King Library to Armstrong Student Center,True,False,False,B,"Destination 39.7524,-104.9834 is 1730487m from expected 39.5074,-84.7362",4050,eval_C1_03_r2_0b6f32b7
+qwen2.5:3b,2,C1_04,common,Upham Hall,Laws Hall,Route from Upham Hall to Laws Hall,False,False,False,A,"Both Upham Hall and Laws Hall have accessible entrances for wheelchairs:
+
+- **Upham Hall**: Accessible entrance coordinates: 39.5087397, -84.7338213; fully wheelchair accessible.
+- **Laws Hall**: Acce",37101,eval_C1_04_r2_eba0472e
+qwen2.5:3b,2,C1_05,common,Armstrong Student Center,King Library,Take me from Armstrong Student Center to King Library,True,False,False,B,"Destination 41.2839,-87.9044 is 332980m from expected 39.5088,-84.7371",3734,eval_C1_05_r2_8e898827
+qwen2.5:3b,2,C1_06,common,Garland Hall,Armstrong Student Center,Navigate from Garland Hall to Armstrong Student Center,True,False,False,B,"Destination -39.0223,138.5276 is 16326714m from expected 39.5074,-84.7362",42677,eval_C1_06_r2_d8567389
+qwen2.5:3b,2,C1_07,common,MacMillan Hall,King Library,Directions from MacMillan Hall to King Library,False,False,False,A,"I found that MacMillan Hall has several accessible entrances:
+- Entrance A: Hinged door at coordinates: Latitude -41.8260659, Longitude -71.3998809.
+- Entrance B: Hinged door at coordinates: Latitude ",10264,eval_C1_07_r2_af5ee5b2
+qwen2.5:3b,2,C1_08,common,Roudebush Hall,Upham Hall,How do I get to Upham Hall from Roudebush Hall,False,False,False,A,"For your route from Roudebush Hall to Upham Hall, please note the following details about entrances and ramps:
+
+**Upham Hall:**
+- There are multiple accessible entrances available. You can use any of ",39889,eval_C1_08_r2_9642d5dd
+qwen2.5:3b,2,C1_09,common,Hughes Hall,King Library,Route from Hughes Hall to King Library wheelchair accessible,True,False,False,B,"Destination 52.2065,-0.1362 is 6318439m from expected 39.5088,-84.7371",8677,eval_C1_09_r2_1428a34a
+qwen2.5:3b,2,C1_10,common,Laws Hall,Shriver Center,Navigate from Laws Hall to Shriver Center,True,False,False,B,"Destination 41.7510,-87.6655 is 351146m from expected 39.5068,-84.7374",11928,eval_C1_10_r2_60ac620f
+qwen2.5:3b,2,C1_11,common,Kreger Hall,Benton Hall,Directions from Kreger Hall to Benton Hall,True,False,False,B,"Destination 39.1581,-84.0178 is 72899m from expected 39.5092,-84.7337",3889,eval_C1_11_r2_3025b591
+qwen2.5:3b,2,C1_12,common,Harrison Hall,Roudebush Hall,Route from Harrison Hall to Roudebush Hall,False,False,False,A,"Both Harrison Hall and Roudebush Hall have accessible entrances for wheelchair users. Here is a suggested route from Harrison Hall to Roudebush Hall:
+
+- **Distance**: Approximately 1.5 miles (2.4 km)
+",29551,eval_C1_12_r2_564c7d3b
+qwen2.5:3b,2,C1_13,common,Pearson Hall,Garland Hall,Take me from Pearson Hall to Garland Hall,True,False,False,B,"Destination 39.1131,-84.5278 is 47614m from expected 39.5093,-84.7378",12032,eval_C1_13_r2_b98e24ff
+qwen2.5:3b,2,C1_14,common,Alumni Hall,Shriver Center,Accessible route from Alumni Hall to Shriver Center,False,False,False,A,"To plan a route from Alumni Hall to Shriver Center, I will use the accessible entrances for both locations.
+
+**Route Plan:**
+- **Start**: [Alumni Hall, 41.8457755, -71.4370273]
+- **First Step**: Walk ",45735,eval_C1_14_r2_ecb1af34
+qwen2.5:3b,2,C1_15,common,Hiestand Hall,King Library,Navigate from Hiestand Hall to King Library,False,False,False,A,"Both Hiestand Hall and King Library have accessible entrances:
+
+- **Hiestand Hall**:
+  - Accessible Entrances: 
+    - Latitude & Longitude: [39.505266, -84.732015]
+    - Latitude & Longitude: [39.5054",51468,eval_C1_15_r2_99a3c043
+qwen2.5:3b,2,C1_16,common,Bachelor Hall,MacMillan Hall,How do I get from Bachelor Hall to MacMillan Hall,True,False,False,B,"Destination 40.7947,-83.5947 is 172825m from expected 39.5077,-84.7349",3485,eval_C1_16_r2_c76b86d0
+qwen2.5:3b,2,C1_17,common,Upham Hall,Armstrong Student Center,Route from Upham Hall to Armstrong Student Center,True,True,True,,,42134,eval_C1_17_r2_1bc4e7b9
+qwen2.5:3b,2,C1_18,common,Garland Hall,Laws Hall,Directions from Garland Hall to Laws Hall,True,False,False,B,"Destination 39.7495,-86.1708 is 125960m from expected 39.5081,-84.7338",4089,eval_C1_18_r2_ce021d7c
+qwen2.5:3b,2,C1_19,common,Shriver Center,Roudebush Hall,Take me from Shriver Center to Roudebush Hall,True,False,False,B,"Destination 41.7682,-87.7196 is 355689m from expected 39.5085,-84.7353",9479,eval_C1_19_r2_a7bd881f
+qwen2.5:3b,2,C1_20,common,MacMillan Hall,Benton Hall,Navigate from MacMillan Hall to Benton Hall,False,False,False,A,"Both MacMillan Hall and Benton Hall have fully wheelchair-accessible entrances. The optimal route will be from MacMillan Hall to the closest accessible entrance of Benton Hall.
+
+Here is a suggested ro",9491,eval_C1_20_r2_ef990904
+qwen2.5:3b,2,C2_01,cross_campus,Pearson Hall,Boyd Hall,Accessible route from Pearson Hall to Boyd Hall,False,False,False,A,"I found that both Pearson Hall and Boyd Hall have accessible entrances. The nearest entrance for Pearson Hall is at coordinates `35.912459`, `-79.052448`, while the closest entrance for Boyd Hall is a",33636,eval_C2_01_r2_7b076a8c
+qwen2.5:3b,2,C2_02,cross_campus,Hughes Hall,Peabody Hall,Navigate from Hughes Hall to Peabody Hall wheelchair,False,False,False,A,"To navigate from Hughes Hall to Peabody Hall in a wheelchair-friendly manner, follow the suggested route:
+
+**Route Details:**
+- **Distance:** Approximately 196 km (122 miles)
+- **Travel Time:** Around",38248,eval_C2_02_r2_37745d51
+qwen2.5:3b,2,C2_03,cross_campus,Hiestand Hall,Bachelor Hall,Route from Hiestand Hall to Bachelor Hall,False,False,False,A,"Both Hiestand Hall and Bachelor Hall are fully accessible with wheelchairs. They each have multiple entrances that are wheelchair-accessible.
+
+Here is the route plan for you from Hiestand Hall to Bach",13734,eval_C2_03_r2_297a6b1a
+qwen2.5:3b,2,C2_04,cross_campus,Pearson Hall,Alumni Hall,Directions from Pearson Hall to Alumni Hall,True,False,False,B,"Destination 40.6912,-73.9614 is 925547m from expected 39.5071,-84.7395",11089,eval_C2_04_r2_d73ab4aa
+qwen2.5:3b,2,C2_05,cross_campus,Benton Hall,Peabody Hall,Take me from Benton Hall to Peabody Hall accessible route,False,False,False,A,"I've found two entrances that are fully wheelchair accessible for both Benton Hall and Peabody Hall:
+
+- **Benton Hall**:
+  - Accessible Entrance 1: Latitude - Longtitude (39.5106038, -84.7335334)
+  - ",14385,eval_C2_05_r2_f5095ed7
+qwen2.5:3b,2,C2_06,cross_campus,McVey Data Science Building,Alumni Hall,How do I get from McVey Data Science Building to Alumni Hall,True,False,False,B,"Destination 39.0698,-84.4379 is 55115m from expected 39.5071,-84.7395",4189,eval_C2_06_r2_1fac73d9
+qwen2.5:3b,2,C2_07,cross_campus,King Library,Boyd Hall,Navigate from King Library to Boyd Hall,True,False,False,B,"Destination 39.4570,-98.4228 is 1173894m from expected 39.5058,-84.7318",3709,eval_C2_07_r2_d3631538
+qwen2.5:3b,2,C2_08,cross_campus,Hughes Hall,Bachelor Hall,Route from Hughes Hall to Bachelor Hall wheelchair accessible,False,False,False,A,"Hughes Hall has an accessible entrance labeled as 'HUGHES-A' at coordinates (52.2010527, 0.1316921), but Bachelor Hall does not have any accessible entrances according to the available data. Please pr",30429,eval_C2_08_r2_312e5cc0
+qwen2.5:3b,2,C2_09,cross_campus,Garland Hall,Peabody Hall,Directions from Garland Hall to Peabody Hall,True,False,False,B,"Destination 39.5012,-84.7258 is 707m from expected 39.5052,-84.7322",15055,eval_C2_09_r2_f014e2da
+qwen2.5:3b,2,C2_10,cross_campus,Armstrong Student Center,Richard M. McVey Data Science Building,Take me from Armstrong Student Center to McVey Data Science Building,True,False,False,B,"Destination 41.7504,-88.3581 is 394485m from expected 39.5107,-84.7318",6716,eval_C2_10_r2_bf2c8e22
+qwen2.5:3b,2,C3_01,problematic,Benton Hall,Elliot Hall,Navigate from Benton Hall to Elliot Hall,True,False,False,B,"Destination -38.4613,143.0155 is 15935346m from expected 39.5078,-84.7368",38889,eval_C3_01_r2_06a7766a
+qwen2.5:3b,2,C3_02,problematic,King Library,Hiestand Hall,Route from King Library to Hiestand Hall,False,False,False,A,"Both King Library and Hiestand Hall have fully accessible entrances:
+
+- **King Library**:
+  - Accessible Entrance: Main entrance located at approximately [39.508823, -84.737976]
+  - Another accessible",24951,eval_C3_02_r2_a24e4c88
+qwen2.5:3b,2,C3_03,problematic,Harrison Hall,Laws Hall,Directions from Harrison Hall to Laws Hall,False,False,False,A,"I found multiple entrances for Harrison Hall and Laws Hall that are wheelchair accessible:
+- For **Harrison Hall** at 37.0637665, -76.4209925 in Northampton, Virginia, you can enter via entrance with ",39071,eval_C3_03_r2_2ff437d0
+qwen2.5:3b,2,C3_04,problematic,Upham Hall,Hiestand Hall,Accessible route from Upham Hall to Hiestand Hall,True,False,False,B,"Destination 39.5056,-84.7325 is 674m from expected 39.5083,-84.7395",28641,eval_C3_04_r2_a656a39d
+qwen2.5:3b,2,C3_05,problematic,Boyd Hall,Kreger Hall,How do I get from Boyd Hall to Kreger Hall wheelchair,False,False,False,A,"I have identified the entrances for Boyd Hall and Kreger Hall. Both are wheelchair accessible:
+
+**Boyd Hall (South Limestone, University of Kentucky):**
+- Entrances: Yes, you can enter from three diff",43490,eval_C3_05_r2_62c2fc2c
+qwen2.5:3b,2,C3_06,problematic,Peabody Hall,Elliot Hall,Navigate from Peabody Hall to Elliott Hall,False,False,False,A,I've found that both Peabody Hall and Elliott Hall are currently unmapped for wheelchair accessibility data in OpenStreetMap. It's recommended to verify these buildings directly or contact their acces,36632,eval_C3_06_r2_65c0ddc4
+qwen2.5:3b,2,C3_07,problematic,Benton Hall,Peabody Hall,Directions from Benton Hall to Peabody Hall,False,False,False,A,"Both Benton Hall and Peabody Hall are fully wheelchair accessible with ramp access available at the entrances. 
+
+A route to travel from Benton Hall to Peabody Hall is as follows:
+
+- Distance: 491 mete",23465,eval_C3_07_r2_01c0b2a4
+qwen2.5:3b,2,C3_08,problematic,Kreger Hall,Alumni Hall,Route from Kreger Hall to Alumni Hall accessible,False,False,False,C,"To find a wheelchair-accessible route from **Kreger Hall** to **Alumni Hall**, we need to locate the entrances with `wheelchair: yes` tags and then use those as the starting point for our routing requ",35686,eval_C3_08_r2_7c2ccc89
+qwen2.5:3b,2,C3_09,problematic,MacMillan Hall,Boyd Hall,Take me from MacMillan Hall to Boyd Hall,True,False,False,B,"Destination 40.5533,-74.3655 is 889742m from expected 39.5058,-84.7318",63619,eval_C3_09_r2_4acd0ef4
+qwen2.5:3b,2,C3_10,problematic,Roudebush Hall,Hiestand Hall,Navigate from Roudebush Hall to Hiestand Hall wheelchair accessible,False,False,False,A,"Both Roudebush Hall and Hiestand Hall are accessible for wheelchair users.
+
+For **Roudebush Hall**:
+- There is a fully accessible entrance at coordinates: 39.5094721, -84.7340895.
+- A partially access",16223,eval_C3_10_r2_83636a00
+qwen2.5:3b,2,C4_01,ambiguous,Benton Hall,the library,Navigate from Benton Hall to the library,False,False,False,A,"I found two options for your route:
+
+### From Benton Hall to King Library
+
+The main entrance of **Benton Hall** is wheelchair accessible and fully ramped.
+- The coordinates are: `lat` -39.5106038, `lo",27634,eval_C4_01_r2_f8978a64
+qwen2.5:3b,2,C4_02,ambiguous,Armstrong,King Library,How do I get from Armstrong to King Library,True,False,False,B,"Destination 41.0678,-87.9534 is 323192m from expected 39.5088,-84.7371",14088,eval_C4_02_r2_6be4e41a
+qwen2.5:3b,2,C4_03,ambiguous,Benton Hall,student center,Route from Benton Hall to the student center,False,False,False,A,"The nearest locations for the Student Center are:
+
+- **Simpson Center for Student-Athlete High Performance**: Located at Piedmont Avenue, Berkeley (approximately 2.3 km away from Benton Hall)
+- **Césa",10342,eval_C4_03_r2_393e868c
+qwen2.5:3b,2,C4_04,ambiguous,the engineering building,King Library,Directions from the engineering building to King Library,False,False,False,C,"The Engineering Building has multiple wheelchair accessible entrances. I will use one of the entrances for your route planning.
+
+Would you like me to provide details on these locations or should we pr",9459,eval_C4_04_r2_e5b375ae
+qwen2.5:3b,2,C4_05,ambiguous,McVey building,Armstrong Student Center,Navigate from McVey building to Armstrong Student Center,False,False,False,A,To navigate from the [Richard M. McVey Data Science Building](https://www.openstreetmap.org/?mlat=39.5114849&mlon=-84.7341639) to the [Armstrong Student Center](https://www.openstreetmap.org/?mlat=39.,24856,eval_C4_05_r2_ce02d377
+qwen2.5:3b,2,C4_06,ambiguous,Laws,Shriver,Route from Laws to Shriver,True,False,False,B,"Destination 39.2548,-84.5683 is 31568m from expected 39.5068,-84.7374",3603,eval_C4_06_r2_8762da23
+qwen2.5:3b,2,C4_07,ambiguous,Benton Hall,Data Science Building,How do I get from Benton Hall to the Data Science Building,True,False,False,B,"Destination 40.7882,-83.2177 is 191673m from expected 39.5107,-84.7318",10170,eval_C4_07_r2_10f5b9d1
+qwen2.5:3b,2,C4_08,ambiguous,Garland,Armstrong,Directions from Garland to Armstrong,True,False,False,B,"Destination 32.8323,-97.1300 is 1335397m from expected 39.5074,-84.7362",9152,eval_C4_08_r2_99578206
+qwen2.5:3b,2,C4_09,ambiguous,the admin building,King Library,Route from the admin building to King Library,True,False,False,B,"Destination -32.7123,147.9212 is 15292085m from expected 39.5088,-84.7371",21975,eval_C4_09_r2_f2e95a15
+qwen2.5:3b,2,C4_10,ambiguous,Hughes Hall,the gym,Navigate from Hughes Hall to the gym,True,False,False,B,"Destination -1.2346,0.1235 is 9654824m from expected 39.5110,-84.7410",21502,eval_C4_10_r2_518d5ad1
+qwen2.5:3b,3,C1_01,common,Benton Hall,Richard M. McVey Data Science Building,Navigate from Benton Hall to McVey Data Science Building,False,False,False,A,"To navigate from Benton Hall to the McVey Data Science Building, I will plan a route using their accessible entrances.
+
+**Current Route Plan:**
+- **Start Point:** Main entrance of Benton Hall at coord",32999,eval_C1_01_r3_45e7f578
+qwen2.5:3b,3,C1_02,common,Benton Hall,Armstrong Student Center,Directions from Benton Hall to Armstrong Student Center,True,False,False,B,"Destination 39.2415,-83.6279 is 99744m from expected 39.5074,-84.7362",25788,eval_C1_02_r3_818a90a8
+qwen2.5:3b,3,C1_03,common,King Library,Armstrong Student Center,How do I get from King Library to Armstrong Student Center,True,False,False,B,"Destination 41.8319,-87.6178 is 354737m from expected 39.5074,-84.7362",44344,eval_C1_03_r3_974fe7d0
+qwen2.5:3b,3,C1_04,common,Upham Hall,Laws Hall,Route from Upham Hall to Laws Hall,True,False,False,B,"Destination 39.5163,-84.7306 is 951m from expected 39.5081,-84.7338",17964,eval_C1_04_r3_92513d43
+qwen2.5:3b,3,C1_05,common,Armstrong Student Center,King Library,Take me from Armstrong Student Center to King Library,True,False,False,B,"Destination 39.7843,-81.2538 is 299791m from expected 39.5088,-84.7371",137951,eval_C1_05_r3_454b35aa
+qwen2.5:3b,3,C1_06,common,Garland Hall,Armstrong Student Center,Navigate from Garland Hall to Armstrong Student Center,False,False,False,A,It seems there is no accessible data available for the location of Garland Hall and Armstrong Student Center. Please provide a different address or intersection if possible. If you have details such a,3685,eval_C1_06_r3_b4bbcf37
+qwen2.5:3b,3,C1_07,common,MacMillan Hall,King Library,Directions from MacMillan Hall to King Library,False,False,False,A,"The nearest accessible entrance to MacMillan Hall is at coordinates: 41.8260659, -71.3998809. This entrance uses a hinged door and can be entered directly without a ramp. There are no explicit wheelch",919969,eval_C1_07_r3_a86d8c72
+qwen2.5:3b,3,C1_08,common,Roudebush Hall,Upham Hall,How do I get to Upham Hall from Roudebush Hall,True,False,False,B,"Destination 40.3964,-85.7912 is 133480m from expected 39.5096,-84.7358",7351,eval_C1_08_r3_cfba8cec
+qwen2.5:3b,3,C1_09,common,Hughes Hall,King Library,Route from Hughes Hall to King Library wheelchair accessible,True,False,False,B,"Destination 52.2045,-0.1359 is 6318549m from expected 39.5088,-84.7371",12701,eval_C1_09_r3_498a6f93
+qwen2.5:3b,3,C1_10,common,Laws Hall,Shriver Center,Navigate from Laws Hall to Shriver Center,True,False,False,B,"Destination 39.1074,-84.5079 is 48605m from expected 39.5068,-84.7374",9798,eval_C1_10_r3_d5966181
+qwen2.5:3b,3,C1_11,common,Kreger Hall,Benton Hall,Directions from Kreger Hall to Benton Hall,False,False,False,A,"I have identified the entrances for both Kreger Hall and Benton Hall. Here are the details:
+
+**Kreger Hall (from your current location to Kreger Hall):**
+- **Entrances:** 
+  - Entrance at latitude 39.",939323,eval_C1_11_r3_a68e9ec0
+qwen2.5:3b,3,C1_12,common,Harrison Hall,Roudebush Hall,Route from Harrison Hall to Roudebush Hall,False,False,False,A,Both Harrison Hall and Roudebush Hall do not have any accessible entrances according to the OpenStreetMap data. Please check the on-site accessibility information or contact their respective offices f,26793,eval_C1_12_r3_b5e5a335
+qwen2.5:3b,3,C1_13,common,Pearson Hall,Garland Hall,Take me from Pearson Hall to Garland Hall,False,False,False,A,"I've found the entrances for both Pearson Hall and Garland Hall. Here are your options:
+
+- **Pearson Hall (from Franklin-Rosemary Historic District to Downtown):**
+  - Two accessible entrances availab",265343,eval_C1_13_r3_c7a3005a
+qwen2.5:3b,3,C1_14,common,Alumni Hall,Shriver Center,Accessible route from Alumni Hall to Shriver Center,False,False,False,A,I couldn't find detailed accessibility information for Alumni Hall at Ohio State University in your area. We might need to try a different nearby location or check the official website for Shriver Cen,15481,eval_C1_14_r3_e454be60
+qwen2.5:3b,3,C1_15,common,Hiestand Hall,King Library,Navigate from Hiestand Hall to King Library,False,False,False,A,"To plan your route from Hiestand Hall to King Library, I need the specific street addresses of both locations.
+
+- **Hiestand Hall**: 150 Maple Avenue, Oxford, Ohio
+- **King Library**: 640 McGuffey Dri",8486,eval_C1_15_r3_4a38f4f5
+qwen2.5:3b,3,C1_16,common,Bachelor Hall,MacMillan Hall,How do I get from Bachelor Hall to MacMillan Hall,True,False,False,B,"Destination 41.3089,-83.6225 is 221317m from expected 39.5077,-84.7349",3923,eval_C1_16_r3_ac026110
+qwen2.5:3b,3,C1_17,common,Upham Hall,Armstrong Student Center,Route from Upham Hall to Armstrong Student Center,False,False,False,A,"It seems that the place name `Armstrong Student Center` couldn't be resolved to a specific location. Please provide a full address or another nearby landmark if possible.
+If you have any other details",260971,eval_C1_17_r3_f67af4dd
+qwen2.5:3b,3,C1_18,common,Garland Hall,Laws Hall,Directions from Garland Hall to Laws Hall,True,False,False,B,"Destination 39.6279,-96.0222 is 967061m from expected 39.5081,-84.7338",3966,eval_C1_18_r3_15b3a118
+qwen2.5:3b,3,C1_19,common,Shriver Center,Roudebush Hall,Take me from Shriver Center to Roudebush Hall,True,False,False,B,"Destination 41.7560,-91.9896 is 660938m from expected 39.5085,-84.7353",10400,eval_C1_19_r3_28b875d1
+qwen2.5:3b,3,C1_20,common,MacMillan Hall,Benton Hall,Navigate from MacMillan Hall to Benton Hall,False,False,False,A,"To plan the route from MacMillan Hall to Benton Hall, I need to find accessible entrances for both buildings. Let's start by looking at where we are and how to get there.
+
+**MacMillan Hall:**
+- Locate",13539,eval_C1_20_r3_5deafffb
+qwen2.5:3b,3,C2_01,cross_campus,Pearson Hall,Boyd Hall,Accessible route from Pearson Hall to Boyd Hall,False,False,False,A,"It seems that both Pearson Hall and Boyd Hall have missing wheelchair accessibility information in OpenStreetMap. I will attempt to find a nearby accessible route, but there might be no suitable alter",965721,eval_C2_01_r3_32d12e42
+qwen2.5:3b,3,C2_02,cross_campus,Hughes Hall,Peabody Hall,Navigate from Hughes Hall to Peabody Hall wheelchair,False,False,False,A,"The accessible entrance to Hughes Hall is located at Mortimer Road, Petersfield, Cambridge, Cambridgeshire and Peterborough, United Kingdom. It has two entrances marked as 'yes' with wheelchair access",446318,eval_C2_02_r3_c9b30da3
+qwen2.5:3b,3,C2_03,cross_campus,Hiestand Hall,Bachelor Hall,Route from Hiestand Hall to Bachelor Hall,False,False,False,A,"Neither of the halls have any accessible entrances or ramps. Please provide a detailed address for an accurate route.
+
+Alternatively, if you can clarify which specific hall is closer to your current l",17188,eval_C2_03_r3_506e208c
+qwen2.5:3b,3,C2_04,cross_campus,Pearson Hall,Alumni Hall,Directions from Pearson Hall to Alumni Hall,False,False,False,A,"I've found that Pearson Hall has accessible entrances at the following coordinates: 
+- Latitude: 35.9128138, Longitude: -79.0529682  
+- Latitude: 35.9124446, Longitude: -79.052957
+- Latitude: 35.91229",479568,eval_C2_04_r3_5a12dec5
+qwen2.5:3b,3,C2_05,cross_campus,Benton Hall,Peabody Hall,Take me from Benton Hall to Peabody Hall accessible route,False,False,False,A,"I found that both Benton Hall and Peabody Hall are fully wheelchair-accessible with ramps and entrances. The route will be tailored to ensure the most accessible path for you.
+
+The recommended route i",13261,eval_C2_05_r3_f79123e4
+qwen2.5:3b,3,C2_06,cross_campus,McVey Data Science Building,Alumni Hall,How do I get from McVey Data Science Building to Alumni Hall,False,False,False,A,"To get from the [Richard M. McVey Data Science Building] to the [Alumni Hall], you can use the following wheelchair-accessible route:
+
+### Route Summary:
+- **Distance:** Approximately 0.5 miles (782 m",14013,eval_C2_06_r3_1287cc9e
+qwen2.5:3b,3,C2_07,cross_campus,King Library,Boyd Hall,Navigate from King Library to Boyd Hall,True,False,False,B,"Destination 41.0954,-87.8624 is 318910m from expected 39.5058,-84.7318",4339,eval_C2_07_r3_c7300774
+qwen2.5:3b,3,C2_08,cross_campus,Hughes Hall,Bachelor Hall,Route from Hughes Hall to Bachelor Hall wheelchair accessible,True,False,False,B,"Destination -36.1725,171.5933 is 13511798m from expected 39.5065,-84.7325",18556,eval_C2_08_r3_e5ad549c
+qwen2.5:3b,3,C2_09,cross_campus,Garland Hall,Peabody Hall,Directions from Garland Hall to Peabody Hall,True,False,False,B,"Destination 39.8172,-98.2896 is 1159937m from expected 39.5052,-84.7322",12586,eval_C2_09_r3_02715fb1
+qwen2.5:3b,3,C2_10,cross_campus,Armstrong Student Center,Richard M. McVey Data Science Building,Take me from Armstrong Student Center to McVey Data Science Building,True,False,False,B,"Destination 39.1293,-84.4900 is 47239m from expected 39.5107,-84.7318",7198,eval_C2_10_r3_bfbdd461
+qwen2.5:3b,3,C3_01,problematic,Benton Hall,Elliot Hall,Navigate from Benton Hall to Elliot Hall,False,False,False,A,"For your journey from Benton Hall to Elliot Hall, I need to prioritize a route using the data available. Let's start with the accessibility details of Benton Hall.
+
+Benton Hall is fully accessible and",12280,eval_C3_01_r3_9ebd3496
+qwen2.5:3b,3,C3_02,problematic,King Library,Hiestand Hall,Route from King Library to Hiestand Hall,True,False,False,B,"Destination 39.7631,-94.7435 is 856694m from expected 39.5083,-84.7395",6674,eval_C3_02_r3_c7b3442d
+qwen2.5:3b,3,C3_03,problematic,Harrison Hall,Laws Hall,Directions from Harrison Hall to Laws Hall,True,False,False,B,"Destination 39.1127,-86.0431 is 120923m from expected 39.5081,-84.7338",4008,eval_C3_03_r3_f8b09536
+qwen2.5:3b,3,C3_04,problematic,Upham Hall,Hiestand Hall,Accessible route from Upham Hall to Hiestand Hall,False,False,False,A,"Both Upham Hall and Hiestand Hall have accessible entrances for wheelchair users:
+
+- **Upham Hall Entrances:**
+  - Fully Wheelchair Accessible: Latitude/Longitude coordinates available.
+  - Unaccessib",17329,eval_C3_04_r3_9a2c5cb7
+qwen2.5:3b,3,C3_05,problematic,Boyd Hall,Kreger Hall,How do I get from Boyd Hall to Kreger Hall wheelchair,False,False,False,A,"I found the routes for both locations and highlighted the wheelchair-accessible entrances:
+
+- From Boyd Hall (University of Kentucky) to Kreger Hall:
+  - **Entrances**: fully wheelchair accessible at ",22389,eval_C3_05_r3_a121762f
+qwen2.5:3b,3,C3_06,problematic,Peabody Hall,Elliot Hall,Navigate from Peabody Hall to Elliott Hall,True,False,False,B,"Destination 41.2635,-86.4559 is 243530m from expected 39.5078,-84.7368",3981,eval_C3_06_r3_7c2679aa
+qwen2.5:3b,3,C3_07,problematic,Benton Hall,Peabody Hall,Directions from Benton Hall to Peabody Hall,False,False,False,A,"Both Benton Hall and Peabody Hall are fully wheelchair accessible with multiple entrances. Here is the route from Benton Hall to Peabody Hall:
+
+- **Distance**: Approximately 1.6 km (about 1 mile)
+- **",11288,eval_C3_07_r3_3592079e
+qwen2.5:3b,3,C3_08,problematic,Kreger Hall,Alumni Hall,Route from Kreger Hall to Alumni Hall accessible,False,False,False,A,"I have found that Kreger Hall has a fully wheelchair accessible entrance at the following coordinates:  
+Latitude: 39.5080759, Longitude: -84.7345174  
+
+And Alumni Hall does not appear to have any ent",34483,eval_C3_08_r3_d261587c
+qwen2.5:3b,3,C3_09,problematic,MacMillan Hall,Boyd Hall,Take me from MacMillan Hall to Boyd Hall,True,False,False,B,"Destination -34.8947,-50.7294 is 8979228m from expected 39.5058,-84.7318",6271,eval_C3_09_r3_9185a1af
+qwen2.5:3b,3,C3_10,problematic,Roudebush Hall,Hiestand Hall,Navigate from Roudebush Hall to Hiestand Hall wheelchair accessible,False,False,False,A,,1794,eval_C3_10_r3_e039d7d4
+qwen2.5:3b,3,C4_01,ambiguous,Benton Hall,the library,Navigate from Benton Hall to the library,False,False,False,A,"To navigate from Benton Hall to the Library, I found that both buildings are fully accessible for wheelchair users.
+
+**From Benton Hall (Wheelchair Accessible Entrance):**
+- **Destination**: King Libr",15318,eval_C4_01_r3_7428015d
+qwen2.5:3b,3,C4_02,ambiguous,Armstrong,King Library,How do I get from Armstrong to King Library,True,False,False,B,"Destination 39.0345,-82.6079 is 190720m from expected 39.5088,-84.7371",6203,eval_C4_02_r3_98d67978
+qwen2.5:3b,3,C4_03,ambiguous,Benton Hall,student center,Route from Benton Hall to the student center,False,False,False,A,"Both Benton Hall and the Armstrong Student Center are fully wheelchair accessible with ramp-free entrances:
+
+- **Benton Hall**: The primary entrance is fully wheelchair accessible (entrance: main). Th",15316,eval_C4_03_r3_6861c28d
+qwen2.5:3b,3,C4_04,ambiguous,the engineering building,King Library,Directions from the engineering building to King Library,False,False,False,A,"It seems there was an issue finding the exact location of King Library. Could you please provide a more specific address or coordinates? If not, I can try to find nearby options and suggest an alterna",7212,eval_C4_04_r3_e78ef615
+qwen2.5:3b,3,C4_05,ambiguous,McVey building,Armstrong Student Center,Navigate from McVey building to Armstrong Student Center,False,False,False,A,"It seems there is still an issue finding the coordinates for Armstrong Student Center. Let's proceed by using the provided data.
+
+The nearest accessible entrance to the Armstrong Student Center from M",13076,eval_C4_05_r3_f8d604ea
+qwen2.5:3b,3,C4_06,ambiguous,Laws,Shriver,Route from Laws to Shriver,True,False,False,B,"Destination 41.7494,-89.1557 is 448474m from expected 39.5068,-84.7374",4033,eval_C4_06_r3_10b46791
+qwen2.5:3b,3,C4_07,ambiguous,Benton Hall,Data Science Building,How do I get from Benton Hall to the Data Science Building,False,False,False,A,"I've found that both Benton Hall and the Data Science Building have fully accessible entrances:
+
+**Benton Hall:**
+- Entrances marked as ""fully wheelchair accessible"" are available at:
+  - Main entranc",14326,eval_C4_07_r3_9f8b5032
+qwen2.5:3b,3,C4_08,ambiguous,Garland,Armstrong,Directions from Garland to Armstrong,True,False,False,B,"Destination 39.7774,-84.1822 is 56135m from expected 39.5074,-84.7362",8830,eval_C4_08_r3_2c64a0c9
+qwen2.5:3b,3,C4_09,ambiguous,the admin building,King Library,Route from the admin building to King Library,False,False,False,A,"I found the accessible entrances for both locations:
+- Admin Building: Entrance with a tag of `wheelchair: yes` located at coordinates 1.3562858, 104.0277426.
+- King Library: Accessible entrance types",12038,eval_C4_09_r3_6a4c07d8
+qwen2.5:3b,3,C4_10,ambiguous,Hughes Hall,the gym,Navigate from Hughes Hall to the gym,False,False,False,A,"I couldn't find any information about a gym near Hughes Hall. Could you please provide the name or address of the gym you're looking for, such as 'Gym, Tarzana Neighborhood Council District, Los Angel",16552,eval_C4_10_r3_93a89dff
